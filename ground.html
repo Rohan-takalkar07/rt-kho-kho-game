@@ -1,0 +1,98 @@
+<html>
+<body1 style="margin:0; background:#efefef">
+
+  <div id="ground" style="
+    width:840px;
+    height:450px;
+    background:#b3b2b2;
+    border:8px solid #bbbbbb;
+    margin:30px auto;
+    position:relative;
+    cursor:pointer;
+  " onclick="placeSpot(event)">
+    <!-- Kho Kho layout here.. -->
+     <div style=" background-color: white;border-radius:100%;width: 1%; position:absolute; width: 22px; height:22px;margin-left: 38px; margin-top:210px"></div>
+
+
+
+
+    <div style="margin-left: 60px; margin-right: 60px">
+      
+
+      <div style=" background-color:#d1d1d1; border: 2px solid white; ">
+        
+        
+
+
+        <div style=" display: flex; justify-content: space-evenly;">
+
+
+        
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:205px"></div>
+        </div>
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:205px"></div>
+        </div>
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:205px"></div>
+        </div>
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:205px"></div>
+        </div>
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:205px"></div>
+        </div>
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:205px"></div>
+        </div>
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22; margin-top:205px"></div>
+        </div>
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:205px"></div>
+        </div>
+        <div style="background-color:#d1d1d1;border:2px solid white; height:332pt; width: 25px;">
+          <div style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:205px"><div style=" background-color: white;border-radius:100%; width: 100%; height: 22px;margin-top: 33px; margin-left:74px;"></div></div>
+          
+        </div>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let spots = [];
+
+    function placeSpot(event) {
+      let ground = document.getElementById("ground");
+      let rect = ground.getBoundingClientRect();
+
+      let x = event.clientX - rect.left;
+      let y = event.clientY - rect.top;
+
+      spots.push({ x, y });
+
+      // 1️⃣ Create the visible red spot
+      let dot = document.createElement("div");
+      dot.style = `
+    width:14px;
+    height:14px;
+    background:red;
+    border-radius:50%;
+    position:absolute;
+    left:${x - 7}px;
+    top:${y - 7}px;
+  `;
+      ground.appendChild(dot);
+
+      // 2️⃣ Open another window using Electron
+      window.electronAPI.openNewWindow({ x, y });
+    }
+  </script>
+
+</body1>
+
+</html>

@@ -1,0 +1,116 @@
+<html>
+    <script>
+       const {ipcRenderer} = require("electron");
+       function Back() {
+        ipcRenderer.send("dashboard.html");
+       }
+    </script>
+
+<body>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="color: rgb(6, 6, 6); font-size: 30px; font:bold">Create Tournament</div>
+        <div>logo</div>
+    </div>
+    <p style="font:bold; font-size: 16px;margin-bottom: 25px;">Set up a new kho kho tournament</p>
+    <label>Tournament Name</label>
+    <div> <input type="text" placeholder="placeholder" ;
+            style="width:97.5%; padding: 10px; margin:8px 0 15px; border: 1px solid #ccc; background:rgba(232, 232, 232, 0.941)"></div>
+
+
+
+
+
+    <div style="display: flex; justify-content:space-around;">
+        <div style="width: 100%;"><label>Start Date</label>
+            <div><input type="date" placeholder="placeholder"
+                    style="background:rgba(232, 232, 232, 0.941);width: 95%; padding:10px; margin:8px 0 15px; border: 1px solid #ccc;"></div>
+        </div>
+
+        <div style="width:100%;"><label>End date</label>
+            <div style="width: 100%;">
+                <input type="date" placeholder="placeholder"
+                    style=" background:rgba(232, 232, 232, 0.941); width:95%; padding:10px; margin:8px 0 15px; border: 1px solid #ccc;">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div style="display: flex; justify-content:space-around;">
+        <div style="width: 100%;"><label>State</label>
+            <div><input type="text" placeholder="placeholder"
+                    style="background:rgba(232, 232, 232, 0.941);  width: 95%; padding:10px; margin:8px 0 15px; border: 1px solid #ccc;"></div>
+        </div>
+
+        <div style="width:100%;"><label>City</label>
+            <div style="width: 100%;">
+                <input type="text" placeholder="placeholder"
+                    style=" background:rgba(232, 232, 232, 0.941); width:95%; padding:10px; margin:8px 0 15px; border: 1px solid #ccc;">
+            </div>
+        </div>
+
+    </div>
+
+    <label>Venue</label>
+    <div> <input type="text" placeholder="placeholder" ;
+            style=" background:rgba(232, 232, 232, 0.941); width:97.5%; padding: 10px; margin:8px 0 15px; border: 1px solid #ccc;"></div>
+
+
+    <div style="display: flex; justify-content:space-around;">
+        <div style="width: 100%;"><label>Section(Age Group)</label>
+            <div><select placeholder="placeholder"
+                    style=" background:rgba(232, 232, 232, 0.941); width: 95%; padding:10px; margin:8px 0 15px; border: 1px solid #ccc;">
+                <option>Under-14(U-14)</option>
+                <option>Under-17(U-17)</option>
+                <option>Under-19(U-19)</option>
+                <option>Sub-Junior</option>
+                <option>Junior & Senior</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="width:100%;"><label>(Gender)</label>
+            <div><select placeholder="placeholder"
+                    style="background:rgba(232, 232, 232, 0.941);  width: 95%; padding:10px; margin:8px 0 15px; border: 1px solid #ccc;">
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="display: flex; justify-content:space-around;">
+        <div style="width: 100%;"><label>Tournament Format</label>
+            <div><select placeholder="placeholder"
+                    style="background:rgba(232, 232, 232, 0.941);  width: 95%; padding:10px; margin:8px 0 15px; border: 1px solid #ccc;">
+                <option>Traditional/Standard Format </option>
+                <option>Modern/Fast Format(using small mat)</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="width:100%;"><label>Max time per turn</label>
+            <div><select placeholder="placeholder"
+                    style=" background:rgba(232, 232, 232, 0.941); width: 95%; padding:10px; margin:8px 0 15px; border: 1px solid #ccc;">
+                <option>9 minutes</option>
+                <option>7 minutes</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; justify-content: flex-end;width: 97.5%;">
+            <button  style="padding:10px; margin:8px 0 15px; border: 3px solid navy; color: navy; width: 12%; margin-right: 8px;background-color: white; font:bold;font-size:15px;" onclick="Back()">Cancle</button>
+            <button  style="padding:10px; margin:8px 0 15px; border: 1px solid #ccc; background-color: navy; color: white; font: bold; font-size:15px;">Create Tournament</button>
+        </div>
+
+    
+
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,263 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+
+
+<script>
+    function toggleDropdown() {
+        const menu = document.getElementById("menu");
+        menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    function navigate(page) {
+        window.location.href = page;
+    }
+
+    window.onclick = function (event) {
+        if (!event.target.matches('button')) {
+            document.getElementById("menu").style.display = "none";
+        }
+    };
+</script>
+
+
+
+
+<body style="font-family: Arial; background-color:rgb(219, 216, 216);">
+
+    <!-- Tournament name and dropdown Button -->
+    <div style="margin-left: 18px; margin-right: 18px;">
+        <div style="display: flex; justify-content: space-between;">
+            <div style="font-size: 28px; font-weight: bold;color: black; ">Dashboard</div>
+            <div style="position: relative; display: inline-block; margin-right: 5px;">
+
+
+                <button onclick="toggleDropdown()" style="
+                background-color:#1a73e8;
+                color:white;
+                padding:10px 16px;
+                border:none;
+                border-radius:4px;
+                cursor:pointer;
+            ">
+                    Create <i class="fa fa-angle-down" aria-hidden="true"></i>
+
+                </button>
+
+
+                <div id="menu" style="
+                display:none;
+                position:absolute;
+                background:white;
+                min-width:180px;
+                box-shadow:0px 2px 6px rgba(0,0,0,0.2);
+                border-radius:4px;
+                z-index:1000;
+                margin-top:5px;
+            ">
+                    <div onclick="navigate('create_turnament.html')"
+                        style="padding:12px 16px; border-bottom:1px solid #eee; cursor:pointer;">Tournaments</div>
+                    <div onclick="navigate('matches.html')"
+                        style="padding:12px 16px; border-bottom:1px solid #eee; cursor:pointer;">Matches</div>
+                    <div onclick="navigate('teams.html')"
+                        style="padding:12px 16px; border-bottom:1px solid #eee; cursor:pointer;">Teams</div>
+                    <div onclick="navigate('officials.html')"
+                        style="padding:12px 16px; border-bottom:1px solid #eee; cursor:pointer;">Officials</div>
+                    <div onclick="navigate('staff.html')"
+                        style="padding:12px 16px; border-bottom:none; cursor:pointer;">
+                        Staff</div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- tounament. >> staff >> team >> officials >> horizaontal div -->
+
+
+        <div style="display: flex; justify-content:space-between; margin-top: 8px; ">
+            <div>
+                <div style="font-size: 20px;  color: rgb(97, 95, 95);">Tournament</div>
+                <div style="display: flex;justify-content: space-evenly;">
+                    <div style="font-size: small;">3live </div>
+                    <div style="font-size: small;">3 completed</div>
+                </div>
+            </div>
+
+            <div>
+                <div style="font-size: 20px; color: rgb(97, 95, 95);">Teams</div>
+                <div style="font-size: small;">18 Teams</div>
+            </div>
+            <div>
+                <div style="font-size: 20px;  color: rgb(97, 95, 95);">Staff</div>
+                <div style="font-size: small;">18 Staff</div>
+            </div>
+            <div>
+                <div style="font-size: 20px;  color: rgb(97, 95, 95);">Officials</div>
+                <div style="font-size: small;">18 officials</div>
+            </div>
+            <div>
+                <div style="font-size: 20px;  color: rgb(97, 95, 95);">Matches</div>
+                <div style="display: flex;justify-content: space-evenly;">
+                    <div style="font-size: small;">3 live</div>
+                    <div style="font-size: small;">3 upcomming</div>
+                    <div style="font-size: small;">3 completed</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- dividation div -->
+        <div style="display: flex; justify-content: space-between;">
+
+            <div style="width: 80%;">
+                <!-- part 1 div start -->
+                <div style="display: flex; justify-content: space-between; margin-top: 17px;">
+                    <!-- left dive start from search box to end  -->
+                    <div style="background-color: white; padding: 8px; width: 93%;">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        <input type="text" placeholder="search" style="border: none;">
+                    </div>
+                    <div>
+                        <button style="border: none; background-color:#1a73e8; padding: 8px; color: white;">
+                            search <i class="fa fa-search" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+                <hr style="margin-top: 20px; margin-bottom: 20px;">
+
+
+                <table style="width:100%; border-collapse:collapse; font-family:Arial; background-color: white;">
+
+                    <!-- Header Row -->
+                    <tr style="background:#f5f6fa; text-align:left;">
+                        <th style="padding:10px;">Event Name</th>
+                        <th style="padding:10px;">Status</th>
+                        <th style="padding:10px;">Matches</th>
+                        <th style="padding:10px;">Teams</th>
+                        <th style="padding:10px;">Start Date</th>
+                        <th style="padding:10px;">End Date</th>
+                    </tr>
+
+                    <!-- Row 1 -->
+                    <tr style="border-bottom:1px solid #ddd;">
+                        <td style="padding:12px; color:#1976d2;">Khelo India</td>
+                        <td style="padding:12px;">
+                            <span
+                                style="padding:4px 10px; background:#e3f2fd; color:#1976d2; border-radius:6px; font-size:13px;">Live</span>
+                        </td>
+                        <td style="padding:12px;">13</td>
+                        <td style="padding:12px;">8</td>
+                        <td style="padding:12px;">01 Aug 2025</td>
+                        <td style="padding:12px;">04 Aug 2025</td>
+                    </tr>
+
+                    <!-- Row 2 -->
+                    <tr style="border-bottom:1px solid #ddd;">
+                        <td style="padding:12px; color:#1976d2;">Mayor’s Cup</td>
+                        <td style="padding:12px;">
+                            <span
+                                style="padding:4px 10px; background:#e3f2fd; color:#1976d2; border-radius:6px; font-size:13px;">Live</span>
+                        </td>
+                        <td style="padding:12px;">13</td>
+                        <td style="padding:12px;">8</td>
+                        <td style="padding:12px;">01 Aug 2025</td>
+                        <td style="padding:12px;">04 Aug 2025</td>
+                    </tr>
+
+                    <!-- Row 3 -->
+                    <tr style="border-bottom:1px solid #ddd;">
+                        <td style="padding:12px; color:#1976d2;">State Championship</td>
+                        <td style="padding:12px;">
+                            <span
+                                style="padding:4px 10px; background:#f0f4ff; color:#4a6bf8; border-radius:6px; font-size:13px;">Scheduled</span>
+                        </td>
+                        <td style="padding:12px;">13</td>
+                        <td style="padding:12px;">8</td>
+                        <td style="padding:12px;">01 Aug 2025</td>
+                        <td style="padding:12px;">04 Aug 2025</td>
+                    </tr>
+
+                    <!-- Row 4 -->
+                    <tr style="border-bottom:1px solid #ddd;">
+                        <td style="padding:12px; color:#1976d2;">National Championship</td>
+                        <td style="padding:12px;">
+                            <span
+                                style="padding:4px 10px; background:#f0f4ff; color:#4a6bf8; border-radius:6px; font-size:13px;">Scheduled</span>
+                        </td>
+                        <td style="padding:12px;">13</td>
+                        <td style="padding:12px;">8</td>
+                        <td style="padding:12px;">01 Aug 2025</td>
+                        <td style="padding:12px;">04 Aug 2025</td>
+                    </tr>
+
+                    <!-- Row 5 -->
+                    <tr style="border-bottom:1px solid #ddd;">
+                        <td style="padding:12px; color:#1976d2;">Ultimate Kho Kho</td>
+                        <td style="padding:12px;">
+                            <span
+                                style="padding:4px 10px; background:#f0f4ff; color:#4a6bf8; border-radius:6px; font-size:13px;">Scheduled</span>
+                        </td>
+                        <td style="padding:12px;">13</td>
+                        <td style="padding:12px;">8</td>
+                        <td style="padding:12px;">01 Aug 2025</td>
+                        <td style="padding:12px;">04 Aug 2025</td>
+                    </tr>
+
+                </table>
+
+                <div style="display: flex; justify-content: space-evenly; margin-top: 20px;">
+                    <div style="padding: 12%; background-color:rgba(128, 128, 128, 0.529); width: 30%;"></div>
+                    <div
+                        style="padding: 12%; background-color:rgba(128, 128, 128, 0.529);  width: 30%; margin-left: 25px; margin-right: 25px;">
+                    </div>
+                    <div style="padding: 12%; background-color:rgba(128, 128, 128, 0.529);  width: 30%; "></div>
+                </div>
+            </div>
+            <!-- part 1 div end -->
+            <!-- part 2 div start -->
+
+            <div style="width: 18%; margin-top:19.5px;">
+                <div style="background-color: white; margin-bottom: 25px;">
+                    <div style=" margin-left: 10px;margin-right: 10px; padding-bottom: 20px;">
+                        <div style="font-size: 20px;font-weight: bold; margin-bottom: 20px; padding-top: 15px;">upcomming Matches</div>
+                        <div style="background-color: white; border: 1px solid black; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between;;">
+                                <div>Team A</div>
+                                <div>v/s</div>
+                                <div>Team B</div>
+                            </div>
+                            <div style="display: flex; justify-content: center; margin-top: 15px;">Time,Status</div>
+                        </div>
+
+                         <div style="background-color: white; border: 1px solid black; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between;;">
+                                <div>Team A</div>
+                                <div>v/s</div>
+                                <div>Team B</div>
+                            </div>
+                            <div style="display: flex; justify-content: center; margin-top: 15px;">Time,Status</div>
+                        </div>
+
+                         <div style="background-color: white; border: 1px solid black; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between;;">
+                                <div>Team A</div>
+                                <div>v/s</div>
+                                <div>Team B</div>
+                            </div>
+                            <div style="display: flex; justify-content: center; margin-top: 15px;">Time,Status</div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div style="background-color: white; padding-bottom: 80%;">
+                    <div style="font-weight: bold; font-size: 20px; display: flex; justify-content: center; padding-top: 15px;">Resent Activity Feed</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</html>

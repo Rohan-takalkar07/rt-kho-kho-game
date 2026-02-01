@@ -1,0 +1,595 @@
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+</head>
+
+<body style="background:#f5f6fa;">
+  <div style="margin-left: 10px; margin-right: 10px;">
+
+    <div style="display: flex; justify-content: space-between; margin-top: 25px; ">
+
+
+      <div style="display: flex; justify-content: space-between; width: 48%; padding: 10px; background-color: white; ">
+        <div>
+          <span style="align-items: center; margin-left: 40%; font-size: 20px;">00</span>
+          <div>
+            <span>team2 Name</span><span>DEF</span>
+          </div>
+        </div>
+        <hr>
+        <div style="display: flex; justify-content: center;">
+          <div class="container">
+            <div style="display: flex; justify-content: center;">
+              <span class="digit" id="minutes" style="font-size: 25px; font-weight: bold;">00</span>
+              <span class="txt">:</span>
+
+              <span class="digit" id="seconds" style="font-size: 25px; font-weight: bold;">00</span>
+              <!-- <span class="txt">Sec</span> -->
+            </div>
+
+            <div id="buttons" style="padding-top: 9px;">
+              <button class="btn" id="start">Start</button>
+              <button class="btn" id="stop">Stop</button>
+              <button class="btn" id="reset">Reset</button>
+            </div>
+          </div>
+
+          <script src="script.js"></script>
+        </div>
+        <hr>
+        <div>
+          <span style="align-items: center; margin-left: 40%; font-size: 20px;">00</span>
+          <div>
+            <span>team2 Name</span><span>DEF</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- table2 -->
+      <div style="width:48%;">
+
+        <table style="width: 100%; border-collapse: collapse; text-align: center;">
+
+          <tr style="background:#a8a8a9; font-size: 15;">
+            <th style="padding: 6px;">Turns</th>
+            <th style="padding: 6px;">1</th>
+            <th style="padding: 6px;">2</th>
+            <th style="padding: 6px;">3</th>
+            <th style="padding: 6px;">4</th>
+            <th style="padding: 6px;">Total</th>
+          </tr>
+
+          <tr style="background-color: white; font-size: 15px;">
+            <td style="padding: 6px;">TEAM a</td>
+            <td style="padding: 6px;">00</td>
+            <td style="padding: 6px;">00</td>
+            <td style="padding: 6px;">00</td>
+            <td style="padding: 6px;">00</td>
+            <td style="padding: 6px;">00</td>
+          </tr>
+          <tr style="background-color: white; font-size: 15px;">
+            <td style="padding: 6px;">TEam b </td>
+            <td style="padding: 6px;">00</td>
+            <td style="padding: 6px;">00</td>
+            <td style="padding: 6px;">00</td>
+            <td style="padding: 6px;">00</td>
+            <td style="padding: 6px;">00</td>
+          </tr>
+        </table>
+
+      </div>
+    </div>
+
+
+
+
+    <div style="display: flex; justify-content: space-between; margin-top: 10px; ">
+      <!-- partition -->
+      <div style="width:89%; height: 53%;">
+        <body1 style="margin:0; background:#efefef">
+
+          <div id="ground" style="
+    width:95%;
+    height:550px;
+    background:#b3b2b2;
+    border:8px solid #bbbbbb;
+    margin:30px auto;
+    position:relative;
+    cursor:pointer;
+    padding-bottom: 10px;
+  " onclick="placeSpot(event)">
+            <!-- Kho Kho layout here.. -->
+            <div
+              style=" background-color: white;border-radius:100%;width: 15%; position:absolute; width: 24px; height:22px;margin-left: 38px; margin-top:272px; background-color: rgba(47, 50, 48, 0.792);">
+            </div>
+
+
+
+
+            <div style="margin-left: 60px; margin-right: 60px">
+
+
+              <div style=" background-color:#d1d1d1; border: 2px solid white; margin-top: 30px; height: 90%;">
+
+
+
+
+                <div style=" display: flex; justify-content: space-evenly;">
+
+
+
+                  <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div
+                      style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:240px">
+                    </div>
+                  </div>
+                  <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div
+                      style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:240px">
+                    </div>
+                  </div>
+                  <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div
+                      style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:240px">
+                    </div>
+                  </div>
+                  <!-- <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div
+                      style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:240px">
+                    </div>
+                  </div> -->
+                  <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div
+                      style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:240px">
+                    </div>
+                  </div>
+                  <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div
+                      style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:240px">
+                    </div>
+                  </div>
+                  <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div style=" background-color: white;border-radius:100%; width: 100%; height: 22; margin-top:240px">
+                    </div>
+                  </div>
+                  <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div
+                      style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:240px">
+                    </div>
+                  </div>
+                  <div style="background-color:#d1d1d1;border:2px solid white; height:369pt; width: 25px;">
+                    <div
+                      style=" background-color: white;border-radius:100%; width: 100%; height: 22px; margin-top:240px">
+                      <div
+                        style=" background-color: white;border-radius:100%; width: 100%; height: 24px;margin-top: 33px; margin-left:122px; background-color: rgba(47, 50, 48, 0.792);">
+                      </div>
+                    </div>
+
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            let spots = [];
+
+            let spotCount = 0; // Track spot count if needed, or just push to array
+            let isPlayerOut = [false, false, false];
+            let currentBatchNum = null;
+
+            function placeSpot(event) {
+              // 1. Check if any timer is running
+              let runningIndex = intervals.findIndex(i => i !== null);
+
+              if (runningIndex === -1) {
+                // Determine if any player is "active" (green glow) even if paused?
+                // For now, if no timer is running, maybe we shouldn't trigger 'out'? 
+                // Or user requirement says: "if one timmer is running... timmer of thet player will stop"
+                // If IDLE, maybe just place spot without opening window? 
+                // Let's assume we only trigger logic if a timer is running.
+                // actually user said "if one timmer is running... timmer of thet player will stop"
+              }
+
+              // Proceed with placing spot regardless? Or only if running?
+              // "when i click on groun at same time and place the red spot" -> always place spot
+
+              let ground = document.getElementById("ground");
+              let rect = ground.getBoundingClientRect();
+
+              let x = event.clientX - rect.left;
+              let y = event.clientY - rect.top;
+
+              spots.push({ x, y });
+
+              // 1️⃣ Create the visible red spot
+              let dot = document.createElement("div");
+              dot.style = `
+    width:14px;
+    height:14px;
+    background:red;
+    border-radius:50%;
+    position:absolute;
+    left:${x - 7}px;
+    top:${y - 7}px;
+  `;
+              ground.appendChild(dot);
+
+              // 2️⃣ Logic for Out
+              if (runningIndex !== -1) {
+                stopTimer(runningIndex);
+
+                // Apply RED background glow to the player
+                let box = document.getElementById("box" + (runningIndex + 1));
+                // user said: "show red backgroun glow effect"
+                box.style.boxShadow = "0 0 15px 5px red";
+
+                // Gather data
+                let outPlayerName = box.innerText.trim();
+                let timeStr = document.getElementById("timer" + (runningIndex + 1)).innerText;
+
+                // Get all ACTIVE defenders in the current rounds
+                let p1 = document.getElementById("box1").innerText.trim();
+                let p2 = document.getElementById("box2").innerText.trim();
+                let p3 = document.getElementById("box3").innerText.trim();
+
+                let allDefenders = [p1, p2, p3];
+
+                isPlayerOut[runningIndex] = true;
+
+                // Check if ALL are out
+                let allOut = isPlayerOut.every(Boolean);
+
+                const { ipcRenderer } = require('electron');
+                ipcRenderer.send('open-window', {
+                  outPlayerIndex: runningIndex,
+                  outPlayerName: outPlayerName,
+                  outPlayerTime: timeStr,
+                  allDefenders: allDefenders,
+                  allDefenders: allDefenders,
+                  isPlayerOut: isPlayerOut,
+                  allOut: allOut,
+                  currentBatchNum: currentBatchNum
+                });
+              }
+            }
+          </script>
+
+          <!-- round timer -->
+
+
+
+        </body1>
+
+      </div>
+
+
+      <div style="width:15%; margin-top: 26px;">
+        <div style="background-color: rgb(254, 253, 252); height: 80%;">
+
+          <div style="margin-right: 20px; margin-left: 20px;">
+            <div style="width: 100%;"><button
+                style=" background-color: rgb(84, 187, 228); padding: 8px; width: 100%; border: none; color: white; font-weight: bold; font-size: 15px; margin-top: 13px;">
+                <i class="fa fa-angle-double-left" aria-hidden="true"> Action Log </i></button></div>
+            <hr style="color: #a8a8a9;">
+            <div style="display: flex;  justify-content: center;">
+              <div style="font-size: 15px; font-weight: bold;">Team name <span>(DEF)</span></div>
+            </div>
+            <hr>
+            <div style="font-size: 15px; font-weight: bold;">Active Defenders</div>
+
+
+
+
+            <!-- rounds start here -->
+
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+              <!-- round 1 -->
+              <div>
+                <div id="box1"
+                  style="background-color: white; width:40px; border-radius: 80%;height: 70%; border: 2px solid black; text-align: center; font-size:20px; padding-top: 5px; margin-left: 15px;">
+                  -
+
+                </div>
+                <div id="timer1" style="margin-left:18px;">00:00</div>
+              </div>
+
+              <!-- round 2 -->
+              <div>
+                <div id="box2"
+                  style="background-color: white; width: 40px; border-radius: 80%;height: 70%; border: 2px solid black; text-align: center; font-size:20px; padding-top: 5px; ">
+                  -</div>
+                <div id="timer2" style="margin-left: 5px;">00:00</div>
+              </div>
+
+              <!-- round 3 -->
+              <div>
+                <div id="box3"
+                  style="background-color: white; width: 40px; border-radius: 80%;height: 70%; border: 2px solid black; text-align: center; font-size:20px; padding-top: 5px; margin-right: 15px; ">
+                  -</div>
+                <div id="timer3" style="margin-left: 5px;">00:00</div>
+              </div>
+            </div>
+            <br>
+            <hr>
+            <div style="margin-top: 10px; margin-bottom: 4px;">
+              <span onclick="loadBatch(1)" style="cursor:pointer; font-weight:bold; text-decoration: underline;">Batch
+                1</span>
+              <span onclick="openPopupBatch1()" style="cursor:pointer;">(Add Defenders)</span>
+            </div>
+            <div id="batch1Container" style="display: flex; justify-content: space-evenly;">
+              <div id="batch1-player1"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+              <div id="batch1-player2"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+              <div id="batch1-player3"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+            </div>
+
+            <div style="margin-top: 10px; margin-bottom: 4px;">
+              <span onclick="loadBatch(2)" style="cursor:pointer; font-weight:bold; text-decoration: underline;">Batch
+                2</span>
+              <span onclick="openPopupBatch2()" style="cursor:pointer;">(Add Defenders)</span>
+            </div>
+            <div id="batch2Container" style="display: flex; justify-content: space-evenly;">
+              <div id="batch2-player1"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+              <div id="batch2-player2"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+              <div id="batch2-player3"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+            </div>
+
+            <div style="margin-top: 10px; margin-bottom: 4px;">
+              <span onclick="loadBatch(3)" style="cursor:pointer; font-weight:bold; text-decoration: underline;">Batch
+                3</span>
+              <span onclick="openPopupBatch3()" style="cursor:pointer;">(Add Defenders)</span>
+            </div>
+            <div id="batch3Container" style="display: flex; justify-content: space-evenly;">
+              <div id="batch3-player1"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+              <div id="batch3-player2"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+              <div id="batch3-player3"
+                style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+              </div>
+            </div>
+          </div>
+          <script>
+            let timers = [0, 0, 0];
+            let intervals = [null, null, null];
+
+            function toggleTimer(index) {
+              if (isPlayerOut[index]) return; // Prevent interaction if player is out
+
+              if (intervals[index]) {
+                // If running, stop it
+                stopTimer(index);
+              } else {
+                // If stopped, start/resume it
+                startTimer(index);
+              }
+            }
+
+            function startTimer(index) {
+              if (isPlayerOut[index]) return; // Extra safety check
+
+              // stop other timers
+              // Ensure only one timer runs at a time
+              for (let i = 0; i < intervals.length; i++) {
+                if (i !== index && intervals[i]) {
+                  stopTimer(i);
+                }
+              }
+
+              // Start current timer (resume)
+              let box = document.getElementById("box" + (index + 1));
+              // add green glow
+              box.style.boxShadow = "0 0 15px 5px lightgreen";
+
+              // start interval
+              intervals[index] = setInterval(() => {
+                timers[index]++;
+                updateDisplay(index);
+              }, 1000);
+            }
+
+            function stopTimer(index) {
+              if (intervals[index]) {
+                clearInterval(intervals[index]);
+                intervals[index] = null;
+                let box = document.getElementById("box" + (index + 1));
+                box.style.boxShadow = ""; // remove glow
+              }
+            }
+
+            function updateDisplay(index) {
+              let minutes = Math.floor(timers[index] / 60);
+              let seconds = timers[index] % 60;
+              document.getElementById("timer" + (index + 1)).textContent =
+                String(minutes).padStart(2, '0') + ":" + String(seconds).padStart(2, '0');
+            }
+
+            // attach click events - use toggle
+            document.getElementById("box1").onclick = () => toggleTimer(0);
+            document.getElementById("box2").onclick = () => toggleTimer(1);
+            document.getElementById("box3").onclick = () => toggleTimer(2);
+
+            // popup window for add difender
+            const { ipcRenderer } = require('electron')
+            function openPopupBatch1() {
+              ipcRenderer.send('open-popup-batch1')
+            }
+            function openPopupBatch2() {
+              ipcRenderer.send('open-popup-batch2')
+            }
+            function openPopupBatch3() {
+              ipcRenderer.send('open-popup-batch3')
+            }
+            function openPopupSubstitute() {
+              ipcRenderer.send('open-popup-substitute')
+            }
+
+            // Listen for selected players from popup
+            ipcRenderer.on('update-batch1', (event, players) => {
+              // Update the three batch 1 player slots
+              document.getElementById('batch1-player1').textContent = players[0] || '-';
+              document.getElementById('batch1-player2').textContent = players[1] || '-';
+              document.getElementById('batch1-player3').textContent = players[2] || '-';
+            });
+            ipcRenderer.on('update-batch2', (event, players) => {
+              // Update the three batch 2 player slots
+              document.getElementById('batch2-player1').textContent = players[0] || '-';
+              document.getElementById('batch2-player2').textContent = players[1] || '-';
+              document.getElementById('batch2-player3').textContent = players[2] || '-';
+            });
+            ipcRenderer.on('update-batch3', (event, players) => {
+              // Update the three batch 3 player slots
+              document.getElementById('batch3-player1').textContent = players[0] || '-';
+              document.getElementById('batch3-player2').textContent = players[1] || '-';
+              document.getElementById('batch3-player3').textContent = players[2] || '-';
+            });
+            ipcRenderer.on('update-substitute', (event, players) => {
+              // Update the three substitute player slots
+              document.getElementById('substitute-player1').textContent = players[0] || '-';
+              document.getElementById('substitute-player2').textContent = players[1] || '-';
+              document.getElementById('substitute-player3').textContent = players[2] || '-';
+            });
+
+            // Send assigned players when popup requests them
+            ipcRenderer.on('get-assigned-players', () => {
+              const assignedPlayers = [];
+
+              // Get batch 1 players
+              const b1p1 = document.getElementById('batch1-player1').textContent;
+              const b1p2 = document.getElementById('batch1-player2').textContent;
+              const b1p3 = document.getElementById('batch1-player3').textContent;
+              if (b1p1 !== '-') assignedPlayers.push(b1p1);
+              if (b1p2 !== '-') assignedPlayers.push(b1p2);
+              if (b1p3 !== '-') assignedPlayers.push(b1p3);
+
+              // Get batch 2 players
+              const b2p1 = document.getElementById('batch2-player1').textContent;
+              const b2p2 = document.getElementById('batch2-player2').textContent;
+              const b2p3 = document.getElementById('batch2-player3').textContent;
+              if (b2p1 !== '-') assignedPlayers.push(b2p1);
+              if (b2p2 !== '-') assignedPlayers.push(b2p2);
+              if (b2p3 !== '-') assignedPlayers.push(b2p3);
+
+              // Get batch 3 players
+              const b3p1 = document.getElementById('batch3-player1').textContent;
+              const b3p2 = document.getElementById('batch3-player2').textContent;
+              const b3p3 = document.getElementById('batch3-player3').textContent;
+              if (b3p1 !== '-') assignedPlayers.push(b3p1);
+              if (b3p2 !== '-') assignedPlayers.push(b3p2);
+              if (b3p3 !== '-') assignedPlayers.push(b3p3);
+
+              // Get substitute players
+              const s1 = document.getElementById('substitute-player1').textContent;
+              const s2 = document.getElementById('substitute-player2').textContent;
+              const s3 = document.getElementById('substitute-player3').textContent;
+              if (s1 !== '-') assignedPlayers.push(s1);
+              if (s2 !== '-') assignedPlayers.push(s2);
+              if (s3 !== '-') assignedPlayers.push(s3);
+
+              ipcRenderer.send('assigned-players-response', assignedPlayers);
+            });
+
+            // Listen for start next defender signal from out.html
+            ipcRenderer.on('start-next-defender', (event, nextIndex) => {
+              // nextIndex is 0, 1, or 2
+              startTimer(nextIndex);
+            });
+
+            ipcRenderer.on('load-batch', (event, batchNum) => {
+              loadBatch(batchNum);
+              // Timer does NOT start automatically as per user request
+            });
+
+            function loadBatch(batchNum) {
+              // 1. Mark Previous Batch as Completed (Red)
+              if (currentBatchNum !== null) {
+                // The user requested "light red". Using "lightcoral" or similar.
+                document.getElementById(`batch${currentBatchNum}-player1`).style.backgroundColor = "#ffcccc"; // Light red
+                document.getElementById(`batch${currentBatchNum}-player2`).style.backgroundColor = "#ffcccc";
+                document.getElementById(`batch${currentBatchNum}-player3`).style.backgroundColor = "#ffcccc";
+              }
+
+              currentBatchNum = batchNum;
+
+              // 2. Mark New Batch as Active (Green)
+              document.getElementById(`batch${batchNum}-player1`).style.backgroundColor = "lightgreen";
+              document.getElementById(`batch${batchNum}-player2`).style.backgroundColor = "lightgreen";
+              document.getElementById(`batch${batchNum}-player3`).style.backgroundColor = "lightgreen";
+
+              // Get players from the selected batch
+              let p1 = document.getElementById(`batch${batchNum}-player1`).textContent;
+              let p2 = document.getElementById(`batch${batchNum}-player2`).textContent;
+              let p3 = document.getElementById(`batch${batchNum}-player3`).textContent;
+
+              // Update Active Defenders (boxes)
+              document.getElementById('box1').textContent = p1;
+              document.getElementById('box2').textContent = p2;
+              document.getElementById('box3').textContent = p3;
+
+              // Reset Timers
+              timers = [0, 0, 0];
+              intervals.forEach((interval, i) => {
+                if (interval) clearInterval(interval);
+                intervals[i] = null;
+                document.getElementById("timer" + (i + 1)).textContent = "00:00";
+                // Remove any green/red glow
+                let box = document.getElementById("box" + (i + 1));
+                box.style.boxShadow = "";
+              });
+
+              // Reset Out State
+              isPlayerOut = [false, false, false];
+
+              console.log(`Loaded Batch ${batchNum}: ${p1}, ${p2}, ${p3}`);
+            }
+
+          </script>
+
+
+
+        </div>
+
+
+        <!-- second part -->
+
+        <div style="background-color: rgb(254, 253, 252); height: 20%; margin-top: 10px;">
+          <div style="font-size: 15px; font-weight: bold; padding-top: 7px;">Team name <span>(DEF)</span></div>
+          <hr style="margin-top:1px;">
+          <div style="font-size: 15px;padding-top: 7px; margin-bottom: 2px;">Substitution <span
+              onclick="openPopupSubstitute()">(Add
+              Substitution)</span></div>
+          <div id="substituteContainer" style="display: flex; justify-content: space-evenly;">
+            <div id="substitute-player1"
+              style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+            </div>
+            <div id="substitute-player2"
+              style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+            </div>
+            <div id="substitute-player3"
+              style="width: 12px;background-color: #dad9c6; border-radius: 10px; padding:20px; text-align: center;">-
+            </div>
+          </div>
+
+        </div>
+      </div>
+</body>
+
+</html>
