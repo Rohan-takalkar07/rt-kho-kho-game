@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kho Kho Team Setup - Step 3</title>
+  <link rel="stylesheet" href="team3.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="createTeam">Create Team</div>
+    <h4>Set up a new Kho Kho Team</h4>
+    <hr/>
+    <div class="step-bar">
+      <div class="step" onclick="window.location.href='team.html'"><span class="circle">1</span>Team Details</div>
+      <div class="step" onclick="window.location.href='team2.html'"><span class="circle">2</span>Create Staff</div>
+      <div class="step active" onclick="window.location.href='team3.html'"><span class="circle">3</span>Assign Staff</div>
+      <div class="step" onclick="window.location.href='team4.html'"><span class="circle">4</span>Add Players</div>
+    </div>
+
+    <h2>Assign Staff</h2>
+    <h6>Assign roles to your team staff</h6>
+    <hr/>
+
+    <!-- Assignment Table -->
+    <table class="staff-table">
+      <thead>
+        <tr>
+          <th>Staff Name</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sandeep Patil</td>
+          <td>Head Coach</td>
+          <td><span class="actions">✏️ 🗑️</span></td>
+        </tr>
+        <tr>
+          <td>Ajay Kulkarni</td>
+          <td>Coach</td>
+          <td><span class="actions">✏️ 🗑️</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <a href="#" class="add-staff">+ Add Staff</a>
+
+    <!-- Navigation Buttons -->
+    <div class="button-row">
+      <button type="button" class="cancel" onclick="window.location.href='team2.html'">Back</button>
+      <button type="button" class="next" onclick="window.location.href='team4.html'">Next</button>
+    </div>
+  </div>
+</body>
+</html>
