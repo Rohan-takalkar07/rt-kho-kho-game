@@ -13,7 +13,7 @@
 
       <div style="display: flex; justify-content: space-between; width: 48%; padding: 10px; background-color: white; ">
         <div>
-          <span style="align-items: center; margin-left: 40%; font-size: 20px;">00</span>
+          <span id="activeDefenderOutCount" style="align-items: center; margin-left: 40%; font-size: 20px;">00</span>
           <div>
             <span>team2 Name</span><span>DEF</span>
           </div>
@@ -33,6 +33,7 @@
               <button class="btn" id="start">Start</button>
               <button class="btn" id="stop">Stop</button>
               <button class="btn" id="reset">Reset</button>
+              <button class="btn" id="endTurn">End Turn</button>
             </div>
           </div>
 
@@ -63,19 +64,19 @@
 
           <tr style="background-color: white; font-size: 15px;">
             <td style="padding: 6px;">TEAM a</td>
-            <td style="padding: 6px;">00</td>
-            <td style="padding: 6px;">00</td>
-            <td style="padding: 6px;">00</td>
-            <td style="padding: 6px;">00</td>
-            <td style="padding: 6px;">00</td>
+            <td id="t1_1" style="padding: 6px;">00</td>
+            <td id="t1_2" style="padding: 6px;">00</td>
+            <td id="t1_3" style="padding: 6px;">00</td>
+            <td id="t1_4" style="padding: 6px;">00</td>
+            <td id="t1_total" style="padding: 6px;">00</td>
           </tr>
           <tr style="background-color: white; font-size: 15px;">
             <td style="padding: 6px;">TEam b </td>
-            <td style="padding: 6px;">00</td>
-            <td style="padding: 6px;">00</td>
-            <td style="padding: 6px;">00</td>
-            <td style="padding: 6px;">00</td>
-            <td style="padding: 6px;">00</td>
+            <td id="t2_1" style="padding: 6px;">00</td>
+            <td id="t2_2" style="padding: 6px;">00</td>
+            <td id="t2_3" style="padding: 6px;">00</td>
+            <td id="t2_4" style="padding: 6px;">00</td>
+            <td id="t2_total" style="padding: 6px;">00</td>
           </tr>
         </table>
 
@@ -177,27 +178,72 @@
 
           <script>
             let spots = [];
+            let currentTurn = 1;
+            let turnScores = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
             let spotCount = 0; // Track spot count if needed, or just push to array
             let isPlayerOut = [false, false, false];
             let currentBatchNum = null;
+            let lastPlacedDot = null; // Store reference to last placed dot for potential removal
+            let lastOutPlayerIndex = null; // Store the index of player who was marked out
+
+            document.addEventListener('DOMContentLoaded', () => {
+              document.getElementById('endTurn').addEventListener('click', endTurn);
+            });
+
+            function endTurn() {
+              if (currentTurn >= 4) {
+                alert("Game Over! All 4 turns completed.");
+                return;
+              }
+              currentTurn++;
+              document.getElementById('activeDefenderOutCount').textContent = "00";
+              alert(`Starting Turn ${currentTurn}`);
+              // Optional: Reset player states or batches if required by game flow
+            }
+
+            function incrementTurnScore() {
+              turnScores[currentTurn]++;
+
+              // Update Top Display
+              document.getElementById('activeDefenderOutCount').textContent = String(turnScores[currentTurn]).padStart(2, '0');
+
+              // Update Table
+              let teamPrefix = (currentTurn % 2 !== 0) ? 't1' : 't2'; // Odd: Team A, Even: Team B
+
+              // Update Current Turn Cell
+              let cellId = `${teamPrefix}_${currentTurn}`;
+              if (document.getElementById(cellId)) {
+                document.getElementById(cellId).textContent = String(turnScores[currentTurn]).padStart(2, '0');
+              }
+
+              // Update Total
+              let total = 0;
+              if (teamPrefix === 't1') {
+                total = (turnScores[1] || 0) + (turnScores[3] || 0);
+              } else {
+                total = (turnScores[2] || 0) + (turnScores[4] || 0);
+              }
+              document.getElementById(`${teamPrefix}_total`).textContent = String(total).padStart(2, '0');
+            }
 
             function placeSpot(event) {
+              // Check if a batch is selected
+              if (currentBatchNum === null) {
+                // Don't place spot if no batch is selected
+                return;
+              }
+
               // 1. Check if any timer is running
               let runningIndex = intervals.findIndex(i => i !== null);
 
+              // Only place dot if a timer is actively running
               if (runningIndex === -1) {
-                // Determine if any player is "active" (green glow) even if paused?
-                // For now, if no timer is running, maybe we shouldn't trigger 'out'? 
-                // Or user requirement says: "if one timmer is running... timmer of thet player will stop"
-                // If IDLE, maybe just place spot without opening window? 
-                // Let's assume we only trigger logic if a timer is running.
-                // actually user said "if one timmer is running... timmer of thet player will stop"
+                // No timer is running, don't place the dot
+                return;
               }
 
-              // Proceed with placing spot regardless? Or only if running?
-              // "when i click on groun at same time and place the red spot" -> always place spot
-
+              // Proceed with placing spot only when a timer is running
               let ground = document.getElementById("ground");
               let rect = ground.getBoundingClientRect();
 
@@ -219,6 +265,9 @@
   `;
               ground.appendChild(dot);
 
+              // Store reference to this dot in case user cancels
+              lastPlacedDot = dot;
+
               // 2️⃣ Logic for Out
               if (runningIndex !== -1) {
                 stopTimer(runningIndex);
@@ -238,6 +287,12 @@
                 let p3 = document.getElementById("box3").innerText.trim();
 
                 let allDefenders = [p1, p2, p3];
+
+                // Store the player index before marking as out
+                lastOutPlayerIndex = runningIndex;
+
+                // Increment Score
+                incrementTurnScore();
 
                 isPlayerOut[runningIndex] = true;
 
@@ -516,6 +571,56 @@
             ipcRenderer.on('load-batch', (event, batchNum) => {
               loadBatch(batchNum);
               // Timer does NOT start automatically as per user request
+            });
+
+            // Listen for cancel event from out.html
+            ipcRenderer.on('out-cancelled', () => {
+              if (lastOutPlayerIndex !== null) {
+                // Restore player state
+                let box = document.getElementById("box" + (lastOutPlayerIndex + 1));
+
+                // Remove red glow and restore to normal or green if timer should resume
+                box.style.boxShadow = "";
+
+                // Mark player as NOT out
+                isPlayerOut[lastOutPlayerIndex] = false;
+
+                // Decrement the score that was incremented
+                if (turnScores[currentTurn] > 0) {
+                  turnScores[currentTurn]--;
+
+                  // Update Top Display
+                  document.getElementById('activeDefenderOutCount').textContent = String(turnScores[currentTurn]).padStart(2, '0');
+
+                  // Update Table
+                  let teamPrefix = (currentTurn % 2 !== 0) ? 't1' : 't2';
+                  let cellId = `${teamPrefix}_${currentTurn}`;
+                  if (document.getElementById(cellId)) {
+                    document.getElementById(cellId).textContent = String(turnScores[currentTurn]).padStart(2, '0');
+                  }
+
+                  // Update Total
+                  let total = 0;
+                  if (teamPrefix === 't1') {
+                    total = (turnScores[1] || 0) + (turnScores[3] || 0);
+                  } else {
+                    total = (turnScores[2] || 0) + (turnScores[4] || 0);
+                  }
+                  document.getElementById(`${teamPrefix}_total`).textContent = String(total).padStart(2, '0');
+                }
+
+                // Restart the timer for this player
+                startTimer(lastOutPlayerIndex);
+
+                // Remove the dot from the ground
+                if (lastPlacedDot && lastPlacedDot.parentNode) {
+                  lastPlacedDot.parentNode.removeChild(lastPlacedDot);
+                  lastPlacedDot = null;
+                }
+
+                // Reset the last out player index
+                lastOutPlayerIndex = null;
+              }
             });
 
             function loadBatch(batchNum) {

@@ -215,6 +215,10 @@ ipcMain.on('batch-selected', (event, batchNum) => {
 });
 
 ipcMain.on('close-out-window', (event) => {
+  // Send cancel event to main window so it can restore player state
+  if (mainWindow) {
+    mainWindow.webContents.send('out-cancelled');
+  }
   const win = BrowserWindow.fromWebContents(event.sender);
   if (win) win.close();
 });
