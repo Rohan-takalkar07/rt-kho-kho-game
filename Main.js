@@ -17,7 +17,7 @@ function createWindow() {
     }
   });
 
-  mainWindow.loadFile('ground_.html');   // Start page
+  mainWindow.loadFile('dashboard.html');   // Start page
 }
 
 app.whenReady().then(createWindow);
