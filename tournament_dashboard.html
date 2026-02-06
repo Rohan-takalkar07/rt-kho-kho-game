@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Dashboard - Kho Kho</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #22c55e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Tournament Header Section */
+        .tourney-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .tourney-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .tourney-title-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .tourney-title-area h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .badge-live {
+            background: #f1f5f9;
+            color: var(--text-muted);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge-live::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #cbd5e1;
+            border-radius: 50%;
+        }
+
+        .tourney-meta {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .meta-divider {
+            color: var(--border);
+        }
+
+        .tourney-stats {
+            display: flex;
+            gap: 48px;
+            margin-top: 24px;
+            border-top: 1px solid var(--border);
+            padding-top: 24px;
+        }
+
+        .stat-item h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .stat-item p {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .btn-start {
+            background: var(--primary);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-start:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Secondary Nav - Tabs */
+        .tabs-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 32px;
+        }
+
+        .tab-item {
+            padding: 12px 0;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-item.active {
+            color: var(--text-main);
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .tab-count {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .btn-action {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Content Area */
+        .search-area {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            flex: 1;
+        }
+
+        .search-input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 12px 12px 48px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-search {
+            background: var(--primary);
+            color: white;
+            padding: 0 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Create Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-btn {
+            background: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dropdown-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            min-width: 220px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            margin-top: 10px;
+            overflow: hidden;
+            z-index: 1000;
+            border: 1px solid var(--border);
+        }
+
+        .dropdown-menu div {
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-main);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dropdown-menu div:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-menu div:hover {
+            background: #f8fafc;
+            color: var(--primary);
+            padding-left: 28px;
+        }
+
+        .dropdown-menu div i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Match Card */
+        .match-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .match-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex: 1;
+        }
+
+        .match-meta-box {
+            text-align: center;
+            min-width: 100px;
+            padding-right: 24px;
+            border-right: 1px solid var(--border);
+        }
+
+        .match-status-tag {
+            display: inline-flex;
+            align-items: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--success);
+            text-transform: uppercase;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .match-status-tag::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        .match-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .match-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .team-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .team-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .team-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .team-score {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .match-middle {
+            text-align: center;
+            flex: 1;
+            padding: 0 40px;
+        }
+
+        .score-display {
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .score-vs {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .match-result-summary {
+            background: #f8fafc;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            display: inline-block;
+        }
+
+        .match-right {
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .view-details {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Officials Box */
+        .officials-area {
+            background: #f1f5f9;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 10px;
+            display: none;
+            /* Shown after match creation */
+        }
+
+        .officials-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .officials-list {
+            display: flex;
+            gap: 24px;
+        }
+
+        .official-item {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .official-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+
+        .official-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Navigation Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="dashboard.html">Dashboard</a> &gt; <span id="breadcrumbTourneyName">Tournament</span>
+        </div>
+
+        <!-- Tournament Header -->
+        <div class="tourney-card">
+            <div class="tourney-header">
+                <div>
+                    <div class="tourney-title-area">
+                        <h1 id="tourneyName">Khelo India</h1>
+                        <span class="badge-live">Live</span>
+                    </div>
+                    <div class="tourney-meta">
+                        <span id="tourneyVenue">SHREE SHIV CHHATRAPATI SPORTS COMPLEX, Balewadi</span>
+                        <span class="meta-divider">|</span>
+                        <span id="tourneyDates">01 Aug 2025 to 04 Aug 2025</span>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn-start">Start Tournament</button>
+                    <i class="fas fa-ellipsis-v"
+                        style="margin-left: 16px; color: var(--text-muted); cursor: pointer;"></i>
+                </div>
+            </div>
+
+            <div class="tourney-stats">
+                <div class="stat-item">
+                    <h4>Section</h4>
+                    <p id="tourneySection">Senior</p>
+                </div>
+                <div class="stat-item">
+                    <h4>Gender</h4>
+                    <p id="tourneyGender">Male</p>
+                </div>
+                <div class="stat-item">
+                    <h4>Match Format</h4>
+                    <p id="tourneyFormat">Knockout</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Secondary Nav - Migrated Create Options -->
+        <!-- Secondary Nav - Migrated Create Options -->
+        <div class="tabs-container">
+            <div class="tabs">
+                <div class="tab-item active" onclick="switchTab('matches')">
+                    Matches <span class="tab-count">0</span>
+                </div>
+                <div class="tab-item" onclick="switchTab('teams')">
+                    Teams <span class="tab-count">0</span>
+                </div>
+                <div class="tab-item" onclick="switchTab('officials')">
+                    Officials <span class="tab-count">0</span>
+                </div>
+                <div class="tab-item" onclick="switchTab('staff')">
+                    Staff <span class="tab-count">0</span>
+                </div>
+            </div>
+
+            <button id="actionBtn" class="btn-action" onclick="handleCreateAction()">
+                <i class="fas fa-plus"></i> <span id="actionBtnText">Create Match</span>
+            </button>
+        </div>
+
+        <!-- Search and Flow Area -->
+        <div class="search-area">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-input" placeholder="Search">
+            </div>
+            <button class="btn-search">Search <i class="fas fa-search" style="margin-left: 8px;"></i></button>
+        </div>
+
+        <!-- Officials Display Area (Visible after match creation) -->
+        <div id="officialsDisplay" class="officials-area">
+            <p class="officials-title">Assigned Officials</p>
+            <div class="officials-list">
+                <div class="official-item">
+                    <span class="official-label">Referee</span>
+                    <span class="official-name">Vinod Kumar</span>
+                </div>
+                <div class="official-item">
+                    <span class="official-label">Umpire 1</span>
+                    <span class="official-name">Suresh Raina</span>
+                </div>
+                <div class="official-item">
+                    <span class="official-label">Umpire 2</span>
+                    <span class="official-name">Rahul Dravid</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Lists -->
+        <div id="matchesView">
+            <!-- Matches will be loaded dynamically here -->
+        </div>
+
+        <div id="officialsView" class="hidden">
+            <!-- Officials will be loaded dynamically here -->
+        </div>
+
+        <div id="genericView" class="hidden"
+            style="background: white; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid var(--border);">
+            <i class="fas fa-info-circle" style="font-size: 48px; color: var(--border); margin-bottom: 16px;"></i>
+            <h3 id="viewTitle">Teams</h3>
+            <p style="color: var(--text-muted);">List of items will appear here.</p>
+        </div>
+
+        <script>
+            const { ipcRenderer } = require('electron');
+
+            // State management
+            let currentTab = 'matches';
+            let matchFlowCompleted = false;
+            let tournament = null;
+
+            function switchTab(tab) {
+                currentTab = tab;
+                document.querySelectorAll('.tab-item').forEach(el => {
+                    el.classList.remove('active');
+                    if (el.innerText.toLowerCase().includes(tab)) el.classList.add('active');
+                });
+
+                // Reset views
+                document.getElementById('matchesView').classList.add('hidden');
+                document.getElementById('officialsView').classList.add('hidden');
+                document.getElementById('genericView').classList.add('hidden');
+
+                // Update Action Button
+                const actionBtnText = document.getElementById('actionBtnText');
+                if (tab === 'matches') {
+                    actionBtnText.innerText = matchFlowCompleted ? 'Create Team' : 'Create Match';
+                    document.getElementById('matchesView').classList.remove('hidden');
+                    loadMatches();
+                } else if (tab === 'officials') {
+                    actionBtnText.innerText = 'Create Official';
+                    document.getElementById('officialsView').classList.remove('hidden');
+                    loadOfficials();
+                } else if (tab === 'teams') {
+                    actionBtnText.innerText = 'Create Team';
+                    document.getElementById('genericView').classList.remove('hidden');
+                    document.getElementById('viewTitle').innerText = 'Teams';
+                } else if (tab === 'staff') {
+                    actionBtnText.innerText = 'Add Staff';
+                    document.getElementById('genericView').classList.remove('hidden');
+                    document.getElementById('viewTitle').innerText = 'Staff';
+                }
+            }
+
+            function handleCreateAction() {
+                if (currentTab === 'matches') {
+                    navigate('renderer/Electron/Create_Match/Create_Assign_Match.html');
+                } else if (currentTab === 'teams') {
+                    navigate('electron/team/team.html');
+                } else if (currentTab === 'officials') {
+                    navigate('officials.html');
+                } else if (currentTab === 'staff') {
+                    navigate('staff.html');
+                }
+            }
+
+            function toggleDropdown() {
+                const menu = document.getElementById("createMenu");
+                menu.style.display = (menu.style.display === "block") ? "none" : "block";
+            }
+
+            function navigate(page) {
+                window.location.href = page;
+            }
+
+            window.onclick = function (event) {
+                if (!event.target.matches('.dropdown-btn') && !event.target.matches('.dropdown-btn i')) {
+                    const menu = document.getElementById("createMenu");
+                    if (menu) menu.style.display = "none";
+                }
+            };
+
+            function completeMatchFlow() {
+                matchFlowCompleted = true;
+
+                // Show officials
+                document.getElementById('officialsDisplay').style.display = 'block';
+            }
+
+            // Format dates
+            function formatDateRange(start, end) {
+                const options = { day: '2-digit', month: 'short', year: 'numeric' };
+                const s = new Date(start).toLocaleDateString('en-GB', options);
+                const e = new Date(end).toLocaleDateString('en-GB', options);
+                return `${s} to ${e}`;
+            }
+
+            function loadMatches() {
+                const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+                const container = document.getElementById('matchesView');
+
+                // Filter matches related to this tournament if needed
+                // For now, assuming all matches in localStorage belong to the current tournament
+
+                if (matches.length === 0) {
+                    container.innerHTML = `
+                        <div style="background: white; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid var(--border);">
+                            <i class="fas fa-calendar-times" style="font-size: 48px; color: var(--border); margin-bottom: 16px;"></i>
+                            <h3>No Matches Found</h3>
+                            <p style="color: var(--text-muted);">No matches have been scheduled for this tournament yet.</p>
+                        </div>
+                    `;
+                    document.querySelector('.tab-item:nth-child(1) .tab-count').innerText = '0';
+                    return;
+                }
+
+                document.querySelector('.tab-item:nth-child(1) .tab-count').innerText = matches.length;
+
+                container.innerHTML = matches.map(m => {
+                    let statusTag = '';
+                    let statusColor = '';
+                    let summaryText = '';
+                    let scoreDisplay = '';
+
+                    const status = m.status ? m.status.toLowerCase() : 'scheduled';
+
+                    if (status === 'live') {
+                        statusTag = 'Live';
+                        statusColor = 'var(--success)';
+                        scoreDisplay = `
+                            <span>${m.scoreA || 0}</span>
+                            <span class="score-vs">v/s</span>
+                            <span>${m.scoreB || 0}</span>
+                        `;
+                        const diff = Math.abs((m.scoreA || 0) - (m.scoreB || 0));
+                        const leader = (m.scoreA || 0) > (m.scoreB || 0) ? m.teamA : m.teamB;
+                        summaryText = diff === 0 ? 'Match is tied' : `${leader} leading by ${diff} points`;
+                    } else if (status === 'completed' || status === 'finished') {
+                        statusTag = 'Finished';
+                        statusColor = 'var(--text-muted)';
+                        scoreDisplay = `
+                            <span>${m.scoreA || 0}</span>
+                            <span class="score-vs">v/s</span>
+                            <span>${m.scoreB || 0}</span>
+                        `;
+                        const diff = Math.abs((m.scoreA || 0) - (m.scoreB || 0));
+                        const winner = (m.scoreA || 0) > (m.scoreB || 0) ? m.teamA : m.teamB;
+                        summaryText = diff === 0 ? 'Match ended in a tie' : `${winner} won by ${diff} points`;
+                    } else {
+                        statusTag = 'Upcoming';
+                        statusColor = 'var(--primary)';
+                        scoreDisplay = `<span class="score-vs">v/s</span>`;
+                        summaryText = `Match scheduled for ${m.matchTime || 'TBD'}`;
+                    }
+
+                    return `
+                        <div class="match-card">
+                            <div class="match-left">
+                                <div class="match-meta-box">
+                                    <div class="match-status-tag" style="color: ${statusColor};">
+                                        <span style="background:${statusColor}; width: 6px; height: 6px; border-radius: 50%;"></span>
+                                        ${statusTag}
+                                    </div>
+                                    <div class="match-number">Match # ${m.matchNo || m.id || 'N/A'}</div>
+                                    <div class="match-date">${m.date || m.matchDate || 'N/A'}</div>
+                                </div>
+                                <div class="team-info">
+                                    <div class="team-name">${m.teamA}</div>
+                                    <div class="team-name">${m.teamB}</div>
+                                </div>
+                            </div>
+                            <div class="match-middle">
+                                <div class="score-display">
+                                    ${scoreDisplay}
+                                </div>
+                                <div class="match-result-summary">${summaryText}</div>
+                            </div>
+                            <div class="match-right">
+                                <a href="#" class="view-details" onclick="alert('Viewing details for Match # ${m.matchNo || m.id}')">View Details</a>
+                            </div>
+                        </div>
+                    `;
+                }).reverse().join(''); // Show latest matches first
+            }
+
+            function loadOfficials() {
+                const officials = JSON.parse(localStorage.getItem('officials') || '[]');
+                const container = document.getElementById('officialsView');
+
+                document.querySelector('.tab-item:nth-child(3) .tab-count').innerText = officials.length;
+
+                if (officials.length === 0) {
+                    container.innerHTML = `
+                        <div style="background: white; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid var(--border);">
+                            <i class="fas fa-user-tie" style="font-size: 48px; color: var(--border); margin-bottom: 16px;"></i>
+                            <h3>No Officials Found</h3>
+                            <p style="color: var(--text-muted);">No officials have been added yet.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div style="background: white; border-radius: 12px; border: 1px solid var(--border); overflow: hidden;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f8fafc; border-bottom: 1px solid var(--border);">
+                                    <th style="padding: 12px 20px; text-align: left; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Name</th>
+                                    <th style="padding: 12px 20px; text-align: left; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Contact</th>
+                                    <th style="padding: 12px 20px; text-align: left; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Location</th>
+                                    <th style="padding: 12px 20px; text-align: left; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${officials.map(o => `
+                                    <tr style="border-bottom: 1px solid var(--border);">
+                                        <td style="padding: 16px 20px; font-weight: 600;">${o.firstName} ${o.lastName}</td>
+                                        <td style="padding: 16px 20px;">
+                                            <div style="font-size: 14px;">${o.email}</div>
+                                            <div style="font-size: 12px; color: var(--text-muted);">${o.mobile}</div>
+                                        </td>
+                                        <td style="padding: 16px 20px;">
+                                            <div style="font-size: 14px;">${o.city || 'N/A'}, ${o.state || 'N/A'}</div>
+                                        </td>
+                                        <td style="padding: 16px 20px;">
+                                            <span style="color: #16a34a; font-weight: 600; font-size: 13px;">● Active</span>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            // Initialize from URL params and localStorage
+            window.addEventListener('DOMContentLoaded', () => {
+                const params = new URLSearchParams(window.location.search);
+                const tourneyName = params.get('name');
+
+                if (tourneyName) {
+                    // Find tournament in localStorage
+                    const tournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+                    tournament = tournaments.find(t => t.name === tourneyName);
+
+                    if (tournament) {
+                        document.getElementById('tourneyName').innerText = tournament.name;
+                        document.getElementById('breadcrumbTourneyName').innerText = tournament.name;
+                        document.getElementById('tourneyVenue').innerText = `${tournament.venue}, ${tournament.city}`;
+                        document.getElementById('tourneyDates').innerText = formatDateRange(tournament.startDate, tournament.endDate);
+
+                        document.getElementById('tourneySection').innerText = tournament.ageGroup || 'N/A';
+                        document.getElementById('tourneyGender').innerText = tournament.gender || 'N/A';
+                        document.getElementById('tourneyFormat').innerText = tournament.format || 'N/A';
+
+                        // Update tab counts if data exists
+                        if (tournament.teams && tournament.teams !== 'TBD') {
+                            document.querySelector('.tab-item:nth-child(2) .tab-count').innerText = tournament.teams;
+                        }
+                        if (tournament.matches && tournament.matches !== 'TBD') {
+                            document.querySelector('.tab-item:nth-child(1) .tab-count').innerText = tournament.matches;
+                        }
+                        // Assume mock or localStorage for others if available, or keep 0
+                        // Example for loading officials count
+                        const officials = JSON.parse(localStorage.getItem('officials') || '[]');
+                        document.querySelector('.tab-item:nth-child(3) .tab-count').innerText = officials.length;
+
+                        // Example for staff (assuming similar structure or placeholder)
+                        const staff = JSON.parse(localStorage.getItem('staff') || '[]');
+                        document.querySelector('.tab-item:nth-child(4) .tab-count').innerText = staff.length;
+
+                        loadMatches();
+                    }
+                } else {
+                    loadMatches();
+                }
+            });
+        </script>
+</body>

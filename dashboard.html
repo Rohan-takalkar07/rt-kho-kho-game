@@ -237,7 +237,7 @@
         }
 
         .search-input {
-            flex: 1;
+            width: 100%;
             padding: 12px 18px;
             border: 2px solid #fed7aa;
             border-radius: 10px;
@@ -437,6 +437,84 @@
                 padding: 10px 8px;
             }
         }
+
+        /* Scrollable Table */
+        .table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #fee;
+            border-radius: 12px;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: #fff7ed;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 4px;
+            transition: transform 0.2s;
+            padding: 4px;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .edit-btn {
+            color: #2563eb;
+        }
+
+        .delete-btn {
+            color: #dc2626;
+        }
+
+        /* Search Suggestions */
+        .search-container {
+            position: relative;
+            flex: 1;
+        }
+
+        .suggestions-box {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #fed7aa;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 10px 18px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+            color: #57534e;
+        }
+
+        .suggestion-item:hover {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        /* Highlight Row */
+        .highlight-row {
+            background-color: #dcfce7 !important;
+            transition: background-color 0.5s ease;
+        }
     </style>
 </head>
 
@@ -453,10 +531,13 @@
                     <div onclick="navigate('create_turnament.html')">
                         <i class="fas fa-trophy"></i>Tournaments
                     </div>
-                    <div onclick="navigate('matches.html')">
+                    <div onclick="navigate('tournament_updates.html')">
+                        <i class="fas fa-list-alt"></i>Tournament Updates
+                    </div>
+                    <div onclick="navigate('renderer/Electron/Create_Match/Create_Assign_Match.html')">
                         <i class="fas fa-calendar-alt"></i>Matches
                     </div>
-                    <div onclick="navigate('teams.html')">
+                    <div onclick="navigate('electron/team/team.html')">
                         <i class="fas fa-users"></i>Teams
                     </div>
                     <div onclick="navigate('officials.html')">
@@ -515,66 +596,34 @@
                 </div>
 
                 <div class="search-box">
-                    <input type="text" class="search-input" placeholder="Search tournaments...">
-                    <button class="search-btn">
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search tournaments..."
+                            oninput="showSuggestions(this.value)">
+                        <div id="suggestionsBox" class="suggestions-box"></div>
+                    </div>
+                    <button class="search-btn" onclick="performSearch()">
                         <i class="fa fa-search"></i> Search
                     </button>
                 </div>
 
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Event Name</th>
-                            <th>Status</th>
-                            <th>Matches</th>
-                            <th>Teams</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="event-name">Khelo India</td>
-                            <td><span class="status-badge status-live">Live</span></td>
-                            <td>13</td>
-                            <td>8</td>
-                            <td>01 Aug 2025</td>
-                            <td>04 Aug 2025</td>
-                        </tr>
-                        <tr>
-                            <td class="event-name">Mayor's Cup</td>
-                            <td><span class="status-badge status-live">Live</span></td>
-                            <td>13</td>
-                            <td>8</td>
-                            <td>01 Aug 2025</td>
-                            <td>04 Aug 2025</td>
-                        </tr>
-                        <tr>
-                            <td class="event-name">State Championship</td>
-                            <td><span class="status-badge status-scheduled">Scheduled</span></td>
-                            <td>13</td>
-                            <td>8</td>
-                            <td>01 Aug 2025</td>
-                            <td>04 Aug 2025</td>
-                        </tr>
-                        <tr>
-                            <td class="event-name">National Championship</td>
-                            <td><span class="status-badge status-scheduled">Scheduled</span></td>
-                            <td>13</td>
-                            <td>8</td>
-                            <td>01 Aug 2025</td>
-                            <td>04 Aug 2025</td>
-                        </tr>
-                        <tr>
-                            <td class="event-name">Ultimate Kho Kho</td>
-                            <td><span class="status-badge status-scheduled">Scheduled</span></td>
-                            <td>13</td>
-                            <td>8</td>
-                            <td>01 Aug 2025</td>
-                            <td>04 Aug 2025</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Event Name</th>
+                                <th>Status</th>
+                                <th>Matches</th>
+                                <th>Teams</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tournamentTableBody">
+                            <!-- Tournament data will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Sidebar -->
@@ -643,6 +692,190 @@
     </div>
 
     <script>
+        let allTournaments = [];
+        let filteredTournaments = [];
+
+        // Load tournaments from localStorage on page load
+        function loadTournaments() {
+            allTournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+            // Sort by newest first (assuming array order is chronological, so reverse it)
+            // Or if there's a createdAt field, sort by that. For now, reversing is safer for "newest created" if pushed to end.
+            allTournaments.reverse();
+            filteredTournaments = [...allTournaments];
+            displayTournaments(filteredTournaments);
+        }
+
+        // Display tournaments in the table using map function
+        function displayTournaments(tournaments) {
+            const tbody = document.getElementById('tournamentTableBody');
+
+            // Check if there are no tournaments
+            if (!tournaments || tournaments.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #78716c;">
+                            <i class="fas fa-inbox" style="font-size: 48px; color: #fed7aa; display: block; margin-bottom: 15px;"></i>
+                            <div>No tournaments found. Create your first tournament to get started!</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Use map to dynamically create table rows from tournament data
+            const tableRows = tournaments.map((tournament, index) => {
+                const statusClass = getStatusClass(tournament.status);
+                // Identifier for highlighting
+                const rowId = `tourney-row-${index}`;
+
+                // Create row with all tournament details
+                return `
+                    <tr id="${rowId}" class="${tournament.highlight ? 'highlight-row' : ''}">
+                        <td class="event-name" onclick="navigateToTournament('${tournament.name}')">${tournament.name || 'N/A'}</td>
+                        <td><span class="status-badge ${statusClass}">${tournament.status || 'Scheduled'}</span></td>
+                        <td>${tournament.matches || 'TBD'}</td>
+                        <td>${tournament.teams || 'TBD'}</td>
+                        <td>${formatDate(tournament.startDate)}</td>
+                        <td>${formatDate(tournament.endDate)}</td>
+                        <td>
+                            <button class="action-btn edit-btn" onclick="editTournament('${tournament.name}')" title="Edit">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteTournament('${tournament.name}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Set the generated HTML to tbody
+            tbody.innerHTML = tableRows;
+        }
+
+        function showSuggestions(query) {
+            const suggestionsBox = document.getElementById('suggestionsBox');
+            if (!query) {
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            const lowerQuery = query.toLowerCase();
+            const suggestions = allTournaments.filter(t => t.name.toLowerCase().includes(lowerQuery));
+
+            if (suggestions.length > 0) {
+                suggestionsBox.innerHTML = suggestions.map(t => `
+                    <div class="suggestion-item" onclick="selectSuggestion('${t.name}')">
+                        ${t.name}
+                    </div>
+                `).join('');
+                suggestionsBox.style.display = 'block';
+            } else {
+                suggestionsBox.style.display = 'none';
+            }
+        }
+
+        function selectSuggestion(name) {
+            document.getElementById('searchInput').value = name;
+            document.getElementById('suggestionsBox').style.display = 'none';
+            performSearch(name);
+        }
+
+        function performSearch(specificName) {
+            const query = specificName || document.getElementById('searchInput').value;
+            if (!query) {
+                loadTournaments(); // Reset if empty
+                return;
+            }
+
+            const lowerQuery = query.toLowerCase();
+            // Find best match (exact or partial)
+            const matchIndex = allTournaments.findIndex(t => t.name.toLowerCase() === lowerQuery);
+
+            if (matchIndex !== -1) {
+                // Move match to top
+                const match = allTournaments[matchIndex];
+                const others = allTournaments.filter((_, i) => i !== matchIndex);
+
+                // Add highlight flag
+                match.highlight = true;
+
+                // Reconstruct array with match at top
+                filteredTournaments = [match, ...others];
+                displayTournaments(filteredTournaments);
+
+                // Remove highlight after 2 seconds (optional, but good UX to confirm act)
+                // Using a slight delay to allow transition or just keep it based on request
+                // Request said "highlight green", didn't specify removal, but usually it fades.
+                // Keeping it persistent for now as per "green highlight" request until refreshed.
+
+                // Reset highlight flag in data after rendering so next re-render is clean? 
+                // Or keep it. Let's keep it in the DOM class logic.
+                setTimeout(() => {
+                    const row = document.getElementById('tourney-row-0');
+                    if (row) row.classList.remove('highlight-row');
+                    match.highlight = false; // reset internal state
+                }, 3000);
+
+            } else {
+                // Filter normally if no exact match found or just generic search
+                filteredTournaments = allTournaments.filter(t => t.name.toLowerCase().includes(lowerQuery));
+                displayTournaments(filteredTournaments);
+            }
+        }
+
+        // Action Functions
+        function deleteTournament(name) {
+            if (confirm(`Are you sure you want to delete the tournament "${name}"? This cannot be undone.`)) {
+                allTournaments = allTournaments.filter(t => t.name !== name);
+
+                // Updating localStorage requires finding the original list and filtering it
+                // Since allTournaments is already reversed/modified, let's just grab fresh from LS to be safe or use simple filter
+                let storedTournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+                storedTournaments = storedTournaments.filter(t => t.name !== name);
+                localStorage.setItem('tournaments', JSON.stringify(storedTournaments));
+
+                loadTournaments(); // Refresh list
+            }
+        }
+
+        function editTournament(name) {
+            window.location.href = `create_turnament.html?mode=edit&name=${encodeURIComponent(name)}`;
+        }
+
+        // Close suggestions when clicking outside
+        window.addEventListener('click', function (e) {
+            if (!document.querySelector('.search-container').contains(e.target)) {
+                document.getElementById('suggestionsBox').style.display = 'none';
+            }
+        });
+
+        const { ipcRenderer } = require('electron');
+
+        function navigateToTournament(name) {
+            ipcRenderer.send('open-tournament-dashboard', name);
+        }
+
+        // Get status badge class
+        function getStatusClass(status) {
+            switch (status.toLowerCase()) {
+                case 'live':
+                    return 'status-live';
+                case 'scheduled':
+                    return 'status-scheduled';
+                default:
+                    return 'status-scheduled';
+            }
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'TBD';
+            const date = new Date(dateString);
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('en-GB', options);
+        }
+
         function toggleDropdown() {
             const menu = document.getElementById("menu");
             menu.style.display = (menu.style.display === "block") ? "none" : "block";
@@ -657,6 +890,9 @@
                 document.getElementById("menu").style.display = "none";
             }
         };
+
+        // Load tournaments when page loads
+        window.addEventListener('DOMContentLoaded', loadTournaments);
     </script>
 </body>
 

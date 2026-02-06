@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Staff - Kho Kho Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 30%, #fff0e6 60%, #fef3f0 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        @keyframes gradientFlow {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(249, 115, 22, 0.15);
+            animation: slideIn 0.8s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #ef731b 0%, #ea580c 50%, #dc2626 100%);
+            padding: 40px 50px 35px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 38px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ea580c;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .form-content {
+            padding: 45px 50px 50px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ea580c;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #fed7aa;
+        }
+
+        .staff-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .staff-table th {
+            padding: 16px;
+            text-align: left;
+            background: #fff7ed;
+            color: #292524;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .staff-table td {
+            padding: 18px 16px;
+            border-bottom: 1px solid #fee;
+            color: #57534e;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 45px;
+            padding-top: 35px;
+            border-top: 2px solid #fef3f0;
+        }
+
+        .btn {
+            padding: 16px 42px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            border: none;
+        }
+
+        .cancel-btn {
+            background: #ffffff;
+            color: #ea580c;
+            border: 2px solid #fb923c;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: white;
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(22, 163, 74, 0.5);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-banner">
+            <div class="header">
+                <div>
+                    <h1>📋 Assign Staff</h1>
+                    <p class="subtitle">Assign roles and verify staff members</p>
+                </div>
+                <button class="back-btn" onclick="window.location.href='Create_Staff.html'">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+
+        <div class="form-content">
+            <div class="section-title">Verify Assignments</div>
+
+            <table class="staff-table">
+                <thead>
+                    <tr>
+                        <th>Staff Name</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="assignVerifyBody"></tbody>
+            </table>
+
+            <div class="button-row">
+                <button class="btn cancel-btn" onclick="window.location.href='Create_Staff.html'">Back</button>
+                <button class="btn next-btn" onclick="finishAssignment()">Finish Setup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function renderVerifyTable() {
+            // In a real app we'd pass this in session, but we'll use a temp storage or similar
+            // For now, let's assume we store the 'current_assignments' in localStorage temporarily
+            const assignments = JSON.parse(localStorage.getItem('temp_assignments') || '[]');
+            const tbody = document.getElementById('assignVerifyBody');
+            tbody.innerHTML = '';
+
+            if (assignments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding: 40px; color: #a8a29e;">No staff assigned yet. Go back to add staff.</td></tr>';
+                return;
+            }
+
+            assignments.forEach((a, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight:600;">${a.name}</td>
+                    <td>${a.role}</td>
+                    <td><i class="fas fa-trash" style="color:#dc2626; cursor:pointer;" onclick="removeAssignment(${index})"></i></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function removeAssignment(index) {
+            let assignments = JSON.parse(localStorage.getItem('temp_assignments') || '[]');
+            assignments.splice(index, 1);
+            localStorage.setItem('temp_assignments', JSON.stringify(assignments));
+            renderVerifyTable();
+        }
+
+        function finishAssignment() {
+            // Move temp assignments to permanent if needed, or just clear and redirect
+            localStorage.removeItem('temp_assignments');
+            alert('Staff Management Setup Complete!');
+            window.location.href = '../../../staff.html';
+        }
+
+        renderVerifyTable();
+    </script>
+</body>
+
+</html>

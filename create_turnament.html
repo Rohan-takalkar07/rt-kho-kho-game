@@ -114,7 +114,7 @@
 
         /* Header with gradient banner */
         .header-banner {
-            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+            background: linear-gradient(135deg, #ef731b 0%, #ea580c 50%, #dc2626 100%);
             background-size: 200% 200%;
             animation: gradientShift 8s ease infinite;
             padding: 40px 50px 35px;
@@ -462,6 +462,14 @@
             transform: translateY(-2px);
         }
 
+        .btn-create:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none !important;
+            animation: none !important;
+        }
+
         /* Decorative corner accents */
         .container::before {
             content: '';
@@ -532,34 +540,56 @@
 
                 <div class="form-group">
                     <label>Tournament Name</label>
-                    <input type="text" placeholder="Enter tournament name">
+                    <input type="text" id="tournamentName" placeholder="Enter tournament name" required>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label>Start Date</label>
-                        <input type="date">
+                        <input type="date" id="startDate" required>
                     </div>
                     <div class="form-group">
                         <label>End Date</label>
-                        <input type="date">
+                        <input type="date" id="endDate" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label>State</label>
-                        <input type="text" placeholder="Enter state">
+                        <select id="stateSelect" onchange="toggleOtherInput('stateSelect', 'otherStateInput')">
+                            <option value="">Select State</option>
+                            <option>Maharashtra</option>
+                            <option>Kerala</option>
+                            <option>Gujarat</option>
+                            <option>Rajasthan</option>
+                            <option>Assam</option>
+                            <option>Goa</option>
+                            <option>Bihar</option>
+                            <option>Madhya Pradesh</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="otherStateInput" placeholder="Enter State Name"
+                            style="display: none; margin-top: 10px;" />
                     </div>
                     <div class="form-group">
                         <label>City</label>
-                        <input type="text" placeholder="Enter city">
+                        <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
+                            <option value="">Select City</option>
+                            <option>Pune</option>
+                            <option>Mumbai</option>
+                            <option>Delhi</option>
+                            <option>Bangalore</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <input type="text" id="otherCityInput" placeholder="Enter City Name"
+                            style="display: none; margin-top: 10px;" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Venue</label>
-                    <input type="text" placeholder="Enter venue location">
+                    <input type="text" id="venue" placeholder="Enter venue location" required>
                 </div>
 
                 <div class="section-title" style="margin-top: 40px;">Competition Settings</div>
@@ -567,7 +597,8 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Section (Age Group)</label>
-                        <select>
+                        <select id="ageGroup">
+                            <option value="">Select Age Group</option>
                             <option>Under-14 (U-14)</option>
                             <option>Under-17 (U-17)</option>
                             <option>Under-19 (U-19)</option>
@@ -577,7 +608,8 @@
                     </div>
                     <div class="form-group">
                         <label>Gender</label>
-                        <select>
+                        <select id="gender">
+                            <option value="">Select Gender</option>
                             <option>Male</option>
                             <option>Female</option>
                             <option>Other</option>
@@ -588,14 +620,16 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Tournament Format</label>
-                        <select>
+                        <select id="format">
+                            <option value="">Select Format</option>
                             <option>Traditional/Standard Format</option>
                             <option>Modern/Fast Format (using small mat)</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Max Time Per Turn</label>
-                        <select>
+                        <select id="maxTime">
+                            <option value="">Select Max Time</option>
                             <option>9 minutes</option>
                             <option>7 minutes</option>
                         </select>
@@ -604,16 +638,444 @@
 
                 <div class="button-group">
                     <button type="button" class="btn-cancel" onclick="Back()">Cancel</button>
-                    <button type="button" class="btn-create">Create Tournament</button>
+                    <button type="button" id="createBtn" class="btn-create" onclick="createTournament()" disabled>Create
+                        Tournament</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Confirmation Popup -->
+    <div id="confirmationPopup" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2>Confirm Tournament Creation</h2>
+            </div>
+            <div class="popup-body">
+                <p style="margin-bottom: 20px; color: #57534e; font-size: 15px;">
+                    Please confirm the tournament details:
+                </p>
+                <div class="confirmation-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Tournament Name:</span>
+                        <span class="detail-value" id="confirmName"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Start Date:</span>
+                        <span class="detail-value" id="confirmStartDate"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">End Date:</span>
+                        <span class="detail-value" id="confirmEndDate"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="btn-cancel-popup" onclick="closeConfirmationPopup()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmCreateTournament()">Yes, Create Tournament</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Popup Overlay */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Popup Content */
+        .popup-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(249, 115, 22, 0.3);
+            animation: slideUp 0.3s ease;
+            overflow: hidden;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Popup Header */
+        .popup-header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+            padding: 25px 30px;
+            color: white;
+        }
+
+        .popup-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Popup Body */
+        .popup-body {
+            padding: 30px;
+        }
+
+        .confirmation-details {
+            background: #fffbf5;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #f97316;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #fed7aa;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #78716c;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: #292524;
+            font-size: 14px;
+        }
+
+        /* Popup Footer */
+        .popup-footer {
+            padding: 20px 30px;
+            background: #fef3f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn-cancel-popup {
+            padding: 12px 28px;
+            background: white;
+            color: #ea580c;
+            border: 2px solid #fb923c;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel-popup:hover {
+            background: #fff7ed;
+            transform: translateY(-2px);
+        }
+
+        .btn-confirm {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        }
+    </style>
+
     <script>
         const { ipcRenderer } = require("electron");
+
+        let pendingTournament = null;
+
         function Back() {
             ipcRenderer.send("dashboard.html");
+        }
+
+        // Toggle Other Input
+        function toggleOtherInput(selectId, inputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+
+            if (select.value === 'Other') {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+            }
+            validateForm();
+        }
+
+        // Validation logic
+        const requiredIds = [
+            'tournamentName', 'startDate', 'endDate',
+            'stateSelect', 'otherStateInput', 'citySelect', 'otherCityInput',
+            'venue', 'ageGroup', 'gender', 'format', 'maxTime'
+        ];
+
+        function validateForm() {
+            const createBtn = document.getElementById('createBtn');
+            let allFilled = true;
+
+            requiredIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                // Only validate if element is visible
+                if (el.style.display !== 'none' && el.tagName !== 'SPAN') {
+                    if (!el.value.trim()) {
+                        allFilled = false;
+                    }
+                }
+            });
+
+            if (allFilled) {
+                createBtn.removeAttribute('disabled');
+            } else {
+                createBtn.setAttribute('disabled', 'true');
+            }
+        }
+
+        // Initialize Listeners
+        window.addEventListener('load', () => {
+            requiredIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', validateForm);
+                    el.addEventListener('change', validateForm);
+                }
+            });
+            validateForm();
+
+            // Check for edit mode
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode');
+            const editName = params.get('name');
+
+            if (mode === 'edit' && editName) {
+                loadTournamentForEdit(editName);
+            }
+        });
+
+        let originalTournamentName = null; // To track if name changes for update
+
+        function loadTournamentForEdit(name) {
+            const tournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+            const tournament = tournaments.find(t => t.name === name);
+
+            if (tournament) {
+                originalTournamentName = name;
+                document.querySelector('.header h1').innerText = '✏️ Edit Tournament';
+                document.getElementById('createBtn').innerText = 'Update Tournament';
+                document.getElementById('createBtn').removeAttribute('disabled'); // Allow update immediately
+
+                // Populate fields
+                document.getElementById('tournamentName').value = tournament.name;
+                document.getElementById('startDate').value = tournament.startDate;
+                document.getElementById('endDate').value = tournament.endDate;
+                document.getElementById('venue').value = tournament.venue;
+
+                // Dropdowns might need careful setting
+                setSelectValue('ageGroup', tournament.ageGroup);
+                setSelectValue('gender', tournament.gender);
+                setSelectValue('format', tournament.format);
+                setSelectValue('maxTime', tournament.maxTime);
+
+                // Handle State/City logic
+                // If it's a standard option, select it. If not, select 'Other' and fill input.
+                handleLocationField('stateSelect', 'otherStateInput', tournament.state);
+                handleLocationField('citySelect', 'otherCityInput', tournament.city);
+
+                validateForm();
+            }
+        }
+
+        function setSelectValue(id, value) {
+            const select = document.getElementById(id);
+            if (select) {
+                // Check if value exists in options
+                let exists = false;
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === value || select.options[i].text === value) {
+                        select.selectedIndex = i;
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists && value) {
+                    // Could handle as custom if applicable, but for fixed dropdowns just default
+                }
+            }
+        }
+
+        function handleLocationField(selectId, inputId, value) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+
+            let matchFound = false;
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === value || select.options[i].text === value) {
+                    select.selectedIndex = i;
+                    matchFound = true;
+                    break;
+                }
+            }
+
+            if (!matchFound && value) {
+                select.value = 'Other';
+                input.style.display = 'block';
+                input.value = value;
+            } else {
+                input.style.display = 'none';
+            }
+        }
+
+        // Format date for display
+        function formatDateForDisplay(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('en-GB', options);
+        }
+
+        // Show confirmation popup
+        function createTournament() {
+            // Get form values
+            const tournamentName = document.getElementById('tournamentName').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            // ... (rest of getting values is same, re-fetching to ensure latest)
+            const state = document.getElementById('stateSelect').value === 'Other' ?
+                document.getElementById('otherStateInput').value :
+                document.getElementById('stateSelect').value;
+
+            const city = document.getElementById('citySelect').value === 'Other' ?
+                document.getElementById('otherCityInput').value :
+                document.getElementById('citySelect').value;
+
+            const venue = document.getElementById('venue').value;
+            const ageGroup = document.getElementById('ageGroup').value;
+            const gender = document.getElementById('gender').value;
+            const format = document.getElementById('format').value;
+            const maxTime = document.getElementById('maxTime').value;
+
+            // Determine status based on dates
+            const today = new Date();
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            let status = 'Scheduled';
+
+            if (today >= start && today <= end) {
+                status = 'Live';
+            } else if (today > end) {
+                status = 'Completed';
+            }
+
+            // Create tournament object
+            pendingTournament = {
+                name: tournamentName,
+                startDate: startDate,
+                endDate: endDate,
+                state: state,
+                city: city,
+                venue: venue,
+                ageGroup: ageGroup,
+                gender: gender,
+                format: format,
+                maxTime: maxTime,
+                status: status,
+                matches: 'TBD', // Should preserve if editing
+                teams: 'TBD',   // Should preserve if editing
+                createdAt: new Date().toISOString()
+            };
+
+            // Show confirmation popup with tournament details
+            const btnText = originalTournamentName ? 'Confirm Update' : 'Confirm Creation';
+            document.querySelector('#confirmationPopup h2').innerText = btnText;
+            document.querySelector('.btn-confirm').innerText = originalTournamentName ? 'Yes, Update Tournament' : 'Yes, Create Tournament';
+
+            document.getElementById('confirmName').textContent = tournamentName;
+            document.getElementById('confirmStartDate').textContent = formatDateForDisplay(startDate);
+            document.getElementById('confirmEndDate').textContent = formatDateForDisplay(endDate);
+            document.getElementById('confirmationPopup').style.display = 'flex';
+        }
+
+        // Close confirmation popup
+        function closeConfirmationPopup() {
+            document.getElementById('confirmationPopup').style.display = 'none';
+            pendingTournament = null;
+        }
+
+        // Confirm and save tournament
+        function confirmCreateTournament() {
+            if (!pendingTournament) {
+                return;
+            }
+
+            // Get existing tournaments from localStorage
+            let tournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+
+            if (originalTournamentName) {
+                // Update existing
+                const index = tournaments.findIndex(t => t.name === originalTournamentName);
+                if (index !== -1) {
+                    // Preserve existing data like matches/teams if not TBD
+                    pendingTournament.matches = tournaments[index].matches;
+                    pendingTournament.teams = tournaments[index].teams;
+                    pendingTournament.createdAt = tournaments[index].createdAt; // Keep original creation date
+
+                    tournaments[index] = pendingTournament;
+                }
+            } else {
+                // Add new tournament
+                tournaments.push(pendingTournament);
+            }
+
+            // Save to localStorage
+            localStorage.setItem('tournaments', JSON.stringify(tournaments));
+
+            // Close popup
+            closeConfirmationPopup();
+
+            // Navigate to dashboard
+            ipcRenderer.send('dashboard.html');
         }
     </script>
 </body>

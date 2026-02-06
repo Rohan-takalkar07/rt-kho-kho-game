@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tournament Updates - Kho Kho Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 30%, #fff0e6 60%, #fef3f0 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Athletic field pattern overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(251, 146, 60, 0.03) 99px, rgba(251, 146, 60, 0.03) 100px),
+                repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(251, 146, 60, 0.03) 99px, rgba(251, 146, 60, 0.03) 100px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Animated glowing orbs */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.15), rgba(251, 146, 60, 0.08), transparent);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            filter: blur(80px);
+            animation: pulse 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.15;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.25;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            padding: 30px 35px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(249, 115, 22, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 i {
+            margin-right: 12px;
+            color: #fed7aa;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ea580c;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn i {
+            margin-right: 8px;
+        }
+
+        /* Main Content */
+        .tournament-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            animation: slideIn 0.8s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: #292524;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: 2px solid #fed7aa;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #f97316;
+            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .search-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #fff7ed;
+        }
+
+        th {
+            padding: 14px;
+            text-align: left;
+            font-weight: 700;
+            color: #292524;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 14px;
+            border-bottom: 1px solid #fee;
+            color: #57534e;
+        }
+
+        tr:hover {
+            background: #fffbf5;
+        }
+
+        .event-name {
+            color: #ea580c;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .event-name:hover {
+            text-decoration: underline;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .status-live {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .status-scheduled {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .status-completed {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #78716c;
+            font-size: 16px;
+        }
+
+        .no-data i {
+            font-size: 48px;
+            color: #fed7aa;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Highlighted search result */
+        .highlight-row {
+            background: #fff7ed !important;
+            border-left: 4px solid #f97316;
+            animation: highlightPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes highlightPulse {
+
+            0%,
+            100% {
+                background: #fff7ed;
+            }
+
+            50% {
+                background: #ffedd5;
+            }
+        }
+
+        /* Clickable row cursor */
+        tbody tr {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #fff7ed !important;
+            transform: translateX(3px);
+        }
+
+        /* Popup overlay */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .popup-content {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(249, 115, 22, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .popup-header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .popup-header h2 {
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .popup-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .popup-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .popup-body {
+            padding: 30px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .detail-section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #ea580c;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #fed7aa;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: #fffbf5;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border-left: 3px solid #fb923c;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #78716c;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            color: #292524;
+            font-weight: 600;
+        }
+
+        .popup-footer {
+            padding: 20px 30px;
+            border-top: 2px solid #fef3f0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .popup-back-btn {
+            padding: 14px 40px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .popup-back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 28px;
+            }
+
+            table {
+                font-size: 13px;
+            }
+
+            th,
+            td {
+                padding: 10px 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-trophy"></i>Tournament Updates</h1>
+            <button class="back-btn" onclick="goToDashboard()">
+                <i class="fa fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="tournament-section">
+            <div class="section-header">
+                <h2 class="section-title">All Tournaments</h2>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" class="search-input"
+                    placeholder="Search tournaments by name, status, or location...">
+                <button class="search-btn" onclick="searchTournaments()">
+                    <i class="fa fa-search"></i> Search
+                </button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event Name</th>
+                        <th>Status</th>
+                        <th>Matches</th>
+                        <th>Teams</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Venue</th>
+                    </tr>
+                </thead>
+                <tbody id="tournamentTableBody">
+                    <!-- Data will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tournament Detail Popup -->
+    <div id="tournamentPopup" class="popup-overlay" onclick="closePopup(event)">
+        <div class="popup-content" onclick="event.stopPropagation()">
+            <div class="popup-header">
+                <h2 id="popupTitle">Tournament Details</h2>
+                <button class="popup-close" onclick="closePopup()">&times;</button>
+            </div>
+            <div class="popup-body">
+                <div class="detail-section">
+                    <div class="detail-section-title">Basic Information</div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Tournament Name</div>
+                            <div class="detail-value" id="detailName">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value" id="detailStatus">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Start Date</div>
+                            <div class="detail-value" id="detailStartDate">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">End Date</div>
+                            <div class="detail-value" id="detailEndDate">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-section-title">Location</div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">State</div>
+                            <div class="detail-value" id="detailState">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">City</div>
+                            <div class="detail-value" id="detailCity">-</div>
+                        </div>
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <div class="detail-label">Venue</div>
+                            <div class="detail-value" id="detailVenue">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-section-title">Competition Settings</div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Age Group</div>
+                            <div class="detail-value" id="detailAgeGroup">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Gender</div>
+                            <div class="detail-value" id="detailGender">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Format</div>
+                            <div class="detail-value" id="detailFormat">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Max Time Per Turn</div>
+                            <div class="detail-value" id="detailMaxTime">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <div class="detail-section-title">Statistics</div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Matches</div>
+                            <div class="detail-value" id="detailMatches">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Teams</div>
+                            <div class="detail-value" id="detailTeams">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="popup-back-btn" onclick="closePopup()">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require("electron");
+
+        let allTournaments = [];
+        let highlightTimeout = null;
+
+        // Load tournaments from localStorage
+        function loadTournaments() {
+            allTournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+            displayTournaments(allTournaments, false);
+        }
+
+        // Display tournaments in the table using map function
+        function displayTournaments(tournaments, highlight = false) {
+            const tbody = document.getElementById('tournamentTableBody');
+
+            // Check if there are no tournaments
+            if (!tournaments || tournaments.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="no-data">
+                            <i class="fas fa-inbox"></i>
+                            <div>No tournaments found. Create your first tournament to get started!</div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // Use map to dynamically create table rows from tournament data
+            const tableRows = tournaments.map((tournament, index) => {
+                const statusClass = getStatusClass(tournament.status);
+                const highlightClass = highlight ? 'highlight-row' : '';
+
+                // Create row with all tournament details
+                return `
+                    <tr class="${highlightClass}" onclick="showTournamentDetail(${index})">
+                        <td class="event-name">${tournament.name || 'N/A'}</td>
+                        <td><span class="status-badge ${statusClass}">${tournament.status || 'Scheduled'}</span></td>
+                        <td>${tournament.matches || 'TBD'}</td>
+                        <td>${tournament.teams || 'TBD'}</td>
+                        <td>${formatDate(tournament.startDate)}</td>
+                        <td>${formatDate(tournament.endDate)}</td>
+                        <td>${tournament.city || 'N/A'}, ${tournament.state || 'N/A'}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            // Set the generated HTML to tbody
+            tbody.innerHTML = tableRows;
+        }
+
+        // Get status badge class
+        function getStatusClass(status) {
+            switch (status.toLowerCase()) {
+                case 'live':
+                    return 'status-live';
+                case 'scheduled':
+                    return 'status-scheduled';
+                case 'completed':
+                    return 'status-completed';
+                default:
+                    return 'status-scheduled';
+            }
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return 'TBD';
+            const date = new Date(dateString);
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('en-GB', options);
+        }
+
+        // Search tournaments with highlighting
+        function searchTournaments() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            // Clear any existing timeout
+            if (highlightTimeout) {
+                clearTimeout(highlightTimeout);
+            }
+
+            if (!searchTerm) {
+                displayTournaments(allTournaments, false);
+                return;
+            }
+
+            // Filter and sort tournaments - matching ones first
+            const matching = [];
+            const nonMatching = [];
+
+            allTournaments.forEach(tournament => {
+                const matches = tournament.name.toLowerCase().includes(searchTerm) ||
+                    tournament.status.toLowerCase().includes(searchTerm) ||
+                    tournament.city.toLowerCase().includes(searchTerm) ||
+                    tournament.state.toLowerCase().includes(searchTerm) ||
+                    tournament.venue.toLowerCase().includes(searchTerm);
+
+                if (matches) {
+                    matching.push(tournament);
+                } else {
+                    nonMatching.push(tournament);
+                }
+            });
+
+            // Display matching results at the top with highlighting
+            const sortedTournaments = [...matching, ...nonMatching];
+            displayTournaments(sortedTournaments, true);
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Remove highlighting after 30 seconds
+            highlightTimeout = setTimeout(() => {
+                displayTournaments(allTournaments, false);
+            }, 30000);
+        }
+
+        // Show tournament detail popup
+        function showTournamentDetail(index) {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            let tournament;
+
+            // If search is active, get from sorted list
+            if (searchTerm) {
+                const matching = [];
+                const nonMatching = [];
+
+                allTournaments.forEach(t => {
+                    const matches = t.name.toLowerCase().includes(searchTerm) ||
+                        t.status.toLowerCase().includes(searchTerm) ||
+                        t.city.toLowerCase().includes(searchTerm) ||
+                        t.state.toLowerCase().includes(searchTerm) ||
+                        t.venue.toLowerCase().includes(searchTerm);
+
+                    if (matches) {
+                        matching.push(t);
+                    } else {
+                        nonMatching.push(t);
+                    }
+                });
+
+                const sortedTournaments = [...matching, ...nonMatching];
+                tournament = sortedTournaments[index];
+            } else {
+                tournament = allTournaments[index];
+            }
+
+            // Populate popup with tournament data
+            document.getElementById('popupTitle').textContent = tournament.name;
+            document.getElementById('detailName').textContent = tournament.name;
+            document.getElementById('detailStatus').textContent = tournament.status;
+            document.getElementById('detailStartDate').textContent = formatDate(tournament.startDate);
+            document.getElementById('detailEndDate').textContent = formatDate(tournament.endDate);
+            document.getElementById('detailState').textContent = tournament.state;
+            document.getElementById('detailCity').textContent = tournament.city;
+            document.getElementById('detailVenue').textContent = tournament.venue;
+            document.getElementById('detailAgeGroup').textContent = tournament.ageGroup;
+            document.getElementById('detailGender').textContent = tournament.gender;
+            document.getElementById('detailFormat').textContent = tournament.format;
+            document.getElementById('detailMaxTime').textContent = tournament.maxTime;
+            document.getElementById('detailMatches').textContent = tournament.matches || 'TBD';
+            document.getElementById('detailTeams').textContent = tournament.teams || 'TBD';
+
+            // Show popup
+            document.getElementById('tournamentPopup').style.display = 'block';
+        }
+
+        // Close popup
+        function closePopup(event) {
+            if (event && event.target.classList.contains('popup-content')) {
+                return;
+            }
+            document.getElementById('tournamentPopup').style.display = 'none';
+        }
+
+        // Allow search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchTournaments();
+            }
+        });
+
+        // Navigate to dashboard
+        function goToDashboard() {
+            ipcRenderer.send("dashboard.html");
+        }
+
+        // Load tournaments on page load
+        window.addEventListener('DOMContentLoaded', loadTournaments);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Toss Result</title>
+  <link rel="stylesheet" href="toss.css">
+</head>
+<body>
+  <div class="container">
+    <div class="tossText">Toss Result</div>
+
+    <div class="section">
+      <strong>Toss Won By</strong>
+      <label>
+        <input type="radio" name="team" value="Odisha Juggernauts" checked>
+        Odisha Juggernauts
+      </label>
+      <label>
+        <input type="radio" name="team" value="Telugu Yoddhas">
+        Telugu Yoddhas
+      </label>
+    </div>
+    <hr/>
+    <div class="section">
+      <strong>Choice</strong>
+      <div class="choice-buttons" >
+        <button type="button" id="atkBtn">ATK</button>
+        <button type="button" id="defBtn">DEF</button>
+      </div>
+    </div>
+
+    <div class="footer-buttons">
+      <button type="button" id="digitalToss">Do a Digital Toss</button>
+      <button type="button" class="cancel" id="cancelBtn">Cancel</button>
+      <button type="button" id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <!-- Inline JavaScript -->
+  <script>
+    let selectedChoice = null;
+
+    const atkBtn = document.getElementById('atkBtn');
+    const defBtn = document.getElementById('defBtn');
+
+    atkBtn.addEventListener('click', () => {
+      selectedChoice = 'ATK';
+      atkBtn.classList.add('active');
+      defBtn.classList.remove('active');
+    });
+
+    defBtn.addEventListener('click', () => {
+      selectedChoice = 'DEF';
+      defBtn.classList.add('active');
+      atkBtn.classList.remove('active');
+    });
+
+    document.getElementById('digitalToss').addEventListener('click', () => {
+      const teams = document.getElementsByName('team');
+      const winner = Array.from(teams).find(t => t.checked).value;
+      const randomChoice = Math.random() < 0.5 ? 'ATK' : 'DEF';
+      alert(`Digital Toss: ${winner} chooses ${randomChoice}`);
+    });
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+      document.querySelector('input[value="Odisha Juggernauts"]').checked = true;
+      atkBtn.classList.remove('active');
+      defBtn.classList.remove('active');
+      selectedChoice = null;
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      const teams = document.getElementsByName('team');
+      const winner = Array.from(teams).find(t => t.checked).value;
+      if (!selectedChoice) {
+        alert('Please select ATK or DEF before proceeding.');
+        return;
+      }
+      alert(`Next Step:\nWinner: ${winner}\nChoice: ${selectedChoice}`);
+      // Example navigation:
+      // window.location.href = "../team/team.html";
+    });
+  </script>
+</body>
+</html>

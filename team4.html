@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Kho Kho Team Setup - Step 4</title>
+  <link rel="stylesheet" href="team4.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="createTeam">Create Team</div>
+    <h4>Set up a new Kho Kho Team</h4>
+    <hr />
+    <!-- Step Bar -->
+    <div class="step-bar">
+      <div class="step" onclick="window.location.href='team.html'"><span class="circle">1</span> Team Details</div>
+      <div class="step" onclick="window.location.href='team2.html'"><span class="circle">2</span> Create Staff</div>
+      <div class="step" onclick="window.location.href='team3.html'"><span class="circle">3</span> Assign Staff</div>
+      <div class="step active" onclick="window.location.href='team4.html'"><span class="circle">4</span> Add Players
+      </div>
+    </div>
+
+    <h2>Create Team</h2>
+    <h6>Set up a new Kho Kho team</h6>
+    <hr />
+
+    <!-- Upload Section -->
+    <div class="upload-box" id="drop-zone">
+      <p>Choose a file or drag & drop it here</p>
+      <p class="formats">Supported format: XLS, XLSX</p>
+
+      <!-- Hidden file input -->
+      <input type="file" id="file-input" accept=".xls,.xlsx" hidden />
+
+      <!-- Browse button triggers file input -->
+      <button class="browse" id="browse-btn">Browse File</button>
+
+      <a href="#" class="sample-link">Download sample sheet</a>
+    </div>
+
+    <!-- Player Table -->
+    <table class="player-table">
+      <thead>
+        <tr>
+          <th>Kit No.</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Position</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Jaxson</td>
+          <td>Workman</td>
+          <td>Attacker</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Lincoln</td>
+          <td>Aminoff</td>
+          <td>Defender</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Justin</td>
+          <td>Philips</td>
+          <td>All Rounder</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Talan</td>
+          <td>Bergson</td>
+          <td>Attacker</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Justin</td>
+          <td>Schaefer</td>
+          <td>Defender</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="discard">Discard</button>
+      <button class="confirm">Confirm</button>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="button-row">
+      <button type="button" class="cancel" onclick="window.location.href='team3.html'">Back</button>
+      <button type="button" class="next" disabled>Create Team</button>
+    </div>
+  </div>
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const browseBtn = document.getElementById('browse-btn');
+    // Click browse button → open file dialog
+    browseBtn.addEventListener('click', () => {
+      fileInput.click();
+
+    });
+    // Handle file selection 
+    fileInput.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      handleFile(file);
+    });
+    // Drag over styling 
+    dropZone.addEventListener('dragover', (event) => {
+      event.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+    // Remove styling when leaving 
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+    // Handle drop 
+    dropZone.addEventListener('drop',
+      (event) => {
+        event.preventDefault();
+        dropZone.classList.remove('dragover');
+        const file = event.dataTransfer.files[0];
+        handleFile(file);
+      });
+    // File handler
+    function handleFile(file) {
+      if (file && (file.name.endsWith('.xls') || file.name.endsWith('.xlsx'))) {
+        console.log('File selected:', file.name);
+        alert('File selected: ' + file.name); // temporary feedback
+      } else {
+        alert('Please upload a valid XLS or XLSX file.');
+      }
+    }
+
+  </script>
+</body>
+
+</html>

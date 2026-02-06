@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Staff - Kho Kho Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 30%, #fff0e6 60%, #fef3f0 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 30px 80px rgba(249, 115, 22, 0.15);
+            animation: slideIn 0.8s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #ef731b 0%, #ea580c 50%, #dc2626 100%);
+            padding: 40px 50px 35px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 38px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ea580c;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .form-content {
+            padding: 45px 50px 50px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ea580c;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #fed7aa;
+        }
+
+        .staff-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        select {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #fed7aa;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #fffbf5;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .assign-btn {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border: none;
+            padding: 0 30px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .assign-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+        }
+
+        .staff-list {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .staff-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #fffbf5;
+            border: 1px solid #fee;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            font-size: 18px;
+        }
+
+        .actions i {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .actions i:hover {
+            transform: scale(1.2);
+        }
+
+        .fa-edit {
+            color: #f97316;
+        }
+
+        .fa-trash {
+            color: #dc2626;
+        }
+
+        .add-link {
+            display: inline-block;
+            color: #f97316;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 30px;
+            cursor: pointer;
+        }
+
+        .add-link:hover {
+            text-decoration: underline;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 45px;
+            padding-top: 35px;
+            border-top: 2px solid #fef3f0;
+        }
+
+        .btn {
+            padding: 16px 42px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+        }
+
+        .cancel-btn {
+            background: #ffffff;
+            color: #ea580c;
+            border: 2px solid #fb923c;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            box-shadow: 0 8px 24px rgba(249, 115, 22, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal h3 {
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal p {
+            color: #78716c;
+            margin-bottom: 25px;
+        }
+
+        .modal-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .m-btn {
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+        }
+
+        .m-yes {
+            background: #dc2626;
+            color: white;
+        }
+
+        .m-no {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-banner">
+            <div class="header">
+                <div>
+                    <h1>👥 Create Staff</h1>
+                    <p class="subtitle">Assign roles and manage team staff</p>
+                </div>
+                <button class="back-btn" onclick="window.location.href='../../../staff.html'">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
+            </div>
+        </div>
+
+        <div class="form-content">
+            <div class="section-title">Staff Assignment</div>
+
+            <div class="staff-form">
+                <select id="staffSelect">
+                    <option value="">Select Staff</option>
+                </select>
+
+                <select id="roleSelect">
+                    <option value="">Assign Role</option>
+                    <option>Head Coach</option>
+                    <option>Coach</option>
+                    <option>Manager</option>
+                    <option>Physio</option>
+                </select>
+
+                <button class="assign-btn" onclick="assignStaff()">+ Assign</button>
+            </div>
+
+            <ul class="staff-list" id="assignedList"></ul>
+
+            <a class="add-link" onclick="openAddPopup()">+ Add New Staff Member</a>
+
+            <div class="button-row">
+                <button class="btn cancel-btn" onclick="window.location.href='../../../staff.html'">Cancel</button>
+                <button class="btn next-btn" onclick="goToNext()">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="modal-overlay">
+        <div class="modal">
+            <h3>Confirm Removal</h3>
+            <p>Delete this assignment? You can always re-assign them later.</p>
+            <div class="modal-btns">
+                <button class="m-btn m-no" onclick="closeModal()">No</button>
+                <button class="m-btn m-yes" id="confirmDelBtn">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        let assignments = [];
+        let assignToDelete = null;
+
+        function init() {
+            loadDropdowns();
+            renderAssignments();
+        }
+
+        function loadDropdowns() {
+            const db = JSON.parse(localStorage.getItem('staff_db') || '[]');
+            const roles = JSON.parse(localStorage.getItem('staff_roles') || '["Head Coach", "Coach", "Manager", "Physio"]');
+
+            const staffSelect = document.getElementById('staffSelect');
+            const roleSelect = document.getElementById('roleSelect');
+
+            staffSelect.innerHTML = '<option value="">Select Staff</option>';
+            db.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.id;
+                opt.textContent = `${s.firstName} ${s.lastName}`;
+                staffSelect.appendChild(opt);
+            });
+
+            roleSelect.innerHTML = '<option value="">Assign Role</option>';
+            roles.forEach(r => {
+                const opt = document.createElement('option');
+                opt.value = r;
+                opt.textContent = r;
+                roleSelect.appendChild(opt);
+            });
+        }
+
+        function assignStaff() {
+            const staffId = document.getElementById('staffSelect').value;
+            const role = document.getElementById('roleSelect').value;
+
+            if (!staffId || !role) {
+                alert('Select both staff and role.');
+                return;
+            }
+
+            const db = JSON.parse(localStorage.getItem('staff_db') || '[]');
+            const staff = db.find(s => s.id === staffId);
+
+            assignments.push({
+                assignId: Date.now().toString(),
+                staffId: staffId,
+                name: staff ? `${staff.firstName} ${staff.lastName}` : 'Unknown',
+                role: role
+            });
+
+            renderAssignments();
+            document.getElementById('staffSelect').value = '';
+            document.getElementById('roleSelect').value = '';
+        }
+
+        function renderAssignments() {
+            const list = document.getElementById('assignedList');
+            list.innerHTML = '';
+            assignments.forEach(a => {
+                const li = document.createElement('li');
+                li.className = 'staff-item';
+                li.innerHTML = `
+                    <span><strong>${a.name}</strong> | ${a.role}</span>
+                    <div class="actions">
+                        <i class="fas fa-edit" onclick="editAssignment('${a.assignId}')"></i>
+                        <i class="fas fa-trash" onclick="askDelete('${a.assignId}')"></i>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function editAssignment(id) {
+            const a = assignments.find(item => item.assignId === id);
+            if (!a) return;
+
+            // Pop back to dropdowns for simple editing
+            document.getElementById('staffSelect').value = a.staffId;
+            document.getElementById('roleSelect').value = a.role;
+
+            // Remove from list so it can be re-assigned
+            assignments = assignments.filter(item => item.assignId !== id);
+            renderAssignments();
+        }
+
+        function askDelete(id) {
+            assignToDelete = id;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        document.getElementById('confirmDelBtn').onclick = () => {
+            assignments = assignments.filter(a => a.assignId !== assignToDelete);
+            renderAssignments();
+            closeModal();
+        };
+
+        function openAddPopup() {
+            ipcRenderer.send('open-add-staff-popup');
+        }
+
+        function goToNext() {
+            localStorage.setItem('temp_assignments', JSON.stringify(assignments));
+            window.location.href = 'Assign_Staff.html';
+        }
+
+        ipcRenderer.on('new-staff-data', (event, data) => {
+            const db = JSON.parse(localStorage.getItem('staff_db') || '[]');
+            const index = db.findIndex(s => s.id === data.id);
+            if (index !== -1) db[index] = data; else db.push(data);
+            localStorage.setItem('staff_db', JSON.stringify(db));
+
+            // Role suggestions
+            let roles = JSON.parse(localStorage.getItem('staff_roles') || '["Head Coach", "Coach", "Manager", "Physio"]');
+            if (!roles.includes(data.role)) {
+                roles.push(data.role);
+                localStorage.setItem('staff_roles', JSON.stringify(roles));
+            }
+
+            loadDropdowns();
+
+            // Auto-select the newly added staff/role
+            document.getElementById('staffSelect').value = data.id;
+            document.getElementById('roleSelect').value = data.role;
+        });
+
+        init();
+    </script>
+</body>
+
+</html>

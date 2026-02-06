@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Staff Member</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .popup-container {
+            width: 750px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .popup-header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+            padding: 20px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .popup-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            cursor: pointer;
+            font-size: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .close-btn:hover {
+            transform: rotate(90deg);
+        }
+
+        .popup-body {
+            padding: 25px 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 25px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #78716c;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #fed7aa;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #fffbf5;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #f97316;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+        }
+
+        .popup-footer {
+            padding: 15px 30px;
+            background: #fef3f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        button {
+            padding: 12px 30px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-cancel {
+            background: white;
+            color: #ea580c;
+            border: 2px solid #fb923c;
+        }
+
+        .btn-cancel:hover {
+            background: #fff7ed;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.3);
+        }
+
+        .role-container {
+            position: relative;
+        }
+
+        .custom-role-hint {
+            font-size: 11px;
+            color: #f97316;
+            margin-top: 4px;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="popup-container">
+        <div class="popup-header">
+            <h2 id="popupTitle">Add New Member</h2>
+            <i class="fas fa-times close-btn" onclick="closePopup()"></i>
+        </div>
+        <div class="popup-body">
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="firstName" placeholder="Enter first name">
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="lastName" placeholder="Enter last name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email" placeholder="Enter email address">
+            </div>
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <input type="tel" id="mobile" placeholder="Enter mobile number">
+            </div>
+            <div class="form-group">
+                <label>Gender</label>
+                <select id="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Date of Birth</label>
+                <input type="date" id="dob">
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" id="city" placeholder="Enter city">
+            </div>
+            <div class="form-group role-container">
+                <label>Role</label>
+                <input type="text" id="staffRole" list="roleSuggestions" placeholder="Enter or select role">
+                <datalist id="roleSuggestions">
+                    <option value="Head Coach">
+                    <option value="Coach">
+                    <option value="Manager">
+                    <option value="Physio">
+                    <option value="Assistant Coach">
+                </datalist>
+                <div class="custom-role-hint">* Type to add a custom role</div>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button class="btn-cancel" onclick="closePopup()">Cancel</button>
+            <button class="btn-save" id="saveBtn" onclick="saveStaff()">Confirm</button>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        let isEditMode = false;
+        let originalStaffId = null;
+
+        // Listen for data to initialize (for editing)
+        ipcRenderer.on('init-staff-data', (event, data) => {
+            if (data) {
+                isEditMode = true;
+                originalStaffId = data.id;
+                document.getElementById('popupTitle').innerText = 'Edit Staff Member';
+
+                // Populate fields
+                document.getElementById('firstName').value = data.firstName || '';
+                document.getElementById('lastName').value = data.lastName || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('mobile').value = data.mobile || '';
+                document.getElementById('gender').value = data.gender || 'Male';
+                document.getElementById('dob').value = data.dob || '';
+                document.getElementById('city').value = data.city || '';
+                document.getElementById('staffRole').value = data.role || '';
+            }
+        });
+
+        function closePopup() {
+            ipcRenderer.send('close-staff-popup');
+        }
+
+        function saveStaff() {
+            const formData = {
+                firstName: document.getElementById('firstName').value.trim(),
+                lastName: document.getElementById('lastName').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                mobile: document.getElementById('mobile').value.trim(),
+                gender: document.getElementById('gender').value,
+                dob: document.getElementById('dob').value,
+                city: document.getElementById('city').value.trim(),
+                role: document.getElementById('staffRole').value.trim()
+            };
+
+            if (!formData.firstName || !formData.lastName || !formData.role) {
+                alert('Primary fields (First Name, Last Name, and Role) are required.');
+                return;
+            }
+
+            // Create a unique full name for display compatibility
+            formData.name = `${formData.firstName} ${formData.lastName}`;
+
+            // Add ID if editing
+            if (isEditMode) {
+                formData.id = originalStaffId;
+            } else {
+                formData.id = Date.now().toString(); // Simple ID generation
+            }
+
+            // Persistence logic is handled by the receiver to avoid duplication across processes
+            // But we'll send it back to the parent
+            ipcRenderer.send('staff-added', formData);
+        }
+    </script>
+</body>
+
+</html>

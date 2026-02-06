@@ -31,6 +31,10 @@ ipcMain.on('dashboard.html', () => {
   mainWindow.loadFile('dashboard.html'); // tourament to dashboard >>>>>back
 });
 
+ipcMain.on('tournament-updates.html', () => {
+  mainWindow.loadFile('tournament_updates.html'); // navigate to tournament updates
+});
+
 ipcMain.on('add_difender.hrml', () => {
   mainWindow.loadFile('add_difrnder.html');
 });
@@ -223,5 +227,68 @@ ipcMain.on('close-out-window', (event) => {
   if (win) win.close();
 });
 
+// popup for adding new staff member
+ipcMain.on('open-add-staff-popup', (event, data) => {
+  if (popupWindow) return
+  popupWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    frame: false,
+    transparent: true,
+    modal: true,
+    parent: mainWindow,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  })
+
+  popupWindow.loadFile('renderer/Electron/Staff_Login/Add_Staff_Popup.html')
+
+  popupWindow.webContents.on('did-finish-load', () => {
+    if (data) {
+      popupWindow.webContents.send('init-staff-data', data);
+    }
+  });
+
+  popupWindow.on('close', () => {
+    popupWindow = null
+  })
+})
+
+// Forward added staff data to main window
+ipcMain.on('staff-added', (event, staffData) => {
+  if (mainWindow) {
+    mainWindow.webContents.send('new-staff-data', staffData);
+  }
+  if (popupWindow) {
+    popupWindow.close();
+  }
+})
+
+// Close staff popup
+ipcMain.on('close-staff-popup', () => {
+  if (popupWindow) {
+    popupWindow.close();
+  }
+})
 
 
+
+// Open tournament dashboard in a new window
+ipcMain.on('open-tournament-dashboard', (event, name) => {
+  let tourneyWindow = new BrowserWindow({
+    width: 1200,
+    height: 900,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+
+  tourneyWindow.loadFile('tournament_dashboard.html', { query: { name: name } });
+
+  tourneyWindow.on('closed', () => {
+    tourneyWindow = null;
+  });
+});

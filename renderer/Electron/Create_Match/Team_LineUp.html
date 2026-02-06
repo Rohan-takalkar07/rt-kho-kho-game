@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Match - Final Step</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 30%, #fff0e6 60%, #fef3f0 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.8s ease-out;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #ef731b 0%, #ea580c 50%, #dc2626 100%);
+            padding: 40px 50px 35px;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 38px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+        .form-content {
+            padding: 45px 50px 50px;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #fef3f0;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #78716c;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .lineup-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .lineup-section h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            color: #ea580c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-row {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .player-row input {
+            padding: 12px;
+            border: 2px solid #fed7aa;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #fffbf5;
+            transition: all 0.3s ease;
+        }
+
+        .player-row input:focus {
+            border-color: #f97316;
+            outline: none;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
+            transform: scale(1.02);
+        }
+
+        #contentA,
+        #contentB {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 50px;
+            padding-top: 35px;
+            border-top: 2px solid #fef3f0;
+        }
+
+        .btn {
+            padding: 16px 45px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            border: none;
+        }
+
+        .finish-btn {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+            color: white;
+            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
+        }
+
+        .finish-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 12px 32px rgba(22, 163, 74, 0.6);
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-banner">
+            <div class="header">
+                <h1>🏁 Finalize Lineups</h1>
+                <p class="subtitle">Set the starting players and substitutes for both teams</p>
+            </div>
+        </div>
+
+        <div class="form-content">
+            <div class="tab-bar">
+                <div class="tab active" id="tabA" onclick="switchTab('A')">TEAM A: <span
+                        id="tabNameA">Maharashtra</span></div>
+                <div class="tab" id="tabB" onclick="switchTab('B')">TEAM B: <span id="tabNameB">Gujarat</span></div>
+            </div>
+
+            <div id="contentA">
+                <div class="lineup-grid">
+                    <div class="lineup-section">
+                        <h3><i class="fas fa-running"></i> Starting 9</h3>
+                        <div id="playingA"></div>
+                    </div>
+                    <div class="lineup-section">
+                        <h3><i class="fas fa-plus-circle"></i> Substitutes (3)</h3>
+                        <div id="subsA"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contentB" style="display: none;">
+                <div class="lineup-grid">
+                    <div class="lineup-section">
+                        <h3><i class="fas fa-running"></i> Starting 9</h3>
+                        <div id="playingB"></div>
+                    </div>
+                    <div class="lineup-section">
+                        <h3><i class="fas fa-plus-circle"></i> Substitutes (3)</h3>
+                        <div id="subsB"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button class="btn finish-btn" onclick="finalizeMatch()">Finish & Create Match</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createInputs(containerId, count, prefix) {
+            const container = document.getElementById(containerId);
+            for (let i = 1; i <= count; i++) {
+                const row = document.createElement('div');
+                row.className = 'player-row';
+                row.innerHTML = `
+                    <input type="text" placeholder="#" id="${prefix}_kit_${i}" maxlength="3">
+                    <input type="text" placeholder="Player Name" id="${prefix}_name_${i}">
+                `;
+                container.appendChild(row);
+            }
+        }
+
+        function init() {
+            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            document.getElementById('tabNameA').textContent = setup.teamA || 'Team A';
+            document.getElementById('tabNameB').textContent = setup.teamB || 'Team B';
+
+            createInputs('playingA', 9, 'A_p');
+            createInputs('subsA', 3, 'A_s');
+            createInputs('playingB', 9, 'B_p');
+            createInputs('subsB', 3, 'B_s');
+        }
+
+        function switchTab(type) {
+            document.getElementById('tabA').classList.toggle('active', type === 'A');
+            document.getElementById('tabB').classList.toggle('active', type === 'B');
+            document.getElementById('contentA').style.display = type === 'A' ? 'block' : 'none';
+            document.getElementById('contentB').style.display = type === 'B' ? 'block' : 'none';
+        }
+
+        function finalizeMatch() {
+            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+
+            const getPlayers = (pref, pCount, sCount) => {
+                const p = [];
+                for (let i = 1; i <= pCount; i++) p.push({ kit: document.getElementById(pref + '_p_kit_' + i).value, name: document.getElementById(pref + '_p_name_' + i).value });
+                const s = [];
+                for (let i = 1; i <= sCount; i++) s.push({ kit: document.getElementById(pref + '_s_kit_' + i).value, name: document.getElementById(pref + '_s_name_' + i).value });
+                return { playing: p, substitutes: s };
+            };
+
+            setup.lineupA = getPlayers('A', 9, 3);
+            setup.lineupB = getPlayers('B', 9, 3);
+            setup.status = 'Scheduled';
+            setup.id = 'M' + Date.now();
+
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            matches.push(setup);
+            localStorage.setItem('matches', JSON.stringify(matches));
+            localStorage.removeItem('current_match_setup');
+
+            alert('Match Created Successfully!');
+            window.location.href = '../../../tournament_dashboard.html';
+        }
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>
