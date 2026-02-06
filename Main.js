@@ -230,13 +230,16 @@ ipcMain.on('close-out-window', (event) => {
 // popup for adding new staff member
 ipcMain.on('open-add-staff-popup', (event, data) => {
   if (popupWindow) return
+
+  const parentWindow = BrowserWindow.fromWebContents(event.sender) || mainWindow;
+
   popupWindow = new BrowserWindow({
     width: 800,
     height: 600,
     frame: false,
     transparent: true,
     modal: true,
-    parent: mainWindow,
+    parent: parentWindow,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -256,13 +259,17 @@ ipcMain.on('open-add-staff-popup', (event, data) => {
   })
 })
 
-// Forward added staff data to main window
+// Forward added staff data to parent window
 ipcMain.on('staff-added', (event, staffData) => {
-  if (mainWindow) {
-    mainWindow.webContents.send('new-staff-data', staffData);
-  }
   if (popupWindow) {
+    const parent = popupWindow.getParentWindow();
+    if (parent) {
+      parent.webContents.send('new-staff-data', staffData);
+    }
     popupWindow.close();
+  } else if (mainWindow) {
+    // Fallback if popup reference is lost but logic holds
+    mainWindow.webContents.send('new-staff-data', staffData);
   }
 })
 

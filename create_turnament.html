@@ -1078,6 +1078,22 @@
             ipcRenderer.send('dashboard.html');
         }
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date().toISOString().split('T')[0];
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+
+            if (startDate) startDate.setAttribute('min', today);
+            if (endDate) endDate.setAttribute('min', today);
+
+            if (startDate && endDate) {
+                startDate.addEventListener('change', function () {
+                    endDate.setAttribute('min', this.value);
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

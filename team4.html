@@ -48,91 +48,135 @@
           <th>Position</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Jaxson</td>
-          <td>Workman</td>
-          <td>Attacker</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Lincoln</td>
-          <td>Aminoff</td>
-          <td>Defender</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Justin</td>
-          <td>Philips</td>
-          <td>All Rounder</td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>Talan</td>
-          <td>Bergson</td>
-          <td>Attacker</td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>Justin</td>
-          <td>Schaefer</td>
-          <td>Defender</td>
-        </tr>
+      <tbody id="player-table-body">
+        <!-- Rows will be added dynamically -->
       </tbody>
     </table>
 
     <!-- Action Buttons -->
     <div class="action-buttons">
-      <button class="discard">Discard</button>
-      <button class="confirm">Confirm</button>
+      <button class="discard" onclick="discardPlayers()">Discard</button>
+      <button class="confirm" onclick="confirmPlayers()">Confirm</button>
     </div>
 
     <!-- Navigation Buttons -->
     <div class="button-row">
       <button type="button" class="cancel" onclick="window.location.href='team3.html'">Back</button>
-      <button type="button" class="next" disabled>Create Team</button>
+      <button type="button" class="next" id="createTeamBtn" disabled onclick="createTeam()">Create Team</button>
     </div>
   </div>
   <script>
+    const xlsx = require('xlsx');
+    const { ipcRenderer } = require('electron');
+
     const dropZone = document.getElementById('drop-zone');
     const fileInput = document.getElementById('file-input');
     const browseBtn = document.getElementById('browse-btn');
+    const tableBody = document.getElementById('player-table-body');
+    const createTeamBtn = document.getElementById('createTeamBtn');
+
+    let importedPlayers = [];
+
     // Click browse button → open file dialog
     browseBtn.addEventListener('click', () => {
       fileInput.click();
-
     });
+
     // Handle file selection 
     fileInput.addEventListener('change', (event) => {
       const file = event.target.files[0];
       handleFile(file);
     });
+
     // Drag over styling 
     dropZone.addEventListener('dragover', (event) => {
       event.preventDefault();
       dropZone.classList.add('dragover');
     });
+
     // Remove styling when leaving 
     dropZone.addEventListener('dragleave', () => {
       dropZone.classList.remove('dragover');
     });
+
     // Handle drop 
-    dropZone.addEventListener('drop',
-      (event) => {
-        event.preventDefault();
-        dropZone.classList.remove('dragover');
-        const file = event.dataTransfer.files[0];
-        handleFile(file);
-      });
+    dropZone.addEventListener('drop', (event) => {
+      event.preventDefault();
+      dropZone.classList.remove('dragover');
+      const file = event.dataTransfer.files[0];
+      handleFile(file);
+    });
+
     // File handler
     function handleFile(file) {
-      if (file && (file.name.endsWith('.xls') || file.name.endsWith('.xlsx'))) {
-        console.log('File selected:', file.name);
-        alert('File selected: ' + file.name); // temporary feedback
+      if (file && (file.name.endsWith('.xls') || file.name.endsWith('.xlsx') || file.name.endsWith('.csv'))) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = new Uint8Array(e.target.result);
+          const workbook = xlsx.read(data, { type: 'array' });
+          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+          const jsonData = xlsx.utils.sheet_to_json(firstSheet);
+
+          processPlayerData(jsonData);
+        };
+        reader.readAsArrayBuffer(file);
       } else {
-        alert('Please upload a valid XLS or XLSX file.');
+        alert('Please upload a valid XLS, XLSX, or CSV file.');
       }
+    }
+
+    function processPlayerData(data) {
+      importedPlayers = [];
+      tableBody.innerHTML = '';
+
+      data.forEach((row) => {
+        // Flexible column matching
+        const kitNo = row['Kit No'] || row['Kit No.'] || row['kit_no'] || row['Kit'] || '';
+        const firstName = row['First Name'] || row['FirstName'] || row['first_name'] || '';
+        const lastName = row['Last Name'] || row['LastName'] || row['last_name'] || '';
+        const position = row['Position'] || row['Pos'] || '';
+
+        if (firstName || lastName) { // Basic validation
+          importedPlayers.push({ kitNo, firstName, lastName, position });
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+                    <td>${kitNo}</td>
+                    <td>${firstName}</td>
+                    <td>${lastName}</td>
+                    <td>${position}</td>
+                `;
+          tableBody.appendChild(tr);
+        }
+      });
+
+      if (importedPlayers.length > 0) {
+        createTeamBtn.disabled = false;
+        createTeamBtn.classList.add('active'); // Assume CSS has active state
+      } else {
+        alert('No valid player data found in file.');
+      }
+    }
+
+    function discardPlayers() {
+      importedPlayers = [];
+      tableBody.innerHTML = '';
+      createTeamBtn.disabled = true;
+      fileInput.value = ''; // Reset input
+    }
+
+    function confirmPlayers() {
+      if (importedPlayers.length > 0) {
+        alert(`${importedPlayers.length} players loaded successfully.`);
+      }
+    }
+
+    function createTeam() {
+      // Here you would typically save to localStorage or send via IPC
+      localStorage.setItem('team_players_temp', JSON.stringify(importedPlayers));
+      alert('Team Created Successfully!');
+      // Check if there is a next step or finish
+      // window.location.href = 'dashboard.html'; 
     }
 
   </script>

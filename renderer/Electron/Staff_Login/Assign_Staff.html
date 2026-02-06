@@ -243,9 +243,29 @@
         }
 
         function finishAssignment() {
-            // Move temp assignments to permanent if needed, or just clear and redirect
+            // Commit assignments: Update staff_db with any role changes if necessary
+            // In this flow, assignments might just be for verification, but let's ensure consistency
+            const assignments = JSON.parse(localStorage.getItem('temp_assignments') || '[]');
+            const staffDb = JSON.parse(localStorage.getItem('staff_db') || '[]');
+
+            let updated = false;
+            assignments.forEach(assign => {
+                const staffIndex = staffDb.findIndex(s => s.id === assign.staffId);
+                if (staffIndex !== -1) {
+                    // Update role if different
+                    if (staffDb[staffIndex].role !== assign.role) {
+                        staffDb[staffIndex].role = assign.role;
+                        updated = true;
+                    }
+                }
+            });
+
+            if (updated) {
+                localStorage.setItem('staff_db', JSON.stringify(staffDb));
+            }
+
             localStorage.removeItem('temp_assignments');
-            alert('Staff Management Setup Complete!');
+            // Navigate back to the main staff directory
             window.location.href = '../../../staff.html';
         }
 

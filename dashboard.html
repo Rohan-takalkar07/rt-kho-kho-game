@@ -555,34 +555,34 @@
             <div class="stat-card">
                 <h3><i class="fas fa-trophy"></i> Tournament</h3>
                 <div class="stat-value">
-                    <span>3 Live</span>
-                    <span>3 Completed</span>
+                    <span id="stat-tournament-live">0 Live</span>
+                    <span id="stat-tournament-total">0 Total</span>
                 </div>
             </div>
             <div class="stat-card">
                 <h3><i class="fas fa-users"></i> Teams</h3>
                 <div class="stat-value">
-                    <span>18 Teams</span>
+                    <span id="stat-teams-total">0 Teams</span>
                 </div>
             </div>
             <div class="stat-card">
                 <h3><i class="fas fa-user-friends"></i> Staff</h3>
                 <div class="stat-value">
-                    <span>18 Staff</span>
+                    <span id="stat-staff-total">0 Staff</span>
                 </div>
             </div>
             <div class="stat-card">
                 <h3><i class="fas fa-user-tie"></i> Officials</h3>
                 <div class="stat-value">
-                    <span>18 Officials</span>
+                    <span id="stat-officials-total">0 Officials</span>
                 </div>
             </div>
             <div class="stat-card">
                 <h3><i class="fas fa-calendar-check"></i> Matches</h3>
                 <div class="stat-value">
-                    <span>3 Live</span>
-                    <span>3 Upcoming</span>
-                    <span>3 Completed</span>
+                    <span id="stat-matches-live">0 Live</span>
+                    <span id="stat-matches-upcoming">0 Upcoming</span>
+                    <span id="stat-matches-completed">0 Completed</span>
                 </div>
             </div>
         </div>
@@ -633,34 +633,10 @@
                     <h3 class="sidebar-title">
                         <i class="fas fa-calendar-alt"></i> Upcoming Matches
                     </h3>
-                    <div class="match-card">
-                        <div class="match-teams">
-                            <span>Team A</span>
-                            <span class="match-vs">VS</span>
-                            <span>Team B</span>
-                        </div>
-                        <div class="match-info">
-                            <i class="far fa-clock"></i> Today, 3:00 PM
-                        </div>
-                    </div>
-                    <div class="match-card">
-                        <div class="match-teams">
-                            <span>Team C</span>
-                            <span class="match-vs">VS</span>
-                            <span>Team D</span>
-                        </div>
-                        <div class="match-info">
-                            <i class="far fa-clock"></i> Tomorrow, 10:00 AM
-                        </div>
-                    </div>
-                    <div class="match-card">
-                        <div class="match-teams">
-                            <span>Team E</span>
-                            <span class="match-vs">VS</span>
-                            <span>Team F</span>
-                        </div>
-                        <div class="match-info">
-                            <i class="far fa-clock"></i> Tomorrow, 2:00 PM
+                    <div id="upcomingMatchesContainer">
+                        <!-- Dynamic Matches will be loaded here -->
+                        <div style="text-align: center; color: #78716c; padding: 10px;">
+                            Loading matches...
                         </div>
                     </div>
                 </div>
@@ -699,10 +675,131 @@
         function loadTournaments() {
             allTournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
             // Sort by newest first (assuming array order is chronological, so reverse it)
-            // Or if there's a createdAt field, sort by that. For now, reversing is safer for "newest created" if pushed to end.
             allTournaments.reverse();
             filteredTournaments = [...allTournaments];
             displayTournaments(filteredTournaments);
+            loadUpcomingMatches();
+            loadDashboardStats();
+        }
+
+        function loadDashboardStats() {
+            // 1. Tournaments
+            const tournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+            const liveTournaments = tournaments.filter(t => t.status === 'Live').length;
+            const totalTournaments = tournaments.length;
+
+            document.getElementById('stat-tournament-live').textContent = `${liveTournaments} Live`;
+            document.getElementById('stat-tournament-total').textContent = `${totalTournaments} Total`;
+
+            // 2. Teams
+            const teams = JSON.parse(localStorage.getItem('team_db') || '[]');
+            document.getElementById('stat-teams-total').textContent = `${teams.length} Teams`;
+
+            // 3. Staff
+            const staff = JSON.parse(localStorage.getItem('staff_db') || '[]');
+            document.getElementById('stat-staff-total').textContent = `${staff.length} Staff`;
+
+            // 4. Officials
+            const officials = JSON.parse(localStorage.getItem('officials') || '[]');
+            document.getElementById('stat-officials-total').textContent = `${officials.length} Officials`;
+
+            // 5. Matches
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+
+            let liveMatches = 0;
+            let upcomingMatches = 0;
+            let completedMatches = 0;
+
+            matches.forEach(m => {
+                if (m.status === 'Live') {
+                    liveMatches++;
+                } else if (m.status === 'Completed') {
+                    completedMatches++;
+                } else {
+                    // Scheduled/Upcoming logic
+                    // If status is specifically 'Scheduled' or date is in future
+                    if (m.status === 'Scheduled' || (m.date && m.date >= todayStr)) {
+                        upcomingMatches++;
+                    }
+                }
+            });
+
+            document.getElementById('stat-matches-live').textContent = `${liveMatches} Live`;
+            document.getElementById('stat-matches-upcoming').textContent = `${upcomingMatches} Upcoming`;
+            document.getElementById('stat-matches-completed').textContent = `${completedMatches} Completed`;
+        }
+
+        // Load Upcoming Matches from LocalStorage
+        function loadUpcomingMatches() {
+            const container = document.getElementById('upcomingMatchesContainer');
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+
+            // Filter and Sort Matches
+            const now = new Date();
+            // Reset time part of 'now' for date comparison if we want strict date comparison, 
+            // but keeping time is better for "Upcoming" logic if matches have specific times.
+            // However, the input is just date string YYYY-MM-DD + time string HH:MM.
+
+            const upcomingMatches = matches.filter(m => {
+                if (!m.date || !m.time) return false;
+                const matchDate = new Date(`${m.date}T${m.time}`);
+                // Include matches from today onwards
+                // Or purely based on status if strictly managed
+                return matchDate >= now || m.date >= now.toISOString().split('T')[0];
+            }).sort((a, b) => {
+                const dateA = new Date(`${a.date}T${a.time}`);
+                const dateB = new Date(`${b.date}T${b.time}`);
+                return dateA - dateB;
+            }).slice(0, 5); // Show top 5
+
+            if (upcomingMatches.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: #a8a29e; padding: 20px 0;">
+                        <i class="far fa-calendar-times" style="font-size: 24px; margin-bottom: 8px; display: block;"></i>
+                        No upcoming matches
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = upcomingMatches.map(match => {
+                const matchDate = new Date(`${match.date}T${match.time}`);
+                const dateDisplay = formatMatchDate(matchDate);
+                // Convert 24h time to 12h time
+                const timeDisplay = matchDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+                return `
+                    <div class="match-card" onclick="// navigate to match detail if needed">
+                        <div class="match-teams">
+                            <span>${match.teamA || 'Pro Kabaddi'}</span>
+                            <span class="match-vs">VS</span>
+                            <span>${match.teamB || 'Mumbai'}</span>
+                        </div>
+                        <div class="match-info">
+                            <i class="far fa-clock"></i> ${dateDisplay}, ${timeDisplay}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function formatMatchDate(dateObj) {
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const compareDate = new Date(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+
+            if (compareDate.getTime() === today.getTime()) {
+                return 'Today';
+            } else if (compareDate.getTime() === tomorrow.getTime()) {
+                return 'Tomorrow';
+            } else {
+                return dateObj.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
+            }
         }
 
         // Display tournaments in the table using map function
