@@ -65,23 +65,47 @@
             padding: 40px 50px 35px;
         }
 
-        .header h1 {
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ea580c;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
             font-family: 'Poppins', sans-serif;
-            font-size: 36px;
-            font-weight: 800;
-            color: #ffffff;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         .subtitle {
             color: rgba(255, 255, 255, 0.95);
             font-size: 15px;
             margin-top: 8px;
-            margin-left: 5px;
         }
 
         .form-content {
@@ -184,16 +208,20 @@
     <div class="container">
         <div class="header-banner">
             <div class="header">
-                <h1>
-                    <span>Create Official</span>
-                </h1>
-                <p class="subtitle">Add a new Kho Kho official to the system</p>
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <div class="header-content">
+                    <h1>🏃 Create Official</h1>
+                    <p class="subtitle">Register a new match official for your tournament</p>
+                </div>
+                <div style="width: 100px;"></div> <!-- Spacer -->
             </div>
         </div>
 
         <div class="form-content">
-            <form class="form-grid">
-                <div class="form-item">
+            <form class="form-grid" onsubmit="return false;">
+                <div class=" form-item">
                     <label>First Name*</label>
                     <input type="text" id="firstName" placeholder="Enter first name" required>
                 </div>
@@ -273,9 +301,32 @@
 
         function validateForm() {
             let allFilled = true;
+
+            // Regex patterns
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const mobileRegex = /^\d{10}$/;
+
             inputs.forEach(input => {
-                if (input.style.display !== 'none' && !input.value.trim()) {
-                    allFilled = false;
+                if (input.style.display !== 'none') {
+                    const value = input.value.trim();
+                    let isValid = !!value;
+
+                    // Specific pattern checks
+                    if (isValid) {
+                        if (input.id === 'email') {
+                            isValid = emailRegex.test(value);
+                        } else if (input.id === 'mobile') {
+                            isValid = mobileRegex.test(value);
+                        }
+                    }
+
+                    if (!isValid) {
+                        allFilled = false;
+                        if (value) input.style.borderColor = '#dc2626'; // Red border if filled but invalid
+                        else input.style.borderColor = '#fed7aa'; // Standard border if empty
+                    } else {
+                        input.style.borderColor = '#fed7aa'; // Reset to standard
+                    }
                 }
             });
 
@@ -286,6 +337,7 @@
         inputs.forEach(input => {
             input.addEventListener('input', validateForm);
             input.addEventListener('change', validateForm);
+            input.addEventListener('blur', validateForm);
         });
 
         function saveOfficial() {
@@ -307,20 +359,37 @@
             officials.push(official);
             localStorage.setItem('officials', JSON.stringify(officials));
 
-            handleBackNavigation();
+            showNotification('Official saved! Navigating to Staff setup...');
+            setTimeout(() => {
+                window.location.href = 'staff.html';
+            }, 1500);
         }
 
-        function handleBackNavigation() {
-            const params = new URLSearchParams(window.location.search);
-            const tournament = params.get('tournament');
-            if (tournament) {
-                window.location.href = `tournament_dashboard.html?name=${encodeURIComponent(tournament)}`;
-            } else {
-                window.location.href = 'officials.html';
+        function showNotification(message) {
+            const note = document.createElement('div');
+            note.style = 'position:fixed; bottom:30px; right:30px; background:#ea580c; color:white; padding:15px 25px; border-radius:12px; font-weight:700; box-shadow:0 10px 25px rgba(0,0,0,0.2); z-index:10000;';
+            note.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(note);
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function resetForm() {
+            if (confirm("Are you sure you want to clear all data in this form?")) {
+                const form = document.querySelector('form');
+                if (form) {
+                    form.reset();
+                    // Manually reset other fields
+                    document.getElementById('otherStateInput').style.display = 'none';
+                    document.getElementById('otherCityInput').style.display = 'none';
+                    validateForm();
+                }
             }
         }
 
-        document.getElementById('cancelBtn').onclick = handleBackNavigation;
+        document.getElementById('cancelBtn').onclick = resetForm;
     </script>
 </body>
 

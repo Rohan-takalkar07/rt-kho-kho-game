@@ -1,0 +1,307 @@
+[
+  {
+    "id": "1770874627026",
+    "name": "fghj",
+    "shortName": "gh",
+    "color": "#16a34a",
+    "state": "Rajasthan",
+    "city": "Udaipur",
+    "gender": "Male",
+    "section": "Junior & Senior",
+    "staff": [
+      {
+        "assignId": "1770874635289",
+        "staffId": "1770292158669",
+        "name": "yash raj",
+        "role": "Coach"
+      },
+      {
+        "assignId": "1770874642798",
+        "staffId": "1770392676449",
+        "name": "sonu saam",
+        "role": "Coach"
+      }
+    ],
+    "players": [
+      {
+        "kitNo": 1,
+        "firstName": "yash",
+        "lastName": "shelke",
+        "position": "defender"
+      },
+      {
+        "kitNo": 2,
+        "firstName": "rohan",
+        "lastName": "takalkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 3,
+        "firstName": "vaibhav",
+        "lastName": "pachpor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 7,
+        "firstName": "prasad",
+        "lastName": "bhor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 4,
+        "firstName": "pranav",
+        "lastName": "sonavne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 5,
+        "firstName": "hari",
+        "lastName": "shree",
+        "position": "defender"
+      },
+      {
+        "kitNo": 6,
+        "firstName": "siddhesh",
+        "lastName": "katkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 8,
+        "firstName": "kiran",
+        "lastName": "sonawne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 9,
+        "firstName": "shubham",
+        "lastName": "waman",
+        "position": "defender"
+      }
+    ],
+    "playerCount": 9,
+    "createdAt": "2026-02-12T05:37:48.049Z"
+  },
+  {
+    "team_id": "team_1770875995413",
+    "tournament_id": "",
+    "team_name": "twer",
+    "team_state": "Assam",
+    "team_city": "Silchar",
+    "gender": "Male",
+    "section": "Under-19 (U-19)",
+    "staff": [
+      {
+        "id": "1770875959415",
+        "name": "ghnn hj",
+        "role": "Manager"
+      },
+      {
+        "id": "1770392676449",
+        "name": "sonu saam",
+        "role": "Physio"
+      },
+      {
+        "id": "1770875894289",
+        "name": "vm rajaram",
+        "role": "Manager"
+      }
+    ],
+    "assigned_staff": [
+      {
+        "id": "1770875959415",
+        "name": "ghnn hj",
+        "role": "Manager"
+      },
+      {
+        "id": "1770392676449",
+        "name": "sonu saam",
+        "role": "Physio"
+      },
+      {
+        "id": "1770875894289",
+        "name": "vm rajaram",
+        "role": "Manager"
+      }
+    ],
+    "players": [
+      {
+        "player_id": "player_tzuw0df2j",
+        "player_name": "yash shelke",
+        "age": "N/A",
+        "gender": "Male"
+      },
+      {
+        "player_id": "player_eils325fn",
+        "player_name": "rohan takalkar",
+        "age": "N/A",
+        "gender": "Male"
+      },
+      {
+        "player_id": "player_4h2zsmzcw",
+        "player_name": "vaibhav pachpor",
+        "age": "N/A",
+        "gender": "Male"
+      },
+      {
+        "player_id": "player_spyx4hh4g",
+        "player_name": "prasad bhor",
+        "age": "N/A",
+        "gender": "Male"
+      },
+      {
+        "player_id": "player_3lb1daks2",
+        "player_name": "pranav sonavne",
+        "age": "N/A",
+        "gender": "Male"
+      },
+      {
+        "player_id": "player_3hl950vc5",
+        "player_name": "hari shree",
+        "age": "N/A",
+        "gender": "Male"
+      },
+      {
+        "player_id": "player_i8qwabksx",
+        "player_name": "siddhesh katkar",
+        "age": "N/A",
+        "gender": "Male"
+      },
+      {
+        "player_id": "player_i84zbcyg6",
+        "player_name": "kiran sonawne",
+        "age": "N/A",
+        "gender": "Male"
+      },
+      {
+        "player_id": "player_zfjh3a6m1",
+        "player_name": "shubham waman",
+        "age": "N/A",
+        "gender": "Male"
+      }
+    ]
+  },
+  {
+    "team_id": "team_1770875996580",
+    "tournament_id": "",
+    "staff": [],
+    "assigned_staff": [],
+    "players": [
+      {
+        "player_id": "player_d7klse09n",
+        "player_name": "yash shelke",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_agxqrj1ym",
+        "player_name": "rohan takalkar",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_zqa56dh3a",
+        "player_name": "vaibhav pachpor",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_bej126ib0",
+        "player_name": "prasad bhor",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_v23y29rzw",
+        "player_name": "pranav sonavne",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_ldidfk3lt",
+        "player_name": "hari shree",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_p96w6mrgq",
+        "player_name": "siddhesh katkar",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_bd6meu3qh",
+        "player_name": "kiran sonawne",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_i5ksmoagd",
+        "player_name": "shubham waman",
+        "age": "N/A",
+        "gender": "N/A"
+      }
+    ]
+  },
+  {
+    "team_id": "team_1770875996835",
+    "tournament_id": "",
+    "staff": [],
+    "assigned_staff": [],
+    "players": [
+      {
+        "player_id": "player_wqzpes03q",
+        "player_name": "yash shelke",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_exvitx1aj",
+        "player_name": "rohan takalkar",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_pfwv9awav",
+        "player_name": "vaibhav pachpor",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_kierm7izm",
+        "player_name": "prasad bhor",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_0nt4tu8jo",
+        "player_name": "pranav sonavne",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_qa9rtudrp",
+        "player_name": "hari shree",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_joomy1zr2",
+        "player_name": "siddhesh katkar",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_jgv00jgg9",
+        "player_name": "kiran sonawne",
+        "age": "N/A",
+        "gender": "N/A"
+      },
+      {
+        "player_id": "player_qpt18w9jl",
+        "player_name": "shubham waman",
+        "age": "N/A",
+        "gender": "N/A"
+      }
+    ]
+  }
+]

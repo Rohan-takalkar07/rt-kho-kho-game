@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const XLSX = require("xlsx");
 const path = require('path');
 
 let mainWindow;
@@ -298,4 +299,20 @@ ipcMain.on('open-tournament-dashboard', (event, name) => {
   tourneyWindow.on('closed', () => {
     tourneyWindow = null;
   });
+});
+// Receive request from frontend to open dialog
+ipcMain.handle("select-excel", async () => {
+  const { canceled, filePaths } = await dialog.showOpenDialog({
+    filters: [{ name: "Excel", extensions: ["xlsx", "xls"] }],
+    properties: ["openFile"]
+  });
+
+  if (canceled) return { canceled: true };
+
+  // Read Excel
+  const workbook = XLSX.readFile(filePaths[0]);
+  const sheet = workbook.Sheets[workbook.SheetNames[0]];
+  const rowData = XLSX.utils.sheet_to_json(sheet);
+
+  return { canceled: false, data: rowData };
 });

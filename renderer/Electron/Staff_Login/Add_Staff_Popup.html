@@ -175,7 +175,10 @@
 <body>
     <div class="popup-container">
         <div class="popup-header">
-            <h2 id="popupTitle">Add New Member</h2>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-arrow-left" style="cursor: pointer;" onclick="closePopup()"></i>
+                <h2 id="popupTitle">Add New Member</h2>
+            </div>
             <i class="fas fa-times close-btn" onclick="closePopup()"></i>
         </div>
         <div class="popup-body">
@@ -225,7 +228,7 @@
             </div>
         </div>
         <div class="popup-footer">
-            <button class="btn-cancel" onclick="closePopup()">Cancel</button>
+            <button class="btn-cancel" onclick="resetForm()">Cancel</button>
             <button class="btn-save" id="saveBtn" onclick="saveStaff()">Confirm</button>
         </div>
     </div>
@@ -259,37 +262,110 @@
             ipcRenderer.send('close-staff-popup');
         }
 
-        function saveStaff() {
-            const formData = {
-                firstName: document.getElementById('firstName').value.trim(),
-                lastName: document.getElementById('lastName').value.trim(),
-                email: document.getElementById('email').value.trim(),
-                mobile: document.getElementById('mobile').value.trim(),
-                gender: document.getElementById('gender').value,
-                dob: document.getElementById('dob').value,
-                city: document.getElementById('city').value.trim(),
-                role: document.getElementById('staffRole').value.trim()
-            };
+        function resetForm() {
+            if (confirm("Are you sure you want to clear all data in this form?")) {
+                const inputs = ['firstName', 'lastName', 'email', 'mobile', 'dob', 'city', 'staffRole'];
+                inputs.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.value = '';
+                        el.style.borderColor = '#fed7aa'; // Reset validation borders
+                    }
+                });
+                document.getElementById('gender').value = 'Male';
+            }
+        }
 
-            if (!formData.firstName || !formData.lastName || !formData.role) {
+        function validateField(id, value) {
+            const el = document.getElementById(id);
+            if (!el) return true;
+
+            const trimmedValue = value.trim();
+            let isValid = !!trimmedValue;
+
+            if (isValid) {
+                if (id === 'email') {
+                    isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedValue);
+                } else if (id === 'mobile') {
+                    isValid = /^\d{10}$/.test(trimmedValue);
+                } else if (id === 'dob') {
+                    const dobValue = new Date(trimmedValue);
+                    const today = new Date();
+                    isValid = dobValue <= today;
+                }
+            }
+
+            if (!isValid && trimmedValue) {
+                el.style.borderColor = '#dc2626';
+            } else {
+                el.style.borderColor = '#fed7aa';
+            }
+
+            return isValid;
+        }
+
+        function saveStaff() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+            const gender = document.getElementById('gender').value;
+            const dob = document.getElementById('dob').value;
+            const city = document.getElementById('city').value.trim();
+            const role = document.getElementById('staffRole').value.trim();
+
+            // Validate all fields
+            const isFirstValid = validateField('firstName', firstName);
+            const isLastValid = validateField('lastName', lastName);
+            const isEmailValid = validateField('email', email);
+            const isMobileValid = validateField('mobile', mobile);
+            const isRoleValid = validateField('staffRole', role);
+            const isDobValid = validateField('dob', dob);
+
+            if (!firstName || !lastName || !role) {
                 alert('Primary fields (First Name, Last Name, and Role) are required.');
                 return;
             }
 
-            // Create a unique full name for display compatibility
-            formData.name = `${formData.firstName} ${formData.lastName}`;
-
-            // Add ID if editing
-            if (isEditMode) {
-                formData.id = originalStaffId;
-            } else {
-                formData.id = Date.now().toString(); // Simple ID generation
+            if (!isEmailValid && email) {
+                alert('Please enter a valid email address.');
+                return;
             }
 
-            // Persistence logic is handled by the receiver to avoid duplication across processes
-            // But we'll send it back to the parent
+            if (!isMobileValid && mobile) {
+                alert('Please enter a valid 10-digit mobile number.');
+                return;
+            }
+
+            if (!isDobValid && dob) {
+                alert('Date of Birth cannot be in the future.');
+                return;
+            }
+
+            const formData = {
+                firstName,
+                lastName,
+                email,
+                mobile,
+                gender,
+                dob,
+                city,
+                role,
+                name: `${firstName} ${lastName}`,
+                id: isEditMode ? originalStaffId : Date.now().toString()
+            };
+
             ipcRenderer.send('staff-added', formData);
         }
+
+        // Add real-time validation listeners
+        ['firstName', 'lastName', 'email', 'mobile', 'staffRole', 'dob'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', (e) => validateField(id, e.target.value));
+                el.addEventListener('blur', (e) => validateField(id, e.target.value));
+            }
+        });
     </script>
 </body>
 

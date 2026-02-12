@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Tournament - Kho Kho</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
         rel="stylesheet">
@@ -193,6 +194,13 @@
         .header {
             position: relative;
             z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            flex: 1;
             text-align: center;
         }
 
@@ -208,6 +216,31 @@
                 0 2px 10px rgba(0, 0, 0, 0.2),
                 0 4px 20px rgba(0, 0, 0, 0.1);
             animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ea580c;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
         }
 
         @keyframes titleGlow {
@@ -529,8 +562,14 @@
     <div class="container">
         <div class="header-banner">
             <div class="header">
-                <h1>🏃 Create Tournament</h1>
-                <p class="subtitle">Set up a new Kho Kho tournament with professional management</p>
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <div class="header-content">
+                    <h1>🏃 Create Tournament</h1>
+                    <p class="subtitle">Set up a new Kho Kho tournament with professional management</p>
+                </div>
+                <div style="width: 100px;"></div> <!-- Spacer to center title -->
             </div>
         </div>
 
@@ -637,7 +676,7 @@
                 </div>
 
                 <div class="button-group">
-                    <button type="button" class="btn-cancel" onclick="Back()">Cancel</button>
+                    <button type="button" class="btn-cancel" onclick="resetForm()">Cancel</button>
                     <button type="button" id="createBtn" class="btn-create" onclick="createTournament()" disabled>Create
                         Tournament</button>
                 </div>
@@ -824,8 +863,21 @@
 
         let pendingTournament = null;
 
-        function Back() {
-            ipcRenderer.send("dashboard.html");
+        function goBack() {
+            window.history.back();
+        }
+
+        function resetForm() {
+            if (confirm("Are you sure you want to clear all data in this form?")) {
+                const form = document.querySelector('form');
+                if (form) {
+                    form.reset();
+                    // Hide 'Other' inputs manually as reset() doesn't handle display style
+                    document.getElementById('otherStateInput').style.display = 'none';
+                    document.getElementById('otherCityInput').style.display = 'none';
+                    validateForm();
+                }
+            }
         }
 
         // Toggle Other Input
@@ -860,11 +912,22 @@
 
                 // Only validate if element is visible
                 if (el.style.display !== 'none' && el.tagName !== 'SPAN') {
-                    if (!el.value.trim()) {
+                    if (!el.value || !el.value.trim()) {
                         allFilled = false;
                     }
                 }
             });
+
+            // Date validation: End Date must be after or same as Start Date
+            const startStr = document.getElementById('startDate').value;
+            const endStr = document.getElementById('endDate').value;
+            if (startStr && endStr) {
+                const start = new Date(startStr);
+                const end = new Date(endStr);
+                if (end < start) {
+                    allFilled = false;
+                }
+            }
 
             if (allFilled) {
                 createBtn.removeAttribute('disabled');
@@ -978,19 +1041,25 @@
         // Show confirmation popup
         function createTournament() {
             // Get form values
-            const tournamentName = document.getElementById('tournamentName').value;
+            const tournamentName = document.getElementById('tournamentName').value.trim();
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
-            // ... (rest of getting values is same, re-fetching to ensure latest)
+
+            // Final check just in case
+            if (new Date(endDate) < new Date(startDate)) {
+                alert('End Date cannot be before Start Date.');
+                return;
+            }
+
             const state = document.getElementById('stateSelect').value === 'Other' ?
-                document.getElementById('otherStateInput').value :
+                document.getElementById('otherStateInput').value.trim() :
                 document.getElementById('stateSelect').value;
 
             const city = document.getElementById('citySelect').value === 'Other' ?
-                document.getElementById('otherCityInput').value :
+                document.getElementById('otherCityInput').value.trim() :
                 document.getElementById('citySelect').value;
 
-            const venue = document.getElementById('venue').value;
+            const venue = document.getElementById('venue').value.trim();
             const ageGroup = document.getElementById('ageGroup').value;
             const gender = document.getElementById('gender').value;
             const format = document.getElementById('format').value;
@@ -998,13 +1067,18 @@
 
             // Determine status based on dates
             const today = new Date();
+            today.setHours(0, 0, 0, 0);
             const start = new Date(startDate);
+            start.setHours(0, 0, 0, 0);
             const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999);
+
             let status = 'Scheduled';
 
-            if (today >= start && today <= end) {
+            const now = new Date();
+            if (now >= start && now <= end) {
                 status = 'Live';
-            } else if (today > end) {
+            } else if (now > end) {
                 status = 'Completed';
             }
 
@@ -1064,6 +1138,12 @@
                     tournaments[index] = pendingTournament;
                 }
             } else {
+                // Check if tournament name already exists
+                if (tournaments.some(t => t.name.toLowerCase() === pendingTournament.name.toLowerCase())) {
+                    alert('A tournament with this name already exists.');
+                    closeConfirmationPopup();
+                    return;
+                }
                 // Add new tournament
                 tournaments.push(pendingTournament);
             }

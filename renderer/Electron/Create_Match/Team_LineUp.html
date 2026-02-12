@@ -52,6 +52,18 @@
             padding: 40px 50px 35px;
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+
         .header h1 {
             font-family: 'Poppins', sans-serif;
             font-size: 38px;
@@ -59,12 +71,45 @@
             color: #ffffff;
             text-transform: uppercase;
             letter-spacing: 2px;
+            margin-bottom: 5px;
         }
 
         .subtitle {
             color: rgba(255, 255, 255, 0.95);
             font-size: 15px;
-            margin-top: 8px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ea580c;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
         .form-content {
@@ -189,8 +234,14 @@
     <div class="container">
         <div class="header-banner">
             <div class="header">
-                <h1>🏁 Finalize Lineups</h1>
-                <p class="subtitle">Set the starting players and substitutes for both teams</p>
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <div class="header-content">
+                    <h1>🏁 Finalize Lineups</h1>
+                    <p class="subtitle">Set the starting players and substitutes for both teams</p>
+                </div>
+                <div style="width: 100px;"></div> <!-- Spacer -->
             </div>
         </div>
 
@@ -228,7 +279,8 @@
             </div>
 
             <div class="button-row">
-                <button class="btn finish-btn" onclick="finalizeMatch()">Finish & Create Match</button>
+                <button class="btn finish-btn" id="finishBtn" onclick="finalizeMatch()" disabled>Finish & Create
+                    Match</button>
             </div>
         </div>
     </div>
@@ -240,8 +292,8 @@
                 const row = document.createElement('div');
                 row.className = 'player-row';
                 row.innerHTML = `
-                    <input type="text" placeholder="#" id="${prefix}_kit_${i}" maxlength="3">
-                    <input type="text" placeholder="Player Name" id="${prefix}_name_${i}">
+                    <input type="text" placeholder="#" id="${prefix}_kit_${i}" maxlength="3" oninput="validateLineups()">
+                    <input type="text" placeholder="Player Name" id="${prefix}_name_${i}" oninput="validateLineups()">
                 `;
                 container.appendChild(row);
             }
@@ -256,6 +308,8 @@
             createInputs('subsA', 3, 'A_s');
             createInputs('playingB', 9, 'B_p');
             createInputs('subsB', 3, 'B_s');
+
+            validateLineups();
         }
 
         function switchTab(type) {
@@ -263,6 +317,66 @@
             document.getElementById('tabB').classList.toggle('active', type === 'B');
             document.getElementById('contentA').style.display = type === 'A' ? 'block' : 'none';
             document.getElementById('contentB').style.display = type === 'B' ? 'block' : 'none';
+        }
+
+        function validateLineups() {
+            const getGroup = (pref) => {
+                const kits = [];
+                const names = [];
+                for (let i = 1; i <= 9; i++) {
+                    kits.push(document.getElementById(pref + '_p_kit_' + i).value.trim());
+                    names.push(document.getElementById(pref + '_p_name_' + i).value.trim());
+                }
+                for (let i = 1; i <= 3; i++) {
+                    kits.push(document.getElementById(pref + '_s_kit_' + i).value.trim());
+                    names.push(document.getElementById(pref + '_s_name_' + i).value.trim());
+                }
+                return { kits, names };
+            };
+
+            const checkDuplicates = (kits) => {
+                const seen = new Set();
+                let hasDup = false;
+                kits.forEach(k => {
+                    if (k && seen.has(k)) hasDup = true;
+                    if (k) seen.add(k);
+                });
+                return hasDup;
+            };
+
+            const dataA = getGroup('A');
+            const dataB = getGroup('B');
+
+            const allFilledA = dataA.kits.every(k => k) && dataA.names.every(n => n);
+            const allFilledB = dataB.kits.every(k => k) && dataB.names.every(n => n);
+            const dupA = checkDuplicates(dataA.kits);
+            const dupB = checkDuplicates(dataB.kits);
+
+            const finishBtn = document.getElementById('finishBtn');
+            finishBtn.disabled = !(allFilledA && allFilledB && !dupA && !dupB);
+
+            // Visual feedback for duplicates
+            const updateStyles = (pref, kits) => {
+                const seen = {};
+                kits.forEach((k, idx) => {
+                    const id = idx < 9 ? `${pref}_p_kit_${idx + 1}` : `${pref}_s_kit_${idx - 8}`;
+                    const el = document.getElementById(id);
+                    if (k) {
+                        if (seen[k] !== undefined) {
+                            el.style.borderColor = '#dc2626';
+                            document.getElementById(seen[k]).style.borderColor = '#dc2626';
+                        } else {
+                            el.style.borderColor = '#fed7aa';
+                            seen[k] = id;
+                        }
+                    } else {
+                        el.style.borderColor = '#fed7aa';
+                    }
+                });
+            };
+
+            updateStyles('A', dataA.kits);
+            updateStyles('B', dataB.kits);
         }
 
         function finalizeMatch() {

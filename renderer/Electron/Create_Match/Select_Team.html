@@ -335,10 +335,14 @@
         ];
 
         function init() {
-            let teams = JSON.parse(localStorage.getItem('team_db') || '[]');
+            // Updated to use 'teams' key for consistency with dashboard
+            let teams = JSON.parse(localStorage.getItem('teams') || '[]');
             if (teams.length === 0) {
-                teams = defaultTeams;
-                localStorage.setItem('team_db', JSON.stringify(teams));
+                // Fallback to team_db or default if teams is empty
+                teams = JSON.parse(localStorage.getItem('team_db') || '[]');
+                if (teams.length === 0) {
+                    teams = defaultTeams;
+                }
             }
 
             const selectA = document.getElementById('teamA');
@@ -355,6 +359,23 @@
                 optB.textContent = t.name;
                 selectB.appendChild(optB);
             });
+
+            // Check for pre-selected teams from dashboard
+            const preA = JSON.parse(localStorage.getItem('pre_selected_team_a') || 'null');
+            const preB = JSON.parse(localStorage.getItem('pre_selected_team_b') || 'null');
+
+            if (preA) {
+                selectA.value = preA.id;
+                updatePreview('A');
+            }
+            if (preB) {
+                selectB.value = preB.id;
+                updatePreview('B');
+            }
+
+            // Clear pre-selection after use
+            localStorage.removeItem('pre_selected_team_a');
+            localStorage.removeItem('pre_selected_team_b');
         }
 
         function updatePreview(type) {
