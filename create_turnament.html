@@ -598,15 +598,6 @@
                         <label>State</label>
                         <select id="stateSelect" onchange="toggleOtherInput('stateSelect', 'otherStateInput')">
                             <option value="">Select State</option>
-                            <option>Maharashtra</option>
-                            <option>Kerala</option>
-                            <option>Gujarat</option>
-                            <option>Rajasthan</option>
-                            <option>Assam</option>
-                            <option>Goa</option>
-                            <option>Bihar</option>
-                            <option>Madhya Pradesh</option>
-                            <option value="Other">Other</option>
                         </select>
                         <input type="text" id="otherStateInput" placeholder="Enter State Name"
                             style="display: none; margin-top: 10px;" />
@@ -615,11 +606,6 @@
                         <label>City</label>
                         <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
                             <option value="">Select City</option>
-                            <option>Pune</option>
-                            <option>Mumbai</option>
-                            <option>Delhi</option>
-                            <option>Bangalore</option>
-                            <option value="Other">Other</option>
                         </select>
                         <input type="text" id="otherCityInput" placeholder="Enter City Name"
                             style="display: none; margin-top: 10px;" />
@@ -715,6 +701,21 @@
             </div>
         </div>
     </div>
+
+    <!-- Add Scripts here -->
+    <script src="renderer/js/state_city_data.js"></script>
+    <script src="renderer/js/state_city_validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            populateStates('stateSelect');
+        });
+
+        // Hook into the existing toggleOtherInput if it's defined elsewhere or add it here if it was inline and I missed it.
+        // Wait, create_turnament.html has a script section?
+        // I didn't see the script section in the view_file output (it was truncated).
+        // I should be careful. I'll insert these before the body close if possible, or search for <script>.
+        // The view_file output stopped at line 800.
+    </script>
 
     <style>
         /* Popup Overlay */
@@ -881,11 +882,16 @@
         }
 
         // Toggle Other Input
+        // Toggle Other Input
         function toggleOtherInput(selectId, inputId) {
             const select = document.getElementById(selectId);
             const input = document.getElementById(inputId);
 
-            if (select.value === 'Other') {
+            if (selectId === 'stateSelect') {
+                populateCities('stateSelect', 'citySelect');
+            }
+
+            if (select.value === 'Other' || select.value === 'Customize City') {
                 input.style.display = 'block';
                 input.focus();
             } else {
@@ -1055,9 +1061,10 @@
                 document.getElementById('otherStateInput').value.trim() :
                 document.getElementById('stateSelect').value;
 
-            const city = document.getElementById('citySelect').value === 'Other' ?
+            const cityVal = document.getElementById('citySelect').value;
+            const city = (cityVal === 'Other' || cityVal === 'Customize City') ?
                 document.getElementById('otherCityInput').value.trim() :
-                document.getElementById('citySelect').value;
+                cityVal;
 
             const venue = document.getElementById('venue').value.trim();
             const ageGroup = document.getElementById('ageGroup').value;

@@ -271,6 +271,11 @@
             <div class="section-title">Schedule Information</div>
 
             <div class="form-grid">
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Match Name*</label>
+                    <input type="text" id="matchName" placeholder="e.g. Opening Match, Quarter Final 1, Final"
+                        oninput="validate(this)">
+                </div>
                 <div class="form-group">
                     <label>Match Date*</label>
                     <input type="date" id="matchDate" oninput="validate(this)">
@@ -318,6 +323,7 @@
 
         function saveAndNext() {
             const matchData = {
+                matchName: document.getElementById('matchName').value,
                 date: document.getElementById('matchDate').value,
                 time: document.getElementById('matchTime').value,
                 pool: document.getElementById('pool').value,
@@ -325,9 +331,9 @@
                 venue: document.getElementById('venue').value
             };
 
-            if (!matchData.date || !matchData.time || !matchData.matchNo) {
+            if (!matchData.matchName || !matchData.date || !matchData.time || !matchData.matchNo) {
                 // Highlight invalid fields
-                ['matchDate', 'matchTime', 'matchNo'].forEach(id => {
+                ['matchName', 'matchDate', 'matchTime', 'matchNo'].forEach(id => {
                     const el = document.getElementById(id);
                     if (!el.value.trim()) el.classList.add('invalid');
                 });

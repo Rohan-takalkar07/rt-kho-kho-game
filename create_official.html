@@ -241,13 +241,6 @@
                     <label>State</label>
                     <select id="stateSelect" onchange="toggleOtherInput('stateSelect', 'otherStateInput')">
                         <option value="">Select State</option>
-                        <option>Maharashtra</option>
-                        <option>Kerala</option>
-                        <option>Gujarat</option>
-                        <option>Rajasthan</option>
-                        <option>Assam</option>
-                        <option>Goa</option>
-                        <option value="Other">Other</option>
                     </select>
                     <input type="text" id="otherStateInput" placeholder="Enter State Name"
                         style="display: none; margin-top: 10px;" />
@@ -256,11 +249,6 @@
                     <label>City</label>
                     <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
                         <option value="">Select City</option>
-                        <option>Pune</option>
-                        <option>Mumbai</option>
-                        <option>Delhi</option>
-                        <option>Bangalore</option>
-                        <option value="Other">Other</option>
                     </select>
                     <input type="text" id="otherCityInput" placeholder="Enter City Name"
                         style="display: none; margin-top: 10px;" />
@@ -270,127 +258,137 @@
             <div class="button-row">
                 <button type="button" class="cancel" id="cancelBtn">Cancel</button>
                 <button type="button" id="createBtn" class="create" onclick="saveOfficial()" disabled>Create
-                    Official</button>
             </div>
-        </div>
-    </div>
 
-    <script>
-        // Toggle Other Input
-        function toggleOtherInput(selectId, inputId) {
-            const select = document.getElementById(selectId);
-            const input = document.getElementById(inputId);
+            <script src="renderer/js/state_city_data.js"></script>
+            <script src="renderer/js/state_city_validation.js"></script>
+            <script>
+                // Initialize Dropdowns
+                document.addEventListener('DOMContentLoaded', () => {
+                    populateStates('stateSelect');
+                });
 
-            if (select.value === 'Other') {
-                input.style.display = 'block';
-                input.focus();
-            } else {
-                input.style.display = 'none';
-                input.value = '';
-            }
-            validateForm();
-        }
+                // Toggle Other Input
+                function toggleOtherInput(selectId, inputId) {
+                    // ... existing logic ...
+                    const select = document.getElementById(selectId);
+                    const input = document.getElementById(inputId);
 
-        // Validation
-        const inputs = [
-            'firstName', 'lastName', 'email', 'mobile',
-            'stateSelect', 'otherStateInput', 'citySelect', 'otherCityInput'
-        ].map(id => document.getElementById(id));
-
-        const createBtn = document.getElementById('createBtn');
-
-        function validateForm() {
-            let allFilled = true;
-
-            // Regex patterns
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            const mobileRegex = /^\d{10}$/;
-
-            inputs.forEach(input => {
-                if (input.style.display !== 'none') {
-                    const value = input.value.trim();
-                    let isValid = !!value;
-
-                    // Specific pattern checks
-                    if (isValid) {
-                        if (input.id === 'email') {
-                            isValid = emailRegex.test(value);
-                        } else if (input.id === 'mobile') {
-                            isValid = mobileRegex.test(value);
-                        }
+                    if (selectId === 'stateSelect') {
+                        populateCities('stateSelect', 'citySelect');
                     }
 
-                    if (!isValid) {
-                        allFilled = false;
-                        if (value) input.style.borderColor = '#dc2626'; // Red border if filled but invalid
-                        else input.style.borderColor = '#fed7aa'; // Standard border if empty
+                    if (select.value === 'Other') {
+                        input.style.display = 'block';
+                        input.focus();
                     } else {
-                        input.style.borderColor = '#fed7aa'; // Reset to standard
+                        input.style.display = 'none';
+                        input.value = '';
                     }
-                }
-            });
-
-            if (allFilled) createBtn.removeAttribute('disabled');
-            else createBtn.setAttribute('disabled', 'true');
-        }
-
-        inputs.forEach(input => {
-            input.addEventListener('input', validateForm);
-            input.addEventListener('change', validateForm);
-            input.addEventListener('blur', validateForm);
-        });
-
-        function saveOfficial() {
-            const official = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                email: document.getElementById('email').value,
-                mobile: document.getElementById('mobile').value,
-                state: document.getElementById('stateSelect').value === 'Other' ?
-                    document.getElementById('otherStateInput').value :
-                    document.getElementById('stateSelect').value,
-                city: document.getElementById('citySelect').value === 'Other' ?
-                    document.getElementById('otherCityInput').value :
-                    document.getElementById('citySelect').value,
-                id: Date.now()
-            };
-
-            const officials = JSON.parse(localStorage.getItem('officials') || '[]');
-            officials.push(official);
-            localStorage.setItem('officials', JSON.stringify(officials));
-
-            showNotification('Official saved! Navigating to Staff setup...');
-            setTimeout(() => {
-                window.location.href = 'staff.html';
-            }, 1500);
-        }
-
-        function showNotification(message) {
-            const note = document.createElement('div');
-            note.style = 'position:fixed; bottom:30px; right:30px; background:#ea580c; color:white; padding:15px 25px; border-radius:12px; font-weight:700; box-shadow:0 10px 25px rgba(0,0,0,0.2); z-index:10000;';
-            note.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
-            document.body.appendChild(note);
-        }
-
-        function goBack() {
-            window.history.back();
-        }
-
-        function resetForm() {
-            if (confirm("Are you sure you want to clear all data in this form?")) {
-                const form = document.querySelector('form');
-                if (form) {
-                    form.reset();
-                    // Manually reset other fields
-                    document.getElementById('otherStateInput').style.display = 'none';
-                    document.getElementById('otherCityInput').style.display = 'none';
                     validateForm();
                 }
-            }
-        }
 
-        document.getElementById('cancelBtn').onclick = resetForm;
-    </script>
+
+                // Validation
+                const inputs = [
+                    'firstName', 'lastName', 'email', 'mobile',
+                    'stateSelect', 'otherStateInput', 'citySelect', 'otherCityInput'
+                ].map(id => document.getElementById(id));
+
+                const createBtn = document.getElementById('createBtn');
+
+                function validateForm() {
+                    let allFilled = true;
+
+                    // Regex patterns
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    const mobileRegex = /^\d{10}$/;
+
+                    inputs.forEach(input => {
+                        if (input.style.display !== 'none') {
+                            const value = input.value.trim();
+                            let isValid = !!value;
+
+                            // Specific pattern checks
+                            if (isValid) {
+                                if (input.id === 'email') {
+                                    isValid = emailRegex.test(value);
+                                } else if (input.id === 'mobile') {
+                                    isValid = mobileRegex.test(value);
+                                }
+                            }
+
+                            if (!isValid) {
+                                allFilled = false;
+                                if (value) input.style.borderColor = '#dc2626'; // Red border if filled but invalid
+                                else input.style.borderColor = '#fed7aa'; // Standard border if empty
+                            } else {
+                                input.style.borderColor = '#fed7aa'; // Reset to standard
+                            }
+                        }
+                    });
+
+                    if (allFilled) createBtn.removeAttribute('disabled');
+                    else createBtn.setAttribute('disabled', 'true');
+                }
+
+                inputs.forEach(input => {
+                    input.addEventListener('input', validateForm);
+                    input.addEventListener('change', validateForm);
+                    input.addEventListener('blur', validateForm);
+                });
+
+                function saveOfficial() {
+                    const official = {
+                        firstName: document.getElementById('firstName').value,
+                        lastName: document.getElementById('lastName').value,
+                        email: document.getElementById('email').value,
+                        mobile: document.getElementById('mobile').value,
+                        state: document.getElementById('stateSelect').value === 'Other' ?
+                            document.getElementById('otherStateInput').value :
+                            document.getElementById('stateSelect').value,
+                        city: document.getElementById('citySelect').value === 'Other' ?
+                            document.getElementById('otherCityInput').value :
+                            document.getElementById('citySelect').value,
+                        id: Date.now()
+                    };
+
+                    const officials = JSON.parse(localStorage.getItem('officials') || '[]');
+                    officials.push(official);
+                    localStorage.setItem('officials', JSON.stringify(officials));
+
+                    showNotification('Official saved! Navigating to Staff setup...');
+                    setTimeout(() => {
+                        window.location.href = 'staff.html';
+                    }, 1500);
+                }
+
+                function showNotification(message) {
+                    const note = document.createElement('div');
+                    note.style = 'position:fixed; bottom:30px; right:30px; background:#ea580c; color:white; padding:15px 25px; border-radius:12px; font-weight:700; box-shadow:0 10px 25px rgba(0,0,0,0.2); z-index:10000;';
+                    note.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+                    document.body.appendChild(note);
+                }
+
+                function goBack() {
+                    window.history.back();
+                }
+
+                function resetForm() {
+                    if (confirm("Are you sure you want to clear all data in this form?")) {
+                        const form = document.querySelector('form');
+                        if (form) {
+                            form.reset();
+                            // Manually reset other fields
+                            document.getElementById('otherStateInput').style.display = 'none';
+                            document.getElementById('otherCityInput').style.display = 'none';
+                            validateForm();
+                        }
+                    }
+                }
+
+                document.getElementById('cancelBtn').onclick = resetForm;
+            </script>
 </body>
 
 </html>

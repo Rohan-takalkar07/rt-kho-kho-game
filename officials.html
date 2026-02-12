@@ -315,6 +315,52 @@
             color: #fed7aa;
             margin-bottom: 20px;
         }
+
+        /* Modal Popup Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes modalPop {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #1c1917;
+        }
     </style>
 </head>
 
@@ -339,14 +385,23 @@
                     <input type="text" class="search-input" placeholder="Search officials by name, city or role..."
                         onkeyup="filterOfficials(this.value)">
                 </div>
-                <button class="create-btn" onclick="window.location.href='create_official.html'">
-                    <i class="fas fa-plus"></i> Create Official
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <button id="assignBtn" class="create-btn"
+                        style="background: linear-gradient(135deg, #16a34a, #15803d); display: none;"
+                        onclick="openAssignModal()">
+                        <i class="fas fa-user-plus"></i> Add Official for Match
+                    </button>
+                    <button class="create-btn" onclick="window.location.href='create_official.html'">
+                        <i class="fas fa-plus"></i> Create Official
+                    </button>
+                </div>
             </div>
 
             <table>
                 <thead>
                     <tr>
+                        <th style="width: 40px;"><input type="checkbox" id="selectAll"
+                                onclick="toggleAllCheckboxes(this.checked)"></th>
                         <th>Name</th>
                         <th>Contact</th>
                         <th>Role</th>
@@ -358,6 +413,44 @@
                     <!-- Dynamic Content -->
                 </tbody>
             </table>
+        </div>
+
+        <!-- Assignment Modal -->
+        <div id="assignModal" class="modal-overlay">
+            <div class="modal-content" style="max-width: 600px; text-align: left;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <h2 class="modal-title" style="margin-bottom: 0;">Assign to Match</h2>
+                    <i class="fas fa-times" style="cursor: pointer; color: #78716c;" onclick="closeAssignModal()"></i>
+                </div>
+
+                <p id="selectedCountMsg" style="margin-bottom: 20px; font-weight: 600; color: #ea580c;"></p>
+
+                <div style="margin-bottom: 20px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; font-weight: 700; color: #78716c; text-transform: uppercase; font-size: 12px;">Select
+                        Tournament</label>
+                    <select id="tournamentSelect" onchange="loadMatchesForTournament(this.value)"
+                        style="width: 100%; padding: 12px; border: 2px solid #fed7aa; border-radius: 10px; background: #fffbf5; outline: none;">
+                        <option value="">Choose Tournament</option>
+                    </select>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; font-weight: 700; color: #78716c; text-transform: uppercase; font-size: 12px;">Select
+                        Match</label>
+                    <select id="matchSelect"
+                        style="width: 100%; padding: 12px; border: 2px solid #fed7aa; border-radius: 10px; background: #fffbf5; outline: none;">
+                        <option value="">Choose Match</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 15px;">
+                    <button class="back-btn" style="color: #78716c; border-color: #d6d3d1;"
+                        onclick="closeAssignModal()">Cancel</button>
+                    <button class="create-btn" onclick="confirmAssignment()">Confirm Assignment</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -372,7 +465,7 @@
             if (officials.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="5" class="no-data">
+                        <td colspan="6" class="no-data">
                             <i class="fas fa-folder-open"></i>
                             <div style="font-size: 16px; font-weight: 600;">No officials found</div>
                             <div style="font-size: 14px; margin-top: 5px;">Create new officials to manage upcoming matches</div>
@@ -382,8 +475,11 @@
                 return;
             }
 
-            tbody.innerHTML = officials.map(official => `
-                <tr>
+            tbody.innerHTML = officials.map((official, index) => `
+                <tr onclick="toggleRowCheckbox(event, ${index})">
+                    <td onclick="event.stopPropagation()">
+                        <input type="checkbox" class="official-checkbox" value="${official.firstName} ${official.lastName}" onchange="updateAssignBtn()">
+                    </td>
                     <td style="font-weight: 700; color: #ea580c;">${official.firstName} ${official.lastName}</td>
                     <td>
                         <div style="font-size: 13px;">${official.email}</div>
@@ -393,12 +489,108 @@
                     <td>
                         <div class="location-badge">
                             <i class="fas fa-map-marker-alt"></i>
-                            ${official.city}, ${official.state}
+                            ${official.city || 'N/A'}, ${official.state || 'N/A'}
                         </div>
                     </td>
                     <td><span style="color: #16a34a; font-weight: 600; font-size: 13px;">● Active</span></td>
                 </tr>
             `).join('');
+        }
+
+        function toggleRowCheckbox(event, index) {
+            const checkbox = document.querySelectorAll('.official-checkbox')[index];
+            if (event.target !== checkbox) {
+                checkbox.checked = !checkbox.checked;
+                updateAssignBtn();
+            }
+        }
+
+        function toggleAllCheckboxes(checked) {
+            document.querySelectorAll('.official-checkbox').forEach(cb => {
+                cb.checked = checked;
+            });
+            updateAssignBtn();
+        }
+
+        function updateAssignBtn() {
+            const selected = document.querySelectorAll('.official-checkbox:checked').length;
+            const btn = document.getElementById('assignBtn');
+            btn.style.display = selected > 0 ? 'flex' : 'none';
+        }
+
+        function openAssignModal() {
+            const selected = document.querySelectorAll('.official-checkbox:checked');
+            document.getElementById('selectedCountMsg').innerText = `Selected Officials: ${selected.length}`;
+
+            // Populate tournaments
+            const tournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+            const tSelect = document.getElementById('tournamentSelect');
+            tSelect.innerHTML = '<option value="">Choose Tournament</option>';
+            tournaments.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.name;
+                opt.textContent = t.name;
+                tSelect.appendChild(opt);
+            });
+
+            document.getElementById('assignModal').style.display = 'flex';
+        }
+
+        function closeAssignModal() {
+            document.getElementById('assignModal').style.display = 'none';
+        }
+
+        function loadMatchesForTournament(tourneyName) {
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const mSelect = document.getElementById('matchSelect');
+            mSelect.innerHTML = '<option value="">Choose Match</option>';
+
+            // In some versions, matches might have a tourneyName field
+            // If matches don't have tournament linkage, we show all matches
+            matches.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id || m.matchNo;
+                opt.textContent = `Match # ${m.matchNo} - ${m.teamA} vs ${m.teamB}`;
+                mSelect.appendChild(opt);
+            });
+        }
+
+        function confirmAssignment() {
+            const matchId = document.getElementById('matchSelect').value;
+            const tourneyName = document.getElementById('tournamentSelect').value;
+
+            if (!tourneyName || !matchId) {
+                alert('Please select both a tournament and a match.');
+                return;
+            }
+
+            const selectedOfficials = Array.from(document.querySelectorAll('.official-checkbox:checked')).map(cb => cb.value);
+
+            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            let matchIndex = matches.findIndex(m => (m.id == matchId || m.matchNo == matchId));
+
+            if (matchIndex !== -1) {
+                if (!matches[matchIndex].appointedOfficials) {
+                    matches[matchIndex].appointedOfficials = [];
+                }
+
+                // Add unique officials
+                selectedOfficials.forEach(name => {
+                    if (!matches[matchIndex].appointedOfficials.includes(name)) {
+                        matches[matchIndex].appointedOfficials.push(name);
+                    }
+                });
+
+                localStorage.setItem('matches', JSON.stringify(matches));
+                alert(`Successfully assigned ${selectedOfficials.length} officials to Match # ${matches[matchIndex].matchNo}`);
+                closeAssignModal();
+
+                // Uncheck all
+                document.getElementById('selectAll').checked = false;
+                toggleAllCheckboxes(false);
+            } else {
+                alert('Match not found!');
+            }
         }
 
         function filterOfficials(query) {

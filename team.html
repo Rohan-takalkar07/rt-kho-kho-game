@@ -41,26 +41,14 @@
       </div>
       <div class="form-item">
         <label>State</label>
-        <select>
+        <select id="stateSelect" onchange="populateCities('stateSelect', 'citySelect')">
           <option value="">Select State</option>
-          <option>Maharastra</option>
-          <option>Kerala</option>
-          <option>Gujrat</option>
-          <option>Rajasthan</option>
-          <option>Assam</option>
-          <option>Goa</option>
-          <option>Bihar</option>
-          <option>Madhya Pradesh</option>
         </select>
       </div>
       <div class="form-item">
         <label>City</label>
-        <select>
+        <select id="citySelect">
           <option value="">Select city</option>
-          <option>Pune</option>
-          <option>Mumbai</option>
-          <option>Delhi</option>
-          <option>Bangalore</option>
         </select>
       </div>
       <div class="form-item">
@@ -88,6 +76,14 @@
       <button type="button" class="next" onclick="window.location.href='team2.html'">Next</button>
     </div>
   </div>
+  </div>
+  <script src="renderer/js/state_city_data.js"></script>
+  <script src="renderer/js/state_city_validation.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      populateStates('stateSelect');
+    });
+  </script>
 </body>
 
 </html>

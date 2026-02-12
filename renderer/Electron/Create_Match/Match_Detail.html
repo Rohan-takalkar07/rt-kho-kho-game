@@ -283,9 +283,11 @@
                             <div class="team-name" style="font-size: 18px; color: #ea580c;">${m.teamB}</div>
                         </div>
                         <div class="match-meta">
+                            ${m.matchName ? `<div class="meta-text" style="color: var(--primary); font-weight: 700; margin-bottom: 8px;">${m.matchName}</div>` : ''}
                             <div class="meta-text"><i class="far fa-calendar-alt"></i> ${m.matchDate}</div>
                             <div class="meta-text"><i class="far fa-clock"></i> ${m.matchTime}</div>
                             <div class="meta-text"><i class="fas fa-map-marker-alt"></i> ${m.venue}</div>
+                            ${m.matchName ? `<div class="meta-text" style="font-size: 11px;">#${m.matchNo}</div>` : ''}
                         </div>
                     </div>
                     <div style="text-align: right;">

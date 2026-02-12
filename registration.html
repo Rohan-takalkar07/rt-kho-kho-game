@@ -265,11 +265,8 @@
             <!-- State Selection -->
             <div class="form-group">
                 <label for="state">State</label>
-                <select id="state" onchange="updateCities()">
+                <select id="state" onchange="populateCities('state', 'city')">
                     <option value="">Select State</option>
-                    <option value="Maharashtra">Maharashtra</option>
-                    <option value="Karnataka">Karnataka</option>
-                    <option value="Gujarat">Gujarat</option>
                 </select>
                 <div id="stateError" class="error-msg"></div>
             </div>
@@ -314,142 +311,119 @@
         </div>
     </div>
 
-    <script>
-        /**
-         * Dynamic State-City Mapping
-         */
-        const stateCityData = {
-            "Maharashtra": ["Mumbai", "Pune", "Nagpur"],
-            "Karnataka": ["Bengaluru", "Mysore", "Hubli"],
-            "Gujarat": ["Ahmedabad", "Surat", "Vadodara"]
-        };
+    // Imported scripts handle data and validation
 
-        /**
-         * Function to update City dropdown based on selected State
-         */
-        function updateCities() {
-            const stateSelect = document.getElementById('state');
-            const citySelect = document.getElementById('city');
-            const selectedState = stateSelect.value;
 
-            // Clear existing options
-            citySelect.innerHTML = '<option value="">Select city</option>';
+    /**
+    * Color Selection Logic
+    */
+    const colorCircles = document.querySelectorAll('.color-circle');
+    const hiddenColorInput = document.getElementById('selectedColor');
 
-            if (selectedState && stateCityData[selectedState]) {
-                stateCityData[selectedState].forEach(city => {
-                    const option = document.createElement('option');
-                    option.value = city;
-                    option.textContent = city;
-                    citySelect.appendChild(option);
-                });
-            }
-        }
+    colorCircles.forEach(circle => {
+    circle.addEventListener('click', () => {
+    // Remove selection from all circles
+    colorCircles.forEach(c => c.classList.remove('selected'));
 
-        /**
-         * Color Selection Logic
-         */
-        const colorCircles = document.querySelectorAll('.color-circle');
-        const hiddenColorInput = document.getElementById('selectedColor');
+    // Add selection to clicked circle
+    circle.classList.add('selected');
 
-        colorCircles.forEach(circle => {
-            circle.addEventListener('click', () => {
-                // Remove selection from all circles
-                colorCircles.forEach(c => c.classList.remove('selected'));
+    // Update hidden input with the selected color
+    hiddenColorInput.value = circle.getAttribute('data-color');
+    });
+    });
 
-                // Add selection to clicked circle
-                circle.classList.add('selected');
+    /**
+    * Form Validation and Submission
+    */
+    function handleFormSubmit(event) {
+    event.preventDefault(); // Prevent page reload
 
-                // Update hidden input with the selected color
-                hiddenColorInput.value = circle.getAttribute('data-color');
-            });
-        });
+    // Get values
+    const name = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const state = document.getElementById('state').value;
+    const city = document.getElementById('city').value;
+    const color = hiddenColorInput.value;
 
-        /**
-         * Form Validation and Submission
-         */
-        function handleFormSubmit(event) {
-            event.preventDefault(); // Prevent page reload
+    // Reset errors
+    document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
 
-            // Get values
-            const name = document.getElementById('fullName').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const state = document.getElementById('state').value;
-            const city = document.getElementById('city').value;
-            const color = hiddenColorInput.value;
+    let isValid = true;
 
-            // Reset errors
-            document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
+    // Name Validation
+    if (!name) {
+    document.getElementById('nameError').textContent = 'Full Name is required.';
+    isValid = false;
+    }
 
-            let isValid = true;
+    // Email Validation (Simple regex)
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+    document.getElementById('emailError').textContent = 'Email is required.';
+    isValid = false;
+    } else if (!emailPattern.test(email)) {
+    document.getElementById('emailError').textContent = 'Please enter a valid email address.';
+    isValid = false;
+    }
 
-            // Name Validation
-            if (!name) {
-                document.getElementById('nameError').textContent = 'Full Name is required.';
-                isValid = false;
-            }
+    // Phone Validation
+    const phonePattern = /^\d{10}$/;
+    if (!phone) {
+    document.getElementById('phoneError').textContent = 'Phone number is required.';
+    isValid = false;
+    } else if (!phonePattern.test(phone)) {
+    document.getElementById('phoneError').textContent = 'Phone number must be exactly 10 digits.';
+    isValid = false;
+    }
 
-            // Email Validation (Simple regex)
-            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!email) {
-                document.getElementById('emailError').textContent = 'Email is required.';
-                isValid = false;
-            } else if (!emailPattern.test(email)) {
-                document.getElementById('emailError').textContent = 'Please enter a valid email address.';
-                isValid = false;
-            }
+    // State Validation
+    if (!state) {
+    document.getElementById('stateError').textContent = 'Please select a state.';
+    isValid = false;
+    }
 
-            // Phone Validation
-            const phonePattern = /^\d{10}$/;
-            if (!phone) {
-                document.getElementById('phoneError').textContent = 'Phone number is required.';
-                isValid = false;
-            } else if (!phonePattern.test(phone)) {
-                document.getElementById('phoneError').textContent = 'Phone number must be exactly 10 digits.';
-                isValid = false;
-            }
+    // City Validation
+    if (!city) {
+    document.getElementById('cityError').textContent = 'Please select a city.';
+    isValid = false;
+    }
 
-            // State Validation
-            if (!state) {
-                document.getElementById('stateError').textContent = 'Please select a state.';
-                isValid = false;
-            }
+    // Color Validation
+    if (!color) {
+    document.getElementById('colorError').textContent = 'Please select a color.';
+    isValid = false;
+    }
 
-            // City Validation
-            if (!city) {
-                document.getElementById('cityError').textContent = 'Please select a city.';
-                isValid = false;
-            }
+    // Final Check
+    if (isValid) {
+    showSuccess();
+    }
 
-            // Color Validation
-            if (!color) {
-                document.getElementById('colorError').textContent = 'Please select a color.';
-                isValid = false;
-            }
+    return false;
+    }
 
-            // Final Check
-            if (isValid) {
-                showSuccess();
-            }
+    /**
+    * Success/Modal Handlers
+    */
+    function showSuccess() {
+    document.getElementById('successModal').style.display = 'flex';
+    }
 
-            return false;
-        }
+    document.getElementById('successModal').style.display = 'none';
+    document.getElementById('registrationForm').reset();
+    hiddenColorInput.value = '';
+    colorCircles.forEach(c => c.classList.remove('selected'));
+    populateCities('state', 'city');
+    }
 
-        /**
-         * Success/Modal Handlers
-         */
-        function showSuccess() {
-            document.getElementById('successModal').style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('successModal').style.display = 'none';
-            document.getElementById('registrationForm').reset();
-            hiddenColorInput.value = '';
-            colorCircles.forEach(c => c.classList.remove('selected'));
-            updateCities(); // Reset city dropdown
-        }
+    document.addEventListener('DOMContentLoaded', () => {
+    populateStates('state');
+    });
     </script>
+    <script src="renderer/js/state_city_data.js"></script>
+    <script src="renderer/js/state_city_validation.js"></script>
 </body>
 
 </html>

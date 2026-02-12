@@ -211,8 +211,20 @@
                 <input type="date" id="dob">
             </div>
             <div class="form-group">
+                <label>State</label>
+                <select id="stateSelect" onchange="toggleOtherInput('stateSelect', 'otherStateInput')">
+                    <option value="">Select State</option>
+                </select>
+                <input type="text" id="otherStateInput" placeholder="Enter State Name"
+                    style="display: none; margin-top: 10px;" />
+            </div>
+            <div class="form-group">
                 <label>City</label>
-                <input type="text" id="city" placeholder="Enter city">
+                <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
+                    <option value="">Select City</option>
+                </select>
+                <input type="text" id="otherCityInput" placeholder="Enter City Name"
+                    style="display: none; margin-top: 10px;" />
             </div>
             <div class="form-group role-container">
                 <label>Role</label>
@@ -253,8 +265,25 @@
                 document.getElementById('mobile').value = data.mobile || '';
                 document.getElementById('gender').value = data.gender || 'Male';
                 document.getElementById('dob').value = data.dob || '';
-                document.getElementById('city').value = data.city || '';
+                document.getElementById('dob').value = data.dob || '';
+
+                // Handle State/City initialization
+                // Assuming data.state and data.city are present. If not, might need to infer or leave blank.
+                // Since this is a popup, we need to populate options first.
+                populateStates('stateSelect');
+
+                if (data.state) {
+                    setSelectValue('stateSelect', data.state, 'otherStateInput');
+                    populateCities('stateSelect', 'citySelect');
+                    if (data.city) {
+                        setSelectValue('citySelect', data.city, 'otherCityInput');
+                    }
+                }
+
                 document.getElementById('staffRole').value = data.role || '';
+            } else {
+                // Init empty state
+                populateStates('stateSelect');
             }
         });
 
@@ -264,7 +293,7 @@
 
         function resetForm() {
             if (confirm("Are you sure you want to clear all data in this form?")) {
-                const inputs = ['firstName', 'lastName', 'email', 'mobile', 'dob', 'city', 'staffRole'];
+                const inputs = ['firstName', 'lastName', 'email', 'mobile', 'dob', 'staffRole'];
                 inputs.forEach(id => {
                     const el = document.getElementById(id);
                     if (el) {
@@ -272,6 +301,15 @@
                         el.style.borderColor = '#fed7aa'; // Reset validation borders
                     }
                 });
+
+                // Reset State/City
+                document.getElementById('stateSelect').selectedIndex = 0;
+                document.getElementById('citySelect').innerHTML = '<option value="">Select City</option>';
+                document.getElementById('otherStateInput').style.display = 'none';
+                document.getElementById('otherCityInput').style.display = 'none';
+                document.getElementById('otherStateInput').value = '';
+                document.getElementById('otherCityInput').value = '';
+
                 document.getElementById('gender').value = 'Male';
             }
         }
@@ -311,7 +349,15 @@
             const mobile = document.getElementById('mobile').value.trim();
             const gender = document.getElementById('gender').value;
             const dob = document.getElementById('dob').value;
-            const city = document.getElementById('city').value.trim();
+
+            const state = document.getElementById('stateSelect').value === 'Other' ?
+                document.getElementById('otherStateInput').value.trim() :
+                document.getElementById('stateSelect').value;
+
+            const city = document.getElementById('citySelect').value === 'Other' ?
+                document.getElementById('otherCityInput').value.trim() :
+                document.getElementById('citySelect').value;
+
             const role = document.getElementById('staffRole').value.trim();
 
             // Validate all fields
@@ -349,6 +395,7 @@
                 mobile,
                 gender,
                 dob,
+                state,
                 city,
                 role,
                 name: `${firstName} ${lastName}`,
@@ -366,6 +413,53 @@
                 el.addEventListener('blur', (e) => validateField(id, e.target.value));
             }
         });
+    </script>
+    <script src="../../js/state_city_data.js"></script>
+    <script src="../../js/state_city_validation.js"></script>
+    <script>
+        // Init if not edit mode
+        if (!isEditMode) {
+            populateStates('stateSelect');
+        }
+
+        function toggleOtherInput(selectId, inputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+
+            if (selectId === 'stateSelect') {
+                populateCities('stateSelect', 'citySelect');
+            }
+
+            if (select.value === 'Other') {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+            }
+        }
+
+        function setSelectValue(selectId, value, otherInputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(otherInputId);
+
+            let match = false;
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === value) {
+                    select.selectedIndex = i;
+                    match = true;
+                    break;
+                }
+            }
+
+            if (!match && value) {
+                select.value = 'Other';
+                input.style.display = 'block';
+                input.value = value;
+            } else {
+                input.style.display = 'none';
+            }
+        }
     </script>
 </body>
 
