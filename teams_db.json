@@ -303,5 +303,67 @@
         "gender": "N/A"
       }
     ]
+  },
+  {
+    "id": "team_1771033044711",
+    "staff": [],
+    "players": [
+      {
+        "kitNo": 1,
+        "firstName": "yash",
+        "lastName": "shelke",
+        "position": "defender"
+      },
+      {
+        "kitNo": 2,
+        "firstName": "rohan",
+        "lastName": "takalkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 3,
+        "firstName": "vaibhav",
+        "lastName": "pachpor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 7,
+        "firstName": "prasad",
+        "lastName": "bhor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 4,
+        "firstName": "pranav",
+        "lastName": "sonavne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 5,
+        "firstName": "hari",
+        "lastName": "shree",
+        "position": "defender"
+      },
+      {
+        "kitNo": 6,
+        "firstName": "siddhesh",
+        "lastName": "katkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 8,
+        "firstName": "kiran",
+        "lastName": "sonawne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 9,
+        "firstName": "shubham",
+        "lastName": "waman",
+        "position": "defender"
+      }
+    ],
+    "playerCount": 9,
+    "createdAt": "2026-02-14T01:37:24.711Z"
   }
 ]

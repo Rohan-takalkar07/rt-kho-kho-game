@@ -320,7 +320,8 @@
                     <h1>👥 Create Staff</h1>
                     <p class="subtitle">Assign roles and manage team staff</p>
                 </div>
-                <button class="back-btn" onclick="window.location.href='../../../staff.html'">
+                <button class="back-btn"
+                    onclick="window.location.href='../../../tournament_dashboard.html' + (new URLSearchParams(window.location.search).get('name') ? '?name=' + new URLSearchParams(window.location.search).get('name') : '')">
                     <i class="fa fa-arrow-left"></i> Back
                 </button>
             </div>

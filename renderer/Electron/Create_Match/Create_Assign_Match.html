@@ -313,6 +313,33 @@
     </div>
 
     <script>
+        let isEditMode = false;
+        let editId = null;
+
+        function initEdit() {
+            const params = new URLSearchParams(window.location.search);
+            isEditMode = params.get('edit') === 'true';
+            editId = params.get('id');
+
+            if (isEditMode && editId) {
+                document.querySelector('h1').textContent = '🏁 Edit Match';
+                const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+                const match = matches.find(m => (m.id || '').toString() === editId.toString());
+
+                if (match) {
+                    document.getElementById('matchName').value = match.matchName || '';
+                    document.getElementById('matchDate').value = match.matchDate || match.date || '';
+                    document.getElementById('matchTime').value = match.matchTime || match.time || '';
+                    document.getElementById('pool').value = match.pool || 'Pool A';
+                    document.getElementById('matchNo').value = match.matchNo || '';
+                    document.getElementById('venue').value = match.venue || '';
+
+                    // Store the full match object in temp setup to preserve later steps' data
+                    localStorage.setItem('current_match_setup', JSON.stringify(match));
+                }
+            }
+        }
+
         function validate(el) {
             if (el.value.trim()) {
                 el.classList.remove('invalid');
@@ -322,35 +349,44 @@
         }
 
         function saveAndNext() {
+            const matchSetup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+
             const matchData = {
-                matchName: document.getElementById('matchName').value,
-                date: document.getElementById('matchDate').value,
-                time: document.getElementById('matchTime').value,
+                ...matchSetup,
+                matchName: document.getElementById('matchName').value.trim(),
+                matchDate: document.getElementById('matchDate').value,
+                matchTime: document.getElementById('matchTime').value,
                 pool: document.getElementById('pool').value,
                 matchNo: document.getElementById('matchNo').value,
-                venue: document.getElementById('venue').value
+                venue: document.getElementById('venue').value,
+                id: editId || matchSetup.id || 'M' + Date.now()
             };
 
-            if (!matchData.matchName || !matchData.date || !matchData.time || !matchData.matchNo) {
+            // Fix for inconsistent keys: also store as date/time if needed for backward compatibility
+            matchData.date = matchData.matchDate;
+            matchData.time = matchData.matchTime;
+
+            if (!matchData.matchDate || !matchData.matchTime || !matchData.matchNo) {
                 // Highlight invalid fields
-                ['matchName', 'matchDate', 'matchTime', 'matchNo'].forEach(id => {
+                ['matchDate', 'matchTime', 'matchNo'].forEach(id => {
                     const el = document.getElementById(id);
                     if (!el.value.trim()) el.classList.add('invalid');
                 });
-                alert('Please fill in all required fields.');
+                alert('Please fill in all required fields (Date, Time, and Match No).');
                 return;
             }
 
             localStorage.setItem('current_match_setup', JSON.stringify(matchData));
-            window.location.href = 'Select_Team.html';
+            window.location.href = `Select_Team.html${isEditMode ? '?edit=true' : ''}`;
         }
 
         window.onload = () => {
+            initEdit();
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('matchDate');
-            if (dateInput) {
+            if (dateInput && !dateInput.value) {
                 dateInput.value = today;
-                dateInput.setAttribute('min', today);
+                if (!isEditMode) dateInput.setAttribute('min', today);
             }
         };
     </script>

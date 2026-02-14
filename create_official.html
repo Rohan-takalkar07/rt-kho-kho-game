@@ -208,7 +208,8 @@
     <div class="container">
         <div class="header-banner">
             <div class="header">
-                <button class="back-btn" onclick="goBack()">
+                <button class="back-btn"
+                    onclick="window.location.href='tournament_dashboard.html' + (new URLSearchParams(window.location.search).get('name') ? '?name=' + new URLSearchParams(window.location.search).get('name') : '')">
                     <i class="fas fa-arrow-left"></i> Back
                 </button>
                 <div class="header-content">
@@ -239,7 +240,8 @@
                 </div>
                 <div class="form-item">
                     <label>State</label>
-                    <select id="stateSelect" onchange="toggleOtherInput('stateSelect', 'otherStateInput')">
+                    <select id="stateSelect"
+                        onchange="toggleOtherInput('stateSelect', 'otherStateInput', 'citySelect')">
                         <option value="">Select State</option>
                     </select>
                     <input type="text" id="otherStateInput" placeholder="Enter State Name"
@@ -247,11 +249,17 @@
                 </div>
                 <div class="form-item">
                     <label>City</label>
-                    <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
-                        <option value="">Select City</option>
-                    </select>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
+                            <option value="">Select City</option>
+                        </select>
+                        <button type="button" onclick="saveNewCity()"
+                            style="width: auto; padding: 0 15px; background: #ea580c; color: white; border: none; border-radius: 12px; cursor: pointer; display: none;"
+                            id="saveCityBtn">Save</button>
+                    </div>
                     <input type="text" id="otherCityInput" placeholder="Enter City Name"
-                        style="display: none; margin-top: 10px;" />
+                        style="display: none; margin-top: 10px;"
+                        oninput="document.getElementById('saveCityBtn').style.display = (this.value ? 'block' : 'none')" />
                 </div>
             </form>
 
@@ -263,29 +271,78 @@
             <script src="renderer/js/state_city_data.js"></script>
             <script src="renderer/js/state_city_validation.js"></script>
             <script>
+                let isEditMode = false;
+                let editId = null;
+
+                function initEditMode() {
+                    const params = new URLSearchParams(window.location.search);
+                    isEditMode = params.get('edit') === 'true';
+                    editId = params.get('id');
+
+                    if (isEditMode && editId) {
+                        document.querySelector('h1').textContent = '🏃 Edit Official';
+                        document.getElementById('createBtn').textContent = 'Update Official';
+
+                        const officials = JSON.parse(localStorage.getItem('officials') || '[]');
+                        const official = officials.find(o => (o.id || '').toString() === editId.toString());
+
+                        if (official) {
+                            document.getElementById('firstName').value = official.firstName || '';
+                            document.getElementById('lastName').value = official.lastName || '';
+                            document.getElementById('email').value = official.email || '';
+                            document.getElementById('mobile').value = official.mobile || '';
+
+                            if (official.state) {
+                                const stateSelect = document.getElementById('stateSelect');
+                                const stateOptions = Array.from(stateSelect.options);
+                                if (stateOptions.find(opt => opt.value === official.state)) {
+                                    stateSelect.value = official.state;
+                                } else {
+                                    stateSelect.value = 'Other';
+                                    const otherStateInput = document.getElementById('otherStateInput');
+                                    otherStateInput.value = official.state;
+                                    otherStateInput.style.display = 'block';
+                                }
+
+                                populateCities('stateSelect', 'citySelect');
+                                if (official.city) {
+                                    const citySelect = document.getElementById('citySelect');
+                                    const cityOptions = Array.from(citySelect.options);
+                                    if (cityOptions.find(opt => opt.value === official.city)) {
+                                        citySelect.value = official.city;
+                                    } else {
+                                        citySelect.value = 'Other';
+                                        const otherCityInput = document.getElementById('otherCityInput');
+                                        otherCityInput.value = official.city;
+                                        otherCityInput.style.display = 'block';
+                                        document.getElementById('saveCityBtn').style.display = 'block';
+                                    }
+                                }
+                            }
+                            validateForm();
+                        }
+                    }
+                }
+
                 // Initialize Dropdowns
                 document.addEventListener('DOMContentLoaded', () => {
                     populateStates('stateSelect');
+                    setTimeout(initEditMode, 100);
                 });
 
-                // Toggle Other Input
-                function toggleOtherInput(selectId, inputId) {
-                    // ... existing logic ...
-                    const select = document.getElementById(selectId);
-                    const input = document.getElementById(inputId);
-
-                    if (selectId === 'stateSelect') {
-                        populateCities('stateSelect', 'citySelect');
+                function saveNewCity() {
+                    const state = document.getElementById('stateSelect').value;
+                    const city = document.getElementById('otherCityInput').value.trim();
+                    if (state && city && state !== 'Other') {
+                        if (addCityToState(state, city)) {
+                            populateCities('stateSelect', 'citySelect');
+                            document.getElementById('citySelect').value = city;
+                            document.getElementById('otherCityInput').style.display = 'none';
+                            document.getElementById('saveCityBtn').style.display = 'none';
+                        }
+                    } else if (state === 'Other') {
+                        alert("Please select or enter a standard state first to save a city to it.");
                     }
-
-                    if (select.value === 'Other') {
-                        input.style.display = 'block';
-                        input.focus();
-                    } else {
-                        input.style.display = 'none';
-                        input.value = '';
-                    }
-                    validateForm();
                 }
 
 
@@ -339,7 +396,7 @@
                 });
 
                 function saveOfficial() {
-                    const official = {
+                    const officialData = {
                         firstName: document.getElementById('firstName').value,
                         lastName: document.getElementById('lastName').value,
                         email: document.getElementById('email').value,
@@ -350,16 +407,27 @@
                         city: document.getElementById('citySelect').value === 'Other' ?
                             document.getElementById('otherCityInput').value :
                             document.getElementById('citySelect').value,
-                        id: Date.now()
+                        id: editId || Date.now()
                     };
 
                     const officials = JSON.parse(localStorage.getItem('officials') || '[]');
-                    officials.push(official);
+
+                    if (isEditMode && editId) {
+                        const index = officials.findIndex(o => (o.id || '').toString() === editId.toString());
+                        if (index !== -1) {
+                            officials[index] = { ...officials[index], ...officialData };
+                        } else {
+                            officials.push(officialData);
+                        }
+                    } else {
+                        officials.push(officialData);
+                    }
+
                     localStorage.setItem('officials', JSON.stringify(officials));
 
-                    showNotification('Official saved! Navigating to Staff setup...');
+                    showNotification(isEditMode ? 'Official updated!' : 'Official saved! Navigating to Staff setup...');
                     setTimeout(() => {
-                        window.location.href = 'staff.html';
+                        window.location.href = isEditMode ? 'tournament_dashboard.html' : 'staff.html';
                     }, 1500);
                 }
 

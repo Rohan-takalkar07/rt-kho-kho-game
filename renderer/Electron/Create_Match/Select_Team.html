@@ -360,7 +360,18 @@
                 selectB.appendChild(optB);
             });
 
-            // Check for pre-selected teams from dashboard
+            // Check for pre-selected teams from match setup (for edit mode)
+            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            if (setup.teamAId) {
+                selectA.value = setup.teamAId;
+                updatePreview('A');
+            }
+            if (setup.teamBId) {
+                selectB.value = setup.teamBId;
+                updatePreview('B');
+            }
+
+            // Check for pre-selected teams from dashboard (one-time selection)
             const preA = JSON.parse(localStorage.getItem('pre_selected_team_a') || 'null');
             const preB = JSON.parse(localStorage.getItem('pre_selected_team_b') || 'null');
 
@@ -412,7 +423,10 @@
             matchSetup.teamBId = teamBId;
 
             localStorage.setItem('current_match_setup', JSON.stringify(matchSetup));
-            window.location.href = 'Create_Official.html';
+
+            const params = new URLSearchParams(window.location.search);
+            const isEdit = params.get('edit') === 'true';
+            window.location.href = `Create_Official.html${isEdit ? '?edit=true' : ''}`;
         }
 
         window.onload = init;

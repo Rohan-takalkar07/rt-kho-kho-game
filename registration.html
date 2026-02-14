@@ -265,18 +265,28 @@
             <!-- State Selection -->
             <div class="form-group">
                 <label for="state">State</label>
-                <select id="state" onchange="populateCities('state', 'city')">
+                <select id="state" onchange="toggleOtherInput('state', 'otherStateInput', 'city')">
                     <option value="">Select State</option>
                 </select>
+                <input type="text" id="otherStateInput" placeholder="Enter State Name"
+                    style="display: none; margin-top: 10px;" />
                 <div id="stateError" class="error-msg"></div>
             </div>
 
             <!-- City Selection -->
             <div class="form-group">
                 <label for="city">City</label>
-                <select id="city">
-                    <option value="">Select city</option>
-                </select>
+                <div style="display: flex; gap: 10px;">
+                    <select id="city" onchange="toggleOtherInput('city', 'otherCityInput')">
+                        <option value="">Select city</option>
+                    </select>
+                    <button type="button" onclick="saveNewCity()"
+                        style="width: auto; padding: 0 15px; background: #ea580c; color: white; border: none; border-radius: 10px; cursor: pointer; display: none;"
+                        id="saveCityBtn">Save</button>
+                </div>
+                <input type="text" id="otherCityInput" placeholder="Enter City Name"
+                    style="display: none; margin-top: 10px;"
+                    oninput="document.getElementById('saveCityBtn').style.display = (this.value ? 'block' : 'none')" />
                 <div id="cityError" class="error-msg"></div>
             </div>
 
@@ -416,6 +426,21 @@
     hiddenColorInput.value = '';
     colorCircles.forEach(c => c.classList.remove('selected'));
     populateCities('state', 'city');
+    }
+
+    function saveNewCity() {
+    const state = document.getElementById('state').value;
+    const city = document.getElementById('otherCityInput').value.trim();
+    if (state && city && state !== 'Other') {
+    if (addCityToState(state, city)) {
+    populateCities('state', 'city');
+    document.getElementById('city').value = city;
+    document.getElementById('otherCityInput').style.display = 'none';
+    document.getElementById('saveCityBtn').style.display = 'none';
+    }
+    } else if (state === 'Other') {
+    alert("Please select or enter a standard state first to save a city to it.");
+    }
     }
 
     document.addEventListener('DOMContentLoaded', () => {

@@ -303,6 +303,10 @@
                     <h1>🏁 Create Match</h1>
                     <p class="subtitle">Step 4: Toss and Opening Decision</p>
                 </div>
+                <button class="back-btn" onclick="window.location.href='Assign_Official.html' + window.location.search"
+                    style="background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); padding: 12px 25px; border-radius: 12px; cursor: pointer;">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
             </div>
         </div>
 
@@ -338,7 +342,8 @@
             </div>
 
             <div class="button-row">
-                <button class="btn cancel-btn" onclick="window.location.href='Assign_Official.html'">Back</button>
+                <button class="btn cancel-btn"
+                    onclick="const p=new URLSearchParams(window.location.search); window.location.href='Assign_Official.html' + (p.get('edit')==='true'?'?edit=true':'');">Back</button>
                 <button id="nextBtn" class="btn next-btn" onclick="saveToss()" disabled>Confirm Toss</button>
             </div>
         </div>
@@ -384,7 +389,8 @@
             setup.decision = decision;
 
             localStorage.setItem('current_match_setup', JSON.stringify(setup));
-            window.location.href = 'Toss_Result.html';
+            const p = new URLSearchParams(window.location.search);
+            window.location.href = 'Toss_Result.html' + (p.get('edit') === 'true' ? '?edit=true' : '');
         }
 
         window.onload = init;

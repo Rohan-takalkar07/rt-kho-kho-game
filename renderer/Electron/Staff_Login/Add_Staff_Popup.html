@@ -212,7 +212,7 @@
             </div>
             <div class="form-group">
                 <label>State</label>
-                <select id="stateSelect" onchange="toggleOtherInput('stateSelect', 'otherStateInput')">
+                <select id="stateSelect" onchange="toggleOtherInput('stateSelect', 'otherStateInput', 'citySelect')">
                     <option value="">Select State</option>
                 </select>
                 <input type="text" id="otherStateInput" placeholder="Enter State Name"
@@ -220,11 +220,17 @@
             </div>
             <div class="form-group">
                 <label>City</label>
-                <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
-                    <option value="">Select City</option>
-                </select>
+                <div style="display: flex; gap: 10px;">
+                    <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
+                        <option value="">Select City</option>
+                    </select>
+                    <button type="button" onclick="saveNewCity()"
+                        style="width: auto; padding: 0 10px; background: #ea580c; color: white; border: none; border-radius: 10px; cursor: pointer; display: none;"
+                        id="saveCityBtn">Save</button>
+                </div>
                 <input type="text" id="otherCityInput" placeholder="Enter City Name"
-                    style="display: none; margin-top: 10px;" />
+                    style="display: none; margin-top: 10px;"
+                    oninput="document.getElementById('saveCityBtn').style.display = (this.value ? 'block' : 'none')" />
             </div>
             <div class="form-group role-container">
                 <label>Role</label>
@@ -422,20 +428,18 @@
             populateStates('stateSelect');
         }
 
-        function toggleOtherInput(selectId, inputId) {
-            const select = document.getElementById(selectId);
-            const input = document.getElementById(inputId);
-
-            if (selectId === 'stateSelect') {
-                populateCities('stateSelect', 'citySelect');
-            }
-
-            if (select.value === 'Other') {
-                input.style.display = 'block';
-                input.focus();
-            } else {
-                input.style.display = 'none';
-                input.value = '';
+        function saveNewCity() {
+            const state = document.getElementById('stateSelect').value;
+            const city = document.getElementById('otherCityInput').value.trim();
+            if (state && city && state !== 'Other') {
+                if (addCityToState(state, city)) {
+                    populateCities('stateSelect', 'citySelect');
+                    document.getElementById('citySelect').value = city;
+                    document.getElementById('otherCityInput').style.display = 'none';
+                    document.getElementById('saveCityBtn').style.display = 'none';
+                }
+            } else if (state === 'Other') {
+                alert("Please select or enter a standard state first to save a city to it.");
             }
         }
 

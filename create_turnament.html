@@ -596,7 +596,8 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>State</label>
-                        <select id="stateSelect" onchange="toggleOtherInput('stateSelect', 'otherStateInput')">
+                        <select id="stateSelect"
+                            onchange="toggleOtherInput('stateSelect', 'otherStateInput', 'citySelect')">
                             <option value="">Select State</option>
                         </select>
                         <input type="text" id="otherStateInput" placeholder="Enter State Name"
@@ -604,11 +605,17 @@
                     </div>
                     <div class="form-group">
                         <label>City</label>
-                        <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
-                            <option value="">Select City</option>
-                        </select>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
+                                <option value="">Select City</option>
+                            </select>
+                            <button type="button" onclick="saveNewCity()"
+                                style="width: auto; padding: 0 15px; background: #ea580c; color: white; border: none; border-radius: 12px; cursor: pointer; display: none;"
+                                id="saveCityBtn">Save</button>
+                        </div>
                         <input type="text" id="otherCityInput" placeholder="Enter City Name"
-                            style="display: none; margin-top: 10px;" />
+                            style="display: none; margin-top: 10px;"
+                            oninput="document.getElementById('saveCityBtn').style.display = (this.value ? 'block' : 'none')" />
                     </div>
                 </div>
 
@@ -657,6 +664,8 @@
                             <option value="">Select Max Time</option>
                             <option>9 minutes</option>
                             <option>7 minutes</option>
+                            <option>5 minutes</option>
+                            <option>3 minutes</option>
                         </select>
                     </div>
                 </div>
@@ -710,11 +719,20 @@
             populateStates('stateSelect');
         });
 
-        // Hook into the existing toggleOtherInput if it's defined elsewhere or add it here if it was inline and I missed it.
-        // Wait, create_turnament.html has a script section?
-        // I didn't see the script section in the view_file output (it was truncated).
-        // I should be careful. I'll insert these before the body close if possible, or search for <script>.
-        // The view_file output stopped at line 800.
+        function saveNewCity() {
+            const state = document.getElementById('stateSelect').value;
+            const city = document.getElementById('otherCityInput').value.trim();
+            if (state && city && state !== 'Other') {
+                if (addCityToState(state, city)) {
+                    populateCities('stateSelect', 'citySelect');
+                    document.getElementById('citySelect').value = city;
+                    document.getElementById('otherCityInput').style.display = 'none';
+                    document.getElementById('saveCityBtn').style.display = 'none';
+                }
+            } else if (state === 'Other') {
+                alert("Please select or enter a standard state first to save a city to it.");
+            }
+        }
     </script>
 
     <style>

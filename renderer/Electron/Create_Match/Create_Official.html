@@ -285,6 +285,10 @@
                     <h1>🏁 Create Match</h1>
                     <p class="subtitle">Step 3: Register New Officials</p>
                 </div>
+                <button class="back-btn" onclick="window.location.href='Select_Team.html' + window.location.search"
+                    style="background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); padding: 12px 25px; border-radius: 12px; cursor: pointer;">
+                    <i class="fa fa-arrow-left"></i> Back
+                </button>
             </div>
         </div>
 
@@ -316,19 +320,26 @@
                     <input type="tel" id="mobile" placeholder="Mobile Number" oninput="validate(this)">
                 </div>
                 <div class="form-group">
-                    <label>City</label>
-                    <input type="text" id="city" placeholder="City" oninput="validate(this)">
+                    <label>State</label>
+                    <select id="state" onchange="toggleOtherInput('state', 'otherStateInput', 'city')">
+                        <option value="">Select State</option>
+                    </select>
+                    <input type="text" id="otherStateInput" placeholder="Enter State Name"
+                        style="display: none; margin-top: 10px;" />
                 </div>
                 <div class="form-group">
-                    <label>State</label>
-                    <select id="state" onchange="validate(this)">
-                        <option value="">Select State</option>
-                        <option>Maharashtra</option>
-                        <option>Gujarat</option>
-                        <option>Haryana</option>
-                        <option>Delhi</option>
-                        <option>Other</option>
-                    </select>
+                    <label>City</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="city" onchange="toggleOtherInput('city', 'otherCityInput')">
+                            <option value="">Select City</option>
+                        </select>
+                        <button type="button" onclick="saveNewCity()"
+                            style="width: auto; padding: 0 15px; background: #ea580c; color: white; border: none; border-radius: 12px; cursor: pointer; display: none;"
+                            id="saveCityBtn">Save</button>
+                    </div>
+                    <input type="text" id="otherCityInput" placeholder="Enter City Name"
+                        style="display: none; margin-top: 10px;"
+                        oninput="document.getElementById('saveCityBtn').style.display = (this.value ? 'block' : 'none')" />
                 </div>
             </div>
 
@@ -361,7 +372,24 @@
         </div>
     </div>
 
+    <script src="../../js/state_city_data.js"></script>
+    <script src="../../js/state_city_validation.js"></script>
     <script>
+        function saveNewCity() {
+            const state = document.getElementById('state').value;
+            const city = document.getElementById('otherCityInput').value.trim();
+            if (state && city && state !== 'Other') {
+                if (addCityToState(state, city)) {
+                    populateCities('state', 'city');
+                    document.getElementById('city').value = city;
+                    document.getElementById('otherCityInput').style.display = 'none';
+                    document.getElementById('saveCityBtn').style.display = 'none';
+                    validate();
+                }
+            } else if (state === 'Other') {
+                alert("Please select or enter a standard state first to save a city to it.");
+            }
+        }
         function validate(el) {
             if (el) {
                 if (el.id === 'email' && el.value.trim() && !el.value.includes('@')) {
@@ -434,6 +462,7 @@
         }
 
         window.onload = () => {
+            populateStates('state');
             loadTable();
             validate();
         };

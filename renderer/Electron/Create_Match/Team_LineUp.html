@@ -234,7 +234,7 @@
     <div class="container">
         <div class="header-banner">
             <div class="header">
-                <button class="back-btn" onclick="window.history.back()">
+                <button class="back-btn" onclick="window.location.href='Toss_Result.html' + window.location.search">
                     <i class="fas fa-arrow-left"></i> Back
                 </button>
                 <div class="header-content">
@@ -308,6 +308,28 @@
             createInputs('subsA', 3, 'A_s');
             createInputs('playingB', 9, 'B_p');
             createInputs('subsB', 3, 'B_s');
+
+            // Pre-fill lineups if editing
+            if (setup.lineupA) {
+                setup.lineupA.playing.forEach((p, i) => {
+                    document.getElementById(`A_p_kit_${i + 1}`).value = p.kit;
+                    document.getElementById(`A_p_name_${i + 1}`).value = p.name;
+                });
+                setup.lineupA.substitutes.forEach((p, i) => {
+                    document.getElementById(`A_s_kit_${i + 1}`).value = p.kit;
+                    document.getElementById(`A_s_name_${i + 1}`).value = p.name;
+                });
+            }
+            if (setup.lineupB) {
+                setup.lineupB.playing.forEach((p, i) => {
+                    document.getElementById(`B_p_kit_${i + 1}`).value = p.kit;
+                    document.getElementById(`B_p_name_${i + 1}`).value = p.name;
+                });
+                setup.lineupB.substitutes.forEach((p, i) => {
+                    document.getElementById(`B_s_kit_${i + 1}`).value = p.kit;
+                    document.getElementById(`B_s_name_${i + 1}`).value = p.name;
+                });
+            }
 
             validateLineups();
         }
@@ -392,15 +414,25 @@
 
             setup.lineupA = getPlayers('A', 9, 3);
             setup.lineupB = getPlayers('B', 9, 3);
-            setup.status = 'Scheduled';
-            setup.id = 'M' + Date.now();
+            setup.status = setup.status || 'Scheduled';
+            setup.id = setup.id || 'M' + Date.now();
+            setup.updatedAt = new Date().toISOString();
 
             const matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            matches.push(setup);
+            const index = matches.findIndex(m => (m.id || '').toString() === setup.id.toString());
+
+            if (index !== -1) {
+                matches[index] = setup;
+            } else {
+                matches.push(setup);
+            }
+
             localStorage.setItem('matches', JSON.stringify(matches));
             localStorage.removeItem('current_match_setup');
 
-            alert('Match Created Successfully!');
+            const params = new URLSearchParams(window.location.search);
+            const isEdit = params.get('edit') === 'true';
+            alert(isEdit ? 'Match Updated Successfully!' : 'Match Created Successfully!');
             window.location.href = '../../../tournament_dashboard.html';
         }
 

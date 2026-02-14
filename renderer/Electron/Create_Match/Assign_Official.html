@@ -244,7 +244,7 @@
                     <h1>🏁 Create Match</h1>
                     <p class="subtitle">Step 3: Assign Appointed Officials</p>
                 </div>
-                <button class="back-btn" onclick="window.location.href='Select_Team.html'"
+                <button class="back-btn" onclick="window.location.href='Create_Official.html' + window.location.search"
                     style="background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); padding: 12px 25px; border-radius: 12px; cursor: pointer;">
                     <i class="fa fa-arrow-left"></i> Back
                 </button>
@@ -319,9 +319,12 @@
 
         function loadOfficials() {
             const officials = JSON.parse(localStorage.getItem('officials') || '[]');
+            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            const savedAssignments = setup.officials || {};
+
             officialRoles.forEach(roleId => {
                 const select = document.getElementById(roleId);
-                const currentVal = select.value;
+                const currentVal = select.value || savedAssignments[roleId];
                 select.innerHTML = '<option value="">Select Official</option>';
                 officials.forEach(o => {
                     const opt = document.createElement('option');
@@ -329,7 +332,7 @@
                     opt.textContent = `${o.firstName} ${o.lastName}`;
                     select.appendChild(opt);
                 });
-                select.value = currentVal;
+                if (currentVal) select.value = currentVal;
             });
         }
 
@@ -370,7 +373,9 @@
             matchSetup.officials = assignments;
             localStorage.setItem('current_match_setup', JSON.stringify(matchSetup));
 
-            window.location.href = 'Toss.html';
+            const params = new URLSearchParams(window.location.search);
+            const isEdit = params.get('edit') === 'true';
+            window.location.href = `Toss.html${isEdit ? '?edit=true' : ''}`;
         }
 
         window.onload = loadOfficials;
