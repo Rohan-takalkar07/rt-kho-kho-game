@@ -278,7 +278,7 @@
                     <h1>🏁 Create Match</h1>
                     <p class="subtitle">Step 2: Selection of Competing Teams</p>
                 </div>
-                <button class="back-btn" onclick="window.location.href='Create_Assign_Match.html'"
+                <button class="back-btn" onclick="saveAndBack()"
                     style="background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); padding: 12px 25px; border-radius: 12px; cursor: pointer;">
                     <i class="fa fa-arrow-left"></i> Back
                 </button>
@@ -317,7 +317,8 @@
             </div>
 
             <div class="button-row">
-                <button class="btn cancel-btn" onclick="window.location.href='Create_Assign_Match.html'">Back</button>
+                <button class="btn cancel-btn"
+                    onclick="window.location.href='Create_Assign_Match.html' + (window.location.search || '')">Back</button>
                 <button class="btn next-btn" onclick="saveAndNext()">Save & Next</button>
             </div>
         </div>
@@ -427,6 +428,25 @@
             const params = new URLSearchParams(window.location.search);
             const isEdit = params.get('edit') === 'true';
             window.location.href = `Create_Official.html${isEdit ? '?edit=true' : ''}`;
+        }
+
+        function saveAndBack() {
+            const teamAId = document.getElementById('teamA').value;
+            const teamBId = document.getElementById('teamB').value;
+
+            if (teamAId || teamBId) {
+                const matchSetup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+                if (teamAId) {
+                    matchSetup.teamAId = teamAId;
+                    matchSetup.teamA = document.getElementById('teamA').options[document.getElementById('teamA').selectedIndex].text;
+                }
+                if (teamBId) {
+                    matchSetup.teamBId = teamBId;
+                    matchSetup.teamB = document.getElementById('teamB').options[document.getElementById('teamB').selectedIndex].text;
+                }
+                localStorage.setItem('current_match_setup', JSON.stringify(matchSetup));
+            }
+            window.location.href = 'Create_Assign_Match.html' + (window.location.search || '');
         }
 
         window.onload = init;

@@ -377,6 +377,10 @@
 
         function init() {
             loadDropdowns();
+            const existing = localStorage.getItem('temp_assignments');
+            if (existing) {
+                assignments = JSON.parse(existing);
+            }
             renderAssignments();
         }
 

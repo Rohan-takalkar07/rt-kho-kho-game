@@ -285,7 +285,8 @@
                     <h1>🏁 Create Match</h1>
                     <p class="subtitle">Step 3: Register New Officials</p>
                 </div>
-                <button class="back-btn" onclick="window.location.href='Select_Team.html' + window.location.search"
+                <button class="back-btn"
+                    onclick="window.location.href='Select_Team.html' + (window.location.search || '')"
                     style="background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); padding: 12px 25px; border-radius: 12px; cursor: pointer;">
                     <i class="fa fa-arrow-left"></i> Back
                 </button>
@@ -366,7 +367,8 @@
             </div>
 
             <div class="button-row">
-                <button class="btn back-btn" onclick="window.location.href='Select_Team.html'">Back</button>
+                <button class="btn back-btn"
+                    onclick="window.location.href='Select_Team.html' + (window.location.search || '')">Back</button>
                 <button class="btn next-btn" onclick="window.location.href='Assign_Official.html'">Next Step</button>
             </div>
         </div>

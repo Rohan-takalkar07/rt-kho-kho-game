@@ -9,6 +9,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -140,93 +141,186 @@
 
         .lineup-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            grid-template-columns: 320px 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
         }
 
-        .lineup-section h3 {
-            font-family: 'Poppins', sans-serif;
-            font-size: 18px;
+        .roster-section,
+        .lineup-section {
+            background: #fff;
+            border: 1px solid #fed7aa;
+            border-radius: 16px;
+            padding: 20px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .roster-section {
+            background: #fffaf0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #fed7aa;
+        }
+
+        .section-header h3 {
+            font-size: 16px;
             color: #ea580c;
-            margin-bottom: 20px;
+            margin-bottom: 0 !important;
+        }
+
+        .player-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .player-item {
+            background: white;
+            border: 1px solid #fed7aa;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: grab;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            transition: all 0.2s;
         }
 
-        .player-row {
-            display: grid;
-            grid-template-columns: 60px 1fr;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .player-row input {
-            padding: 12px;
-            border: 2px solid #fed7aa;
-            border-radius: 10px;
-            font-size: 14px;
-            background: #fffbf5;
-            transition: all 0.3s ease;
-        }
-
-        .player-row input:focus {
+        .player-item:hover {
             border-color: #f97316;
-            outline: none;
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
-            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            transform: translateX(2px);
         }
 
-        #contentA,
-        #contentB {
-            animation: fadeIn 0.5s ease;
+        .player-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .button-row {
+        .player-item .kit-badge {
+            background: #ea580c;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 20px;
-            margin-top: 50px;
-            padding-top: 35px;
-            border-top: 2px solid #fef3f0;
+            font-weight: 700;
+            font-size: 12px;
         }
 
-        .btn {
-            padding: 16px 45px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
+        .count-badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: #fed7aa;
+            color: #9a3412;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .add-player-btn {
+            font-size: 12px;
+            color: #ea580c;
+            background: none;
+            border: 1px dashed #ea580c;
+            padding: 4px 8px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .add-player-btn:hover {
+            background: #ea580c;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-card h2 {
+            margin-bottom: 20px;
+            color: #ea580c;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+        }
+
+        .modal-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-sm {
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
             border: none;
         }
 
-        .finish-btn {
-            background: linear-gradient(135deg, #16a34a, #15803d);
-            color: white;
-            box-shadow: 0 8px 24px rgba(22, 163, 74, 0.4);
+        .btn-cancel {
+            background: #f5f5f5;
+            color: #78716c;
         }
 
-        .finish-btn:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 32px rgba(22, 163, 74, 0.6);
-            background: linear-gradient(135deg, #22c55e, #16a34a);
+        .btn-save {
+            background: #ea580c;
+            color: white;
         }
+
+        .placeholder-text {
+            color: #a8a29e;
+            text-align: center;
+            padding-top: 40%;
+            font-style: italic;
+            font-size: 14px;
+        }
+    </style>
     </style>
 </head>
 
@@ -241,7 +335,10 @@
                     <h1>🏁 Finalize Lineups</h1>
                     <p class="subtitle">Set the starting players and substitutes for both teams</p>
                 </div>
-                <div style="width: 100px;"></div> <!-- Spacer -->
+                <button class="back-btn" onclick="autoFillLineups()"
+                    style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4);">
+                    <i class="fas fa-magic"></i> Auto Fill
+                </button>
             </div>
         </div>
 
@@ -254,84 +351,226 @@
 
             <div id="contentA">
                 <div class="lineup-grid">
-                    <div class="lineup-section">
-                        <h3><i class="fas fa-running"></i> Starting 9</h3>
-                        <div id="playingA"></div>
+                    <div class="roster-section">
+                        <div class="section-header">
+                            <h3>Available Roster</h3>
+                            <button class="add-player-btn" onclick="openAddModal('A')">+ Add Missing</button>
+                        </div>
+                        <div id="rosterListA" class="player-list" ondrop="drop(event, 'roster', 'A')"
+                            ondragover="allowDrop(event)"></div>
                     </div>
                     <div class="lineup-section">
-                        <h3><i class="fas fa-plus-circle"></i> Substitutes (3)</h3>
-                        <div id="subsA"></div>
+                        <div class="section-header">
+                            <h3>Starting 9</h3>
+                            <span class="count-badge" id="countPlayingA">0/9</span>
+                        </div>
+                        <div id="playingListA" class="player-list" ondrop="drop(event, 'playing', 'A')"
+                            ondragover="allowDrop(event)"></div>
+                    </div>
+                    <div class="lineup-section">
+                        <div class="section-header">
+                            <h3>Substitutes</h3>
+                            <span class="count-badge" id="countSubsA">0/3</span>
+                        </div>
+                        <div id="subsListA" class="player-list" ondrop="drop(event, 'subs', 'A')"
+                            ondragover="allowDrop(event)"></div>
                     </div>
                 </div>
             </div>
 
             <div id="contentB" style="display: none;">
                 <div class="lineup-grid">
-                    <div class="lineup-section">
-                        <h3><i class="fas fa-running"></i> Starting 9</h3>
-                        <div id="playingB"></div>
+                    <div class="roster-section">
+                        <div class="section-header">
+                            <h3>Available Roster</h3>
+                            <button class="add-player-btn" onclick="openAddModal('B')">+ Add Missing</button>
+                        </div>
+                        <div id="rosterListB" class="player-list" ondrop="drop(event, 'roster', 'B')"
+                            ondragover="allowDrop(event)"></div>
                     </div>
                     <div class="lineup-section">
-                        <h3><i class="fas fa-plus-circle"></i> Substitutes (3)</h3>
-                        <div id="subsB"></div>
+                        <div class="section-header">
+                            <h3>Starting 9</h3>
+                            <span class="count-badge" id="countPlayingB">0/9</span>
+                        </div>
+                        <div id="playingListB" class="player-list" ondrop="drop(event, 'playing', 'B')"
+                            ondragover="allowDrop(event)"></div>
+                    </div>
+                    <div class="lineup-section">
+                        <div class="section-header">
+                            <h3>Substitutes</h3>
+                            <span class="count-badge" id="countSubsB">0/3</span>
+                        </div>
+                        <div id="subsListB" class="player-list" ondrop="drop(event, 'subs', 'B')"
+                            ondragover="allowDrop(event)"></div>
                     </div>
                 </div>
             </div>
 
             <div class="button-row">
-                <button class="btn finish-btn" id="finishBtn" onclick="finalizeMatch()" disabled>Finish & Create
-                    Match</button>
+                <button class="btn cancel-btn" onclick="saveAndBack()"
+                    style="background: #fff; border: 2px solid #fb923c; color: #ea580c; margin-right: 15px;">Back</button>
+                <button class="btn finish-btn" id="finishBtn" onclick="finalizeMatch()" disabled>
+                    <span id="btnText">Finish & Create Match</span>
+                    <i class="fas fa-check-circle" style="margin-left: 8px;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Player Modal -->
+    <div id="addPlayerModal" class="modal-overlay">
+        <div class="modal-card">
+            <h2 id="modalTitle">Add Missing Player</h2>
+            <div class="form-group">
+                <label>Kit Number</label>
+                <input type="number" id="newKit" placeholder="e.g. 10">
+            </div>
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="newFirst" placeholder="e.g. Rahul">
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="newLast" placeholder="e.g. Sharma">
+            </div>
+            <div class="form-group">
+                <label>Position</label>
+                <input type="text" id="newPos" placeholder="e.g. Defender">
+            </div>
+            <div class="modal-btns">
+                <button class="btn-sm btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-sm btn-save" onclick="saveNewPlayer()">Add to Roster</button>
             </div>
         </div>
     </div>
 
     <script>
-        function createInputs(containerId, count, prefix) {
-            const container = document.getElementById(containerId);
-            for (let i = 1; i <= count; i++) {
-                const row = document.createElement('div');
-                row.className = 'player-row';
-                row.innerHTML = `
-                    <input type="text" placeholder="#" id="${prefix}_kit_${i}" maxlength="3" oninput="validateLineups()">
-                    <input type="text" placeholder="Player Name" id="${prefix}_name_${i}" oninput="validateLineups()">
-                `;
-                container.appendChild(row);
-            }
-        }
+        const fs = require('fs');
+        const path = require('path');
+
+        let teamA = null;
+        let teamB = null;
+        let rosters = { A: [], B: [] };
+        let lineups = {
+            A: { playing: [], subs: [] },
+            B: { playing: [], subs: [] }
+        };
+        let currentModalTeam = 'A';
 
         function init() {
             const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
-            document.getElementById('tabNameA').textContent = setup.teamA || 'Team A';
-            document.getElementById('tabNameB').textContent = setup.teamB || 'Team B';
+            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
 
-            createInputs('playingA', 9, 'A_p');
-            createInputs('subsA', 3, 'A_s');
-            createInputs('playingB', 9, 'B_p');
-            createInputs('subsB', 3, 'B_s');
+            teamA = teams.find(t => t.id === setup.teamAId);
+            teamB = teams.find(t => t.id === setup.teamBId);
 
-            // Pre-fill lineups if editing
+            document.getElementById('tabNameA').textContent = teamA ? teamA.name : 'Team A';
+            document.getElementById('tabNameB').textContent = teamB ? teamB.name : 'Team B';
+
+            rosters.A = teamA ? [...teamA.players] : [];
+            rosters.B = teamB ? [...teamB.players] : [];
+
+            // Load existing selections if any
             if (setup.lineupA) {
-                setup.lineupA.playing.forEach((p, i) => {
-                    document.getElementById(`A_p_kit_${i + 1}`).value = p.kit;
-                    document.getElementById(`A_p_name_${i + 1}`).value = p.name;
-                });
-                setup.lineupA.substitutes.forEach((p, i) => {
-                    document.getElementById(`A_s_kit_${i + 1}`).value = p.kit;
-                    document.getElementById(`A_s_name_${i + 1}`).value = p.name;
-                });
+                lineups.A.playing = setup.lineupA.playing || [];
+                lineups.A.subs = setup.lineupA.substitutes || [];
+                // Remove from roster if in playing/subs
+                lineups.A.playing.forEach(p => removeFromRoster('A', p.kit));
+                lineups.A.subs.forEach(p => removeFromRoster('A', p.kit));
             }
             if (setup.lineupB) {
-                setup.lineupB.playing.forEach((p, i) => {
-                    document.getElementById(`B_p_kit_${i + 1}`).value = p.kit;
-                    document.getElementById(`B_p_name_${i + 1}`).value = p.name;
-                });
-                setup.lineupB.substitutes.forEach((p, i) => {
-                    document.getElementById(`B_s_kit_${i + 1}`).value = p.kit;
-                    document.getElementById(`B_s_name_${i + 1}`).value = p.name;
-                });
+                lineups.B.playing = setup.lineupB.playing || [];
+                lineups.B.subs = setup.lineupB.substitutes || [];
+                lineups.B.playing.forEach(p => removeFromRoster('B', p.kit));
+                lineups.B.subs.forEach(p => removeFromRoster('B', p.kit));
             }
 
-            validateLineups();
+            renderAll();
+        }
+
+        function removeFromRoster(team, kit) {
+            rosters[team] = rosters[team].filter(p => p.kitNo.toString() !== kit.toString());
+        }
+
+        function allowDrop(ev) { ev.preventDefault(); }
+
+        function drag(ev, type, team, index) {
+            ev.dataTransfer.setData("text", JSON.stringify({ type, team, index }));
+        }
+
+        function drop(ev, toType, team) {
+            ev.preventDefault();
+            const data = JSON.parse(ev.dataTransfer.getData("text"));
+            if (data.team !== team) return; // Cant move between teams
+
+            let player;
+            if (data.type === 'roster') {
+                player = rosters[team].splice(data.index, 1)[0];
+            } else if (data.type === 'playing') {
+                player = lineups[team].playing.splice(data.index, 1)[0];
+            } else {
+                player = lineups[team].subs.splice(data.index, 1)[0];
+            }
+
+            if (toType === 'roster') {
+                rosters[team].push(player);
+            } else if (toType === 'playing') {
+                if (lineups[team].playing.length >= 9) {
+                    alert("Starting 9 is full!");
+                    rosters[team].push(player); // Put back
+                } else {
+                    lineups[team].playing.push(player);
+                }
+            } else {
+                if (lineups[team].subs.length >= 3) {
+                    alert("Substitutes are full!");
+                    rosters[team].push(player); // Put back
+                } else {
+                    lineups[team].subs.push(player);
+                }
+            }
+
+            renderAll();
+        }
+
+        function renderAll() {
+            renderList('rosterListA', rosters.A, 'roster', 'A');
+            renderList('playingListA', lineups.A.playing, 'playing', 'A');
+            renderList('subsListA', lineups.A.subs, 'subs', 'A');
+
+            renderList('rosterListB', rosters.B, 'roster', 'B');
+            renderList('playingListB', lineups.B.playing, 'playing', 'B');
+            renderList('subsListB', lineups.B.subs, 'subs', 'B');
+
+            document.getElementById('countPlayingA').textContent = `${lineups.A.playing.length}/9`;
+            document.getElementById('countSubsA').textContent = `${lineups.A.subs.length}/3`;
+            document.getElementById('countPlayingB').textContent = `${lineups.B.playing.length}/9`;
+            document.getElementById('countSubsB').textContent = `${lineups.B.subs.length}/3`;
+
+            const validA = lineups.A.playing.length === 9 && lineups.A.subs.length === 3;
+            const validB = lineups.B.playing.length === 9 && lineups.B.subs.length === 3;
+            document.getElementById('finishBtn').disabled = !(validA && validB);
+        }
+
+        function renderList(id, list, type, team) {
+            const el = document.getElementById(id);
+            el.innerHTML = '';
+            if (list.length === 0) {
+                el.innerHTML = '<div class="placeholder-text">Drop here</div>';
+                return;
+            }
+            list.forEach((p, i) => {
+                const div = document.createElement('div');
+                div.className = 'player-item';
+                div.draggable = true;
+                div.ondragstart = (ev) => drag(ev, type, team, i);
+                div.innerHTML = `
+                    <div class="kit-badge">${p.kitNo || p.kit}</div>
+                    <div style="font-weight:600;">${p.firstName || p.name} ${p.lastName || ''}</div>
+                `;
+                el.appendChild(div);
+            });
         }
 
         function switchTab(type) {
@@ -341,99 +580,151 @@
             document.getElementById('contentB').style.display = type === 'B' ? 'block' : 'none';
         }
 
-        function validateLineups() {
-            const getGroup = (pref) => {
-                const kits = [];
-                const names = [];
-                for (let i = 1; i <= 9; i++) {
-                    kits.push(document.getElementById(pref + '_p_kit_' + i).value.trim());
-                    names.push(document.getElementById(pref + '_p_name_' + i).value.trim());
-                }
-                for (let i = 1; i <= 3; i++) {
-                    kits.push(document.getElementById(pref + '_s_kit_' + i).value.trim());
-                    names.push(document.getElementById(pref + '_s_name_' + i).value.trim());
-                }
-                return { kits, names };
+        function openAddModal(team) {
+            currentModalTeam = team;
+            document.getElementById('modalTitle').textContent = `Add Player to ${team === 'A' ? teamA.name : teamB.name}`;
+            document.getElementById('addPlayerModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('addPlayerModal').style.display = 'none';
+        }
+
+        function saveNewPlayer() {
+            const kit = document.getElementById('newKit').value;
+            const first = document.getElementById('newFirst').value;
+            const last = document.getElementById('newLast').value;
+            const pos = document.getElementById('newPos').value;
+
+            if (!kit || !first) {
+                alert("Please fill Kit No and Name");
+                return;
+            }
+
+            const newPlayer = { kitNo: parseInt(kit), firstName: first, lastName: last, position: pos };
+
+            // 1. Update Local Roster
+            rosters[currentModalTeam].push(newPlayer);
+
+            // 2. Update teams database
+            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            const tId = currentModalTeam === 'A' ? teamA.id : teamB.id;
+            const idx = teams.findIndex(t => t.id === tId);
+            if (idx !== -1) {
+                teams[idx].players.push(newPlayer);
+                teams[idx].playerCount = teams[idx].players.length;
+                localStorage.setItem('teams', JSON.stringify(teams));
+
+                // Also update persistent file
+                try {
+                    const dbPath = path.join(process.cwd(), 'teams_db.json');
+                    fs.writeFileSync(dbPath, JSON.stringify(teams, null, 2), 'utf8');
+                } catch (e) { console.error("File update failed", e); }
+            }
+
+            renderAll();
+            closeModal();
+            // Clear inputs
+            document.getElementById('newKit').value = '';
+            document.getElementById('newFirst').value = '';
+            document.getElementById('newLast').value = '';
+            document.getElementById('newPos').value = '';
+        }
+
+        function autoFillLineups() {
+            // Auto fill for Team A
+            fillTeam('A');
+            // Auto fill for Team B
+            fillTeam('B');
+            renderAll();
+        }
+
+        function fillTeam(team) {
+            // Move everyone back to roster first to ensure clean state
+            rosters[team] = [...rosters[team], ...lineups[team].playing, ...lineups[team].subs];
+            lineups[team].playing = [];
+            lineups[team].subs = [];
+
+            // Shuffle roster for randomness (optional, but good for "magic" fill)
+            rosters[team].sort(() => Math.random() - 0.5);
+
+            // Fill Starting 9
+            while (lineups[team].playing.length < 9 && rosters[team].length > 0) {
+                lineups[team].playing.push(rosters[team].shift());
+            }
+
+            // Fill Substitutes
+            while (lineups[team].subs.length < 3 && rosters[team].length > 0) {
+                lineups[team].subs.push(rosters[team].shift());
+            }
+        }
+
+        function saveAndBack() {
+            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            setup.lineupA = {
+                playing: lineups.A.playing.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` })),
+                substitutes: lineups.A.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
             };
-
-            const checkDuplicates = (kits) => {
-                const seen = new Set();
-                let hasDup = false;
-                kits.forEach(k => {
-                    if (k && seen.has(k)) hasDup = true;
-                    if (k) seen.add(k);
-                });
-                return hasDup;
+            setup.lineupB = {
+                playing: lineups.B.playing.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` })),
+                substitutes: lineups.B.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
             };
-
-            const dataA = getGroup('A');
-            const dataB = getGroup('B');
-
-            const allFilledA = dataA.kits.every(k => k) && dataA.names.every(n => n);
-            const allFilledB = dataB.kits.every(k => k) && dataB.names.every(n => n);
-            const dupA = checkDuplicates(dataA.kits);
-            const dupB = checkDuplicates(dataB.kits);
-
-            const finishBtn = document.getElementById('finishBtn');
-            finishBtn.disabled = !(allFilledA && allFilledB && !dupA && !dupB);
-
-            // Visual feedback for duplicates
-            const updateStyles = (pref, kits) => {
-                const seen = {};
-                kits.forEach((k, idx) => {
-                    const id = idx < 9 ? `${pref}_p_kit_${idx + 1}` : `${pref}_s_kit_${idx - 8}`;
-                    const el = document.getElementById(id);
-                    if (k) {
-                        if (seen[k] !== undefined) {
-                            el.style.borderColor = '#dc2626';
-                            document.getElementById(seen[k]).style.borderColor = '#dc2626';
-                        } else {
-                            el.style.borderColor = '#fed7aa';
-                            seen[k] = id;
-                        }
-                    } else {
-                        el.style.borderColor = '#fed7aa';
-                    }
-                });
-            };
-
-            updateStyles('A', dataA.kits);
-            updateStyles('B', dataB.kits);
+            localStorage.setItem('current_match_setup', JSON.stringify(setup));
+            window.location.href = 'Toss_Result.html' + (window.location.search || '');
         }
 
         function finalizeMatch() {
-            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            const btn = document.getElementById('finishBtn');
+            const btnText = document.getElementById('btnText');
 
-            const getPlayers = (pref, pCount, sCount) => {
-                const p = [];
-                for (let i = 1; i <= pCount; i++) p.push({ kit: document.getElementById(pref + '_p_kit_' + i).value, name: document.getElementById(pref + '_p_name_' + i).value });
-                const s = [];
-                for (let i = 1; i <= sCount; i++) s.push({ kit: document.getElementById(pref + '_s_kit_' + i).value, name: document.getElementById(pref + '_s_name_' + i).value });
-                return { playing: p, substitutes: s };
-            };
+            // Celebration Animation
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = 'scale(1.05)', 100);
 
-            setup.lineupA = getPlayers('A', 9, 3);
-            setup.lineupB = getPlayers('B', 9, 3);
-            setup.status = setup.status || 'Scheduled';
-            setup.id = setup.id || 'M' + Date.now();
-            setup.updatedAt = new Date().toISOString();
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ea580c', '#16a34a', '#ffffff']
+            });
 
-            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            const index = matches.findIndex(m => (m.id || '').toString() === setup.id.toString());
+            // Delay for effect
+            btnText.textContent = "Creating Match...";
+            btn.disabled = true;
 
-            if (index !== -1) {
-                matches[index] = setup;
-            } else {
-                matches.push(setup);
-            }
+            setTimeout(() => {
+                const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
 
-            localStorage.setItem('matches', JSON.stringify(matches));
-            localStorage.removeItem('current_match_setup');
+                setup.lineupA = {
+                    playing: lineups.A.playing.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` })),
+                    substitutes: lineups.A.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
+                };
+                setup.lineupB = {
+                    playing: lineups.B.playing.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` })),
+                    substitutes: lineups.B.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
+                };
 
-            const params = new URLSearchParams(window.location.search);
-            const isEdit = params.get('edit') === 'true';
-            alert(isEdit ? 'Match Updated Successfully!' : 'Match Created Successfully!');
-            window.location.href = '../../../tournament_dashboard.html';
+                setup.status = 'Scheduled';
+                setup.id = setup.id || 'M' + Date.now();
+                setup.updatedAt = new Date().toISOString();
+
+                const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+                const index = matches.findIndex(m => (m.id || '').toString() === setup.id.toString());
+
+                if (index !== -1) {
+                    matches[index] = setup;
+                } else {
+                    matches.push(setup);
+                }
+
+                localStorage.setItem('matches', JSON.stringify(matches));
+                localStorage.removeItem('current_match_setup');
+
+                const params = new URLSearchParams(window.location.search);
+                const isEdit = params.get('edit') === 'true';
+                // alert(isEdit ? 'Match Updated Successfully!' : 'Match Created Successfully!'); // Removed alert for smoother flow
+                window.location.href = '../../../tournament_dashboard.html';
+            }, 1000);
         }
 
         window.onload = init;

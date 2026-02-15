@@ -303,7 +303,7 @@
                     <h1>🏁 Create Match</h1>
                     <p class="subtitle">Step 4: Toss and Opening Decision</p>
                 </div>
-                <button class="back-btn" onclick="window.location.href='Assign_Official.html' + window.location.search"
+                <button class="back-btn" onclick="saveAndBack()"
                     style="background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.4); padding: 12px 25px; border-radius: 12px; cursor: pointer;">
                     <i class="fa fa-arrow-left"></i> Back
                 </button>
@@ -342,8 +342,7 @@
             </div>
 
             <div class="button-row">
-                <button class="btn cancel-btn"
-                    onclick="const p=new URLSearchParams(window.location.search); window.location.href='Assign_Official.html' + (p.get('edit')==='true'?'?edit=true':'');">Back</button>
+                <button class="btn cancel-btn" onclick="saveAndBack()">Back</button>
                 <button id="nextBtn" class="btn next-btn" onclick="saveToss()" disabled>Confirm Toss</button>
             </div>
         </div>
@@ -357,6 +356,25 @@
             const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
             document.getElementById('nameA').textContent = setup.teamA || 'Team A';
             document.getElementById('nameB').textContent = setup.teamB || 'Team B';
+
+            if (setup.tossWinnerId) {
+                const type = setup.tossWinnerId === setup.teamAId ? 'A' : 'B';
+                selectWinner(type);
+                if (setup.decision) {
+                    selectDecision(setup.decision);
+                }
+            }
+        }
+
+        function saveAndBack() {
+            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            if (winner) {
+                setup.tossWinner = winner === 'A' ? setup.teamA : setup.teamB;
+                setup.tossWinnerId = winner === 'A' ? setup.teamAId : setup.teamBId;
+            }
+            if (decision) setup.decision = decision;
+            localStorage.setItem('current_match_setup', JSON.stringify(setup));
+            window.location.href = 'Assign_Official.html' + (window.location.search || '');
         }
 
         function selectWinner(type) {

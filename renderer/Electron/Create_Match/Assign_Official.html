@@ -308,7 +308,7 @@
             </div>
 
             <div class="button-row">
-                <button class="btn back-btn" onclick="window.location.href='Create_Official.html'">Back</button>
+                <button class="btn back-btn" onclick="saveAndBack()">Back</button>
                 <button class="btn next-btn" onclick="saveAndNext()">Save & Next</button>
             </div>
         </div>
@@ -376,6 +376,17 @@
             const params = new URLSearchParams(window.location.search);
             const isEdit = params.get('edit') === 'true';
             window.location.href = `Toss.html${isEdit ? '?edit=true' : ''}`;
+        }
+
+        function saveAndBack() {
+            const assignments = {};
+            officialRoles.forEach(roleId => {
+                assignments[roleId] = document.getElementById(roleId).value;
+            });
+            const matchSetup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            matchSetup.officials = assignments;
+            localStorage.setItem('current_match_setup', JSON.stringify(matchSetup));
+            window.location.href = 'Create_Official.html' + (window.location.search || '');
         }
 
         window.onload = loadOfficials;

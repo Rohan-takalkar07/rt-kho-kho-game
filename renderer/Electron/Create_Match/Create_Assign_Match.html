@@ -254,7 +254,8 @@
                     <h1>🏁 Create Match</h1>
                     <p class="subtitle">Set up a new Kho-Kho match details</p>
                 </div>
-                <button class="back-btn" onclick="window.location.href='../../../tournament_dashboard.html'">
+                <button class="back-btn"
+                    onclick="window.location.href='../../../tournament_dashboard.html' + (window.location.search || '')">
                     <i class="fa fa-arrow-left"></i> Back
                 </button>
             </div>
@@ -306,7 +307,7 @@
 
             <div class="button-row">
                 <button class="btn cancel-btn"
-                    onclick="window.location.href='../../../tournament_dashboard.html'">Cancel</button>
+                    onclick="window.location.href='../../../tournament_dashboard.html' + (window.location.search || '')">Cancel</button>
                 <button class="btn next-btn" onclick="saveAndNext()">Save & Next</button>
             </div>
         </div>
@@ -321,23 +322,32 @@
             isEditMode = params.get('edit') === 'true';
             editId = params.get('id');
 
+            // Check for temp data first (for backward navigation or refresh)
+            const tempSetup = JSON.parse(localStorage.getItem('current_match_setup') || 'null');
+
             if (isEditMode && editId) {
                 document.querySelector('h1').textContent = '🏁 Edit Match';
                 const matches = JSON.parse(localStorage.getItem('matches') || '[]');
                 const match = matches.find(m => (m.id || '').toString() === editId.toString());
 
                 if (match) {
-                    document.getElementById('matchName').value = match.matchName || '';
-                    document.getElementById('matchDate').value = match.matchDate || match.date || '';
-                    document.getElementById('matchTime').value = match.matchTime || match.time || '';
-                    document.getElementById('pool').value = match.pool || 'Pool A';
-                    document.getElementById('matchNo').value = match.matchNo || '';
-                    document.getElementById('venue').value = match.venue || '';
-
+                    fillForm(match);
                     // Store the full match object in temp setup to preserve later steps' data
                     localStorage.setItem('current_match_setup', JSON.stringify(match));
                 }
+            } else if (tempSetup) {
+                // Fill form from temp data (backward navigation)
+                fillForm(tempSetup);
             }
+        }
+
+        function fillForm(match) {
+            document.getElementById('matchName').value = match.matchName || '';
+            document.getElementById('matchDate').value = match.matchDate || match.date || '';
+            document.getElementById('matchTime').value = match.matchTime || match.time || '';
+            document.getElementById('pool').value = match.pool || 'Pool A';
+            document.getElementById('matchNo').value = match.matchNo || '';
+            document.getElementById('venue').value = match.venue || '';
         }
 
         function validate(el) {
