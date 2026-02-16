@@ -1,191 +1,5 @@
 [
   {
-    "id": "1771145819190",
-    "name": "csk",
-    "shortName": "csk",
-    "color": "#eab308",
-    "state": "Tamil Nadu",
-    "city": "Chennai",
-    "gender": "Male",
-    "section": "Senior",
-    "createdAt": "2026-02-15T08:56:59.190Z",
-    "isEdit": false,
-    "staff": [
-      {
-        "assignId": "1771145156802",
-        "staffId": "1771145154281",
-        "name": "Prasad Bhor",
-        "role": "Head Coach"
-      },
-      {
-        "assignId": "1771145230307",
-        "staffId": "1771145227699",
-        "name": "Pravin hase",
-        "role": "Assistant Coach"
-      }
-    ],
-    "players": [
-      {
-        "kitNo": 1,
-        "firstName": "yash",
-        "lastName": "shelke",
-        "position": "defender"
-      },
-      {
-        "kitNo": 2,
-        "firstName": "rohan",
-        "lastName": "takalkar",
-        "position": "defender"
-      },
-      {
-        "kitNo": 3,
-        "firstName": "vaibhav",
-        "lastName": "pachpor",
-        "position": "defender"
-      },
-      {
-        "kitNo": 7,
-        "firstName": "prasad",
-        "lastName": "bhor",
-        "position": "defender"
-      },
-      {
-        "kitNo": 4,
-        "firstName": "pranav",
-        "lastName": "sonavne",
-        "position": "defender"
-      },
-      {
-        "kitNo": 5,
-        "firstName": "hari",
-        "lastName": "shree",
-        "position": "defender"
-      },
-      {
-        "kitNo": 6,
-        "firstName": "siddhesh",
-        "lastName": "katkar",
-        "position": "defender"
-      },
-      {
-        "kitNo": 8,
-        "firstName": "kiran",
-        "lastName": "sonawne",
-        "position": "defender"
-      },
-      {
-        "kitNo": 9,
-        "firstName": "shubham",
-        "lastName": "waman",
-        "position": "defender"
-      },
-      {
-        "kitNo": 33,
-        "firstName": "rahul",
-        "lastName": "sharma",
-        "position": "defender"
-      },
-      {
-        "kitNo": 78,
-        "firstName": "pratik",
-        "lastName": "mahale",
-        "position": "defender"
-      },
-      {
-        "kitNo": 67,
-        "firstName": "sweetu",
-        "lastName": "singh",
-        "position": "defender"
-      }
-    ],
-    "playerCount": 12,
-    "updatedAt": "2026-02-15T08:57:18.394Z"
-  },
-  {
-    "id": "1771145819190",
-    "name": "csk",
-    "shortName": "csk",
-    "color": "#eab308",
-    "state": "Tamil Nadu",
-    "city": "Chennai",
-    "gender": "Male",
-    "section": "Senior",
-    "createdAt": "2026-02-15T08:56:59.190Z",
-    "isEdit": false,
-    "staff": [
-      {
-        "assignId": "1771145156802",
-        "staffId": "1771145154281",
-        "name": "Prasad Bhor",
-        "role": "Head Coach"
-      },
-      {
-        "assignId": "1771145230307",
-        "staffId": "1771145227699",
-        "name": "Pravin hase",
-        "role": "Assistant Coach"
-      }
-    ],
-    "players": [
-      {
-        "kitNo": 1,
-        "firstName": "yash",
-        "lastName": "shelke",
-        "position": "defender"
-      },
-      {
-        "kitNo": 2,
-        "firstName": "rohan",
-        "lastName": "takalkar",
-        "position": "defender"
-      },
-      {
-        "kitNo": 3,
-        "firstName": "vaibhav",
-        "lastName": "pachpor",
-        "position": "defender"
-      },
-      {
-        "kitNo": 7,
-        "firstName": "prasad",
-        "lastName": "bhor",
-        "position": "defender"
-      },
-      {
-        "kitNo": 4,
-        "firstName": "pranav",
-        "lastName": "sonavne",
-        "position": "defender"
-      },
-      {
-        "kitNo": 5,
-        "firstName": "hari",
-        "lastName": "shree",
-        "position": "defender"
-      },
-      {
-        "kitNo": 6,
-        "firstName": "siddhesh",
-        "lastName": "katkar",
-        "position": "defender"
-      },
-      {
-        "kitNo": 8,
-        "firstName": "kiran",
-        "lastName": "sonawne",
-        "position": "defender"
-      },
-      {
-        "kitNo": 9,
-        "firstName": "shubham",
-        "lastName": "waman",
-        "position": "defender"
-      }
-    ],
-    "playerCount": 9,
-    "updatedAt": "2026-02-15T08:57:19.794Z"
-  },
-  {
     "id": "1771145941477",
     "name": "kokan",
     "shortName": "ck",
@@ -286,5 +100,268 @@
     ],
     "playerCount": 12,
     "updatedAt": "2026-02-15T08:59:46.870Z"
+  },
+  {
+    "id": "1771236633861",
+    "name": "team2",
+    "shortName": "t2",
+    "color": "#9333ea",
+    "state": "Mizoram",
+    "city": "Lunglei",
+    "gender": "Female",
+    "section": "Senior",
+    "createdAt": "2026-02-16T10:10:33.861Z",
+    "isEdit": false,
+    "staff": [
+      {
+        "assignId": "1771236640440",
+        "staffId": "1771145154281",
+        "name": "Prasad Bhor",
+        "role": "Manager"
+      },
+      {
+        "assignId": "1771236648191",
+        "staffId": "1771145227699",
+        "name": "Pravin hase",
+        "role": "Manager"
+      }
+    ],
+    "players": [
+      {
+        "kitNo": 1,
+        "firstName": "yash",
+        "lastName": "shelke",
+        "position": "defender"
+      },
+      {
+        "kitNo": 2,
+        "firstName": "rohan",
+        "lastName": "takalkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 3,
+        "firstName": "vaibhav",
+        "lastName": "pachpor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 7,
+        "firstName": "prasad",
+        "lastName": "bhor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 4,
+        "firstName": "pranav",
+        "lastName": "sonavne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 5,
+        "firstName": "hari",
+        "lastName": "shree",
+        "position": "defender"
+      },
+      {
+        "kitNo": 6,
+        "firstName": "siddhesh",
+        "lastName": "katkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 8,
+        "firstName": "kiran",
+        "lastName": "sonawne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 9,
+        "firstName": "shubham",
+        "lastName": "waman",
+        "position": "defender"
+      }
+    ],
+    "playerCount": 9,
+    "updatedAt": "2026-02-16T10:11:18.437Z"
+  },
+  {
+    "id": "1771258477727",
+    "name": "pune",
+    "shortName": "t2",
+    "color": "#9333ea",
+    "state": "Mizoram",
+    "city": "Lunglei",
+    "gender": "Female",
+    "section": "Senior",
+    "createdAt": "2026-02-16T16:14:37.727Z",
+    "isEdit": false,
+    "staff": [
+      {
+        "assignId": "1771236640440",
+        "staffId": "1771145154281",
+        "name": "Prasad Bhor",
+        "role": "Manager"
+      },
+      {
+        "assignId": "1771236648191",
+        "staffId": "1771145227699",
+        "name": "Pravin hase",
+        "role": "Manager"
+      },
+      {
+        "assignId": "1771258486607",
+        "staffId": "1771145154281",
+        "name": "Prasad Bhor",
+        "role": "Manager"
+      }
+    ],
+    "players": [
+      {
+        "kitNo": 1,
+        "firstName": "yash",
+        "lastName": "shelke",
+        "position": "defender"
+      },
+      {
+        "kitNo": 2,
+        "firstName": "rohan",
+        "lastName": "takalkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 3,
+        "firstName": "vaibhav",
+        "lastName": "pachpor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 7,
+        "firstName": "prasad",
+        "lastName": "bhor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 4,
+        "firstName": "pranav",
+        "lastName": "sonavne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 5,
+        "firstName": "hari",
+        "lastName": "shree",
+        "position": "defender"
+      },
+      {
+        "kitNo": 6,
+        "firstName": "siddhesh",
+        "lastName": "katkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 8,
+        "firstName": "kiran",
+        "lastName": "sonawne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 9,
+        "firstName": "shubham",
+        "lastName": "waman",
+        "position": "defender"
+      },
+      {
+        "kitNo": 7,
+        "firstName": "dhoni",
+        "lastName": "thala",
+        "position": "wk"
+      },
+      {
+        "kitNo": 2,
+        "firstName": "Rahul",
+        "lastName": "KL",
+        "position": "opener"
+      },
+      {
+        "kitNo": 18,
+        "firstName": "Virat ",
+        "lastName": "Kohli",
+        "position": "Captain"
+      }
+    ],
+    "playerCount": 12,
+    "updatedAt": "2026-02-16T16:15:01.909Z"
+  },
+  {
+    "id": "1771260973191",
+    "name": "Haarcb",
+    "shortName": "RCB",
+    "color": "#dc2626",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "gender": "Male",
+    "section": "Senior",
+    "createdAt": "2026-02-16T16:56:13.191Z",
+    "isEdit": false,
+    "staff": [],
+    "players": [
+      {
+        "kitNo": 1,
+        "firstName": "yash",
+        "lastName": "shelke",
+        "position": "defender"
+      },
+      {
+        "kitNo": 2,
+        "firstName": "rohan",
+        "lastName": "takalkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 3,
+        "firstName": "vaibhav",
+        "lastName": "pachpor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 7,
+        "firstName": "prasad",
+        "lastName": "bhor",
+        "position": "defender"
+      },
+      {
+        "kitNo": 4,
+        "firstName": "pranav",
+        "lastName": "sonavne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 5,
+        "firstName": "hari",
+        "lastName": "shree",
+        "position": "defender"
+      },
+      {
+        "kitNo": 6,
+        "firstName": "siddhesh",
+        "lastName": "katkar",
+        "position": "defender"
+      },
+      {
+        "kitNo": 8,
+        "firstName": "kiran",
+        "lastName": "sonawne",
+        "position": "defender"
+      },
+      {
+        "kitNo": 9,
+        "firstName": "shubham",
+        "lastName": "waman",
+        "position": "defender"
+      }
+    ],
+    "playerCount": 9,
+    "updatedAt": "2026-02-16T16:56:52.087Z"
   }
 ]

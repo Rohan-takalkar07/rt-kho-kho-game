@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Tournament - Kho Kho</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 30%, #fff0e6 60%, #fef3f0 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
+            min-height: 100vh;
+            padding: 30px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Athletic field pattern overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                repeating-linear-gradient(90deg, transparent, transparent 99px, rgba(251, 146, 60, 0.03) 99px, rgba(251, 146, 60, 0.03) 100px),
+                repeating-linear-gradient(0deg, transparent, transparent 99px, rgba(251, 146, 60, 0.03) 99px, rgba(251, 146, 60, 0.03) 100px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Animated glowing orbs - sports theme */
+        body::after {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(249, 115, 22, 0.15), rgba(251, 146, 60, 0.08), transparent);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            filter: blur(80px);
+            animation: pulse 6s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.15;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.25;
+            }
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 0;
+            box-shadow:
+                0 30px 80px rgba(249, 115, 22, 0.15),
+                0 10px 30px rgba(234, 88, 12, 0.1),
+                0 0 0 1px rgba(251, 146, 60, 0.1);
+            animation: slideIn 0.8s ease-out;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header with gradient banner */
+        .header-banner {
+            background: linear-gradient(135deg, #ef731b 0%, #ea580c 50%, #dc2626 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+            padding: 40px 50px 35px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .header-banner::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.3) 20%,
+                    rgba(255, 255, 255, 0.5) 50%,
+                    rgba(255, 255, 255, 0.3) 80%,
+                    transparent);
+            animation: shimmerLine 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmerLine {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes gradientShift {
+
+            0%,
+            100% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        .header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 42px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.2),
+                0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ea580c;
+            padding: 14px 28px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes titleGlow {
+
+            0%,
+            100% {
+                text-shadow:
+                    0 2px 10px rgba(0, 0, 0, 0.2),
+                    0 4px 20px rgba(0, 0, 0, 0.1),
+                    0 0 30px rgba(255, 255, 255, 0.2);
+            }
+
+            50% {
+                text-shadow:
+                    0 2px 10px rgba(0, 0, 0, 0.2),
+                    0 4px 20px rgba(0, 0, 0, 0.1),
+                    0 0 40px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Form content area */
+        .form-content {
+            padding: 45px 50px 50px;
+        }
+
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #ea580c;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #fed7aa;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #f97316, #ea580c);
+            animation: expandLine 2s ease-in-out infinite;
+        }
+
+        @keyframes expandLine {
+
+            0%,
+            100% {
+                width: 80px;
+            }
+
+            50% {
+                width: 120px;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 26px;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .form-group:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .form-group:nth-child(2) {
+            animation-delay: 0.15s;
+        }
+
+        .form-group:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+
+        .form-group:nth-child(4) {
+            animation-delay: 0.25s;
+        }
+
+        .form-group:nth-child(5) {
+            animation-delay: 0.3s;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #292524;
+            margin-bottom: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        label::before {
+            content: '▸';
+            color: #f97316;
+            margin-right: 6px;
+            font-size: 12px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 15px 18px;
+            border: 2px solid #fed7aa;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            background: #fffbf5;
+            color: #292524;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            border-color: #f97316;
+            background: #ffffff;
+            box-shadow:
+                0 0 0 4px rgba(249, 115, 22, 0.1),
+                0 8px 20px rgba(249, 115, 22, 0.15);
+            transform: translateY(-2px);
+        }
+
+        input[type="text"]:hover,
+        input[type="date"]:hover,
+        select:hover {
+            border-color: #fb923c;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.08);
+        }
+
+        input[type="text"]::placeholder {
+            color: #d4a574;
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23f97316' d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            padding-right: 50px;
+        }
+
+        /* Button group */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 45px;
+            padding-top: 35px;
+            border-top: 2px solid #fef3f0;
+        }
+
+        button {
+            padding: 16px 42px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-cancel {
+            background: #ffffff;
+            color: #ea580c;
+            border: 2px solid #fb923c;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+        }
+
+        .btn-cancel:hover {
+            background: #fff7ed;
+            border-color: #f97316;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.2);
+        }
+
+        .btn-cancel:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-create {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+            background-size: 200% 200%;
+            color: white;
+            box-shadow:
+                0 8px 24px rgba(249, 115, 22, 0.4),
+                0 4px 12px rgba(234, 88, 12, 0.3);
+            animation: gradientShift 4s ease infinite;
+        }
+
+        .btn-create::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-create:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-create:hover {
+            transform: translateY(-4px);
+            box-shadow:
+                0 12px 32px rgba(249, 115, 22, 0.5),
+                0 6px 16px rgba(234, 88, 12, 0.4);
+        }
+
+        .btn-create:active {
+            transform: translateY(-2px);
+        }
+
+        .btn-create:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none !important;
+            animation: none !important;
+        }
+
+        /* Decorative corner accents */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, transparent 50%, rgba(249, 115, 22, 0.05) 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(-45deg, transparent 50%, rgba(249, 115, 22, 0.05) 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 0 15px;
+            }
+
+            .header-banner,
+            .form-content {
+                padding: 30px 25px;
+            }
+
+            .header h1 {
+                font-size: 32px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-banner">
+            <div class="header">
+                <button class="back-btn" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <div class="header-content">
+                    <h1>🏃 Create Tournament</h1>
+                    <p class="subtitle">Set up a new Kho Kho tournament with professional management</p>
+                </div>
+                <div style="width: 100px;"></div> <!-- Spacer to center title -->
+            </div>
+        </div>
+
+        <div class="form-content">
+            <form>
+                <div class="section-title">Tournament Details</div>
+
+                <div class="form-group">
+                    <label>Tournament Name</label>
+                    <input type="text" id="tournamentName" placeholder="Enter tournament name" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>State</label>
+                        <select id="stateSelect"
+                            onchange="toggleOtherInput('stateSelect', 'otherStateInput', 'citySelect')">
+                            <option value="">Select State</option>
+                        </select>
+                        <input type="text" id="otherStateInput" placeholder="Enter State Name"
+                            style="display: none; margin-top: 10px;" />
+                    </div>
+                    <div class="form-group">
+                        <label>City</label>
+                        <div style="display: flex; gap: 10px;">
+                            <select id="citySelect" onchange="toggleOtherInput('citySelect', 'otherCityInput')">
+                                <option value="">Select City</option>
+                            </select>
+                            <button type="button" onclick="saveNewCity()"
+                                style="width: auto; padding: 0 15px; background: #ea580c; color: white; border: none; border-radius: 12px; cursor: pointer; display: none;"
+                                id="saveCityBtn">Save</button>
+                        </div>
+                        <input type="text" id="otherCityInput" placeholder="Enter City Name"
+                            style="display: none; margin-top: 10px;"
+                            oninput="document.getElementById('saveCityBtn').style.display = (this.value ? 'block' : 'none')" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Venue</label>
+                    <input type="text" id="venue" placeholder="Enter venue location" required>
+                </div>
+
+                <div class="section-title" style="margin-top: 40px;">Competition Settings</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Section (Age Group)</label>
+                        <select id="ageGroup">
+                            <option value="">Select Age Group</option>
+                            <option>Under-14 (U-14)</option>
+                            <option>Under-17 (U-17)</option>
+                            <option>Under-19 (U-19)</option>
+                            <option>Sub-Junior</option>
+                            <option>Junior & Senior</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="gender">
+                            <option value="">Select Gender</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tournament Format</label>
+                        <select id="format">
+                            <option value="">Select Format</option>
+                            <option>Traditional/Standard Format</option>
+                            <option>Modern/Fast Format (using small mat)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Time Per Turn</label>
+                        <select id="maxTime">
+                            <option value="">Select Max Time</option>
+                            <option>9 minutes</option>
+                            <option>7 minutes</option>
+                            <option>5 minutes</option>
+                            <option>3 minutes</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn-cancel" onclick="resetForm()">Cancel</button>
+                    <button type="button" id="createBtn" class="btn-create" onclick="createTournament()" disabled>Create
+                        Tournament</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Popup -->
+    <div id="confirmationPopup" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <div class="popup-header">
+                <h2>Confirm Tournament Creation</h2>
+            </div>
+            <div class="popup-body">
+                <p style="margin-bottom: 20px; color: #57534e; font-size: 15px;">
+                    Please confirm the tournament details:
+                </p>
+                <div class="confirmation-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Tournament Name:</span>
+                        <span class="detail-value" id="confirmName"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Start Date:</span>
+                        <span class="detail-value" id="confirmStartDate"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">End Date:</span>
+                        <span class="detail-value" id="confirmEndDate"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="popup-footer">
+                <button class="btn-cancel-popup" onclick="closeConfirmationPopup()">Cancel</button>
+                <button class="btn-confirm" onclick="confirmCreateTournament()">Yes, Create Tournament</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Scripts here -->
+    <script src="../assets/js/state_city_data.js"></script>
+    <script src="../assets/js/state_city_validation.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            populateStates('stateSelect');
+        });
+
+        function saveNewCity() {
+            const state = document.getElementById('stateSelect').value;
+            const city = document.getElementById('otherCityInput').value.trim();
+            if (state && city && state !== 'Other') {
+                if (addCityToState(state, city)) {
+                    populateCities('stateSelect', 'citySelect');
+                    document.getElementById('citySelect').value = city;
+                    document.getElementById('otherCityInput').style.display = 'none';
+                    document.getElementById('saveCityBtn').style.display = 'none';
+                }
+            } else if (state === 'Other') {
+                alert("Please select or enter a standard state first to save a city to it.");
+            }
+        }
+    </script>
+
+    <style>
+        /* Popup Overlay */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Popup Content */
+        .popup-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(249, 115, 22, 0.3);
+            animation: slideUp 0.3s ease;
+            overflow: hidden;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Popup Header */
+        .popup-header {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+            padding: 25px 30px;
+            color: white;
+        }
+
+        .popup-header h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Popup Body */
+        .popup-body {
+            padding: 30px;
+        }
+
+        .confirmation-details {
+            background: #fffbf5;
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid #f97316;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #fed7aa;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #78716c;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            font-weight: 700;
+            color: #292524;
+            font-size: 14px;
+        }
+
+        /* Popup Footer */
+        .popup-footer {
+            padding: 20px 30px;
+            background: #fef3f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn-cancel-popup {
+            padding: 12px 28px;
+            background: white;
+            color: #ea580c;
+            border: 2px solid #fb923c;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel-popup:hover {
+            background: #fff7ed;
+            transform: translateY(-2px);
+        }
+
+        .btn-confirm {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
+        }
+    </style>
+
+    <script>
+        const { ipcRenderer } = require("electron");
+
+        let pendingTournament = null;
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function resetForm() {
+            if (confirm("Are you sure you want to clear all data in this form?")) {
+                const form = document.querySelector('form');
+                if (form) {
+                    form.reset();
+                    // Hide 'Other' inputs manually as reset() doesn't handle display style
+                    document.getElementById('otherStateInput').style.display = 'none';
+                    document.getElementById('otherCityInput').style.display = 'none';
+                    validateForm();
+                }
+            }
+        }
+
+        // Toggle Other Input
+        // Toggle Other Input
+        function toggleOtherInput(selectId, inputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+
+            if (selectId === 'stateSelect') {
+                populateCities('stateSelect', 'citySelect');
+            }
+
+            if (select.value === 'Other' || select.value === 'Customize City') {
+                input.style.display = 'block';
+                input.focus();
+            } else {
+                input.style.display = 'none';
+                input.value = '';
+            }
+            validateForm();
+        }
+
+        // Validation logic
+        const requiredIds = [
+            'tournamentName', 'startDate', 'endDate',
+            'stateSelect', 'otherStateInput', 'citySelect', 'otherCityInput',
+            'venue', 'ageGroup', 'gender', 'format', 'maxTime'
+        ];
+
+        function validateForm() {
+            const createBtn = document.getElementById('createBtn');
+            let allFilled = true;
+
+            requiredIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                // Only validate if element is visible
+                if (el.style.display !== 'none' && el.tagName !== 'SPAN') {
+                    if (!el.value || !el.value.trim()) {
+                        allFilled = false;
+                    }
+                }
+            });
+
+            // Date validation: End Date must be after or same as Start Date
+            const startStr = document.getElementById('startDate').value;
+            const endStr = document.getElementById('endDate').value;
+            if (startStr && endStr) {
+                const start = new Date(startStr);
+                const end = new Date(endStr);
+                if (end < start) {
+                    allFilled = false;
+                }
+            }
+
+            if (allFilled) {
+                createBtn.removeAttribute('disabled');
+            } else {
+                createBtn.setAttribute('disabled', 'true');
+            }
+        }
+
+        // Initialize Listeners
+        window.addEventListener('load', () => {
+            requiredIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.addEventListener('input', validateForm);
+                    el.addEventListener('change', validateForm);
+                }
+            });
+            validateForm();
+
+            // Check for edit mode
+            const params = new URLSearchParams(window.location.search);
+            const mode = params.get('mode');
+            const editName = params.get('name');
+
+            if (mode === 'edit' && editName) {
+                loadTournamentForEdit(editName);
+            }
+        });
+
+        let originalTournamentName = null; // To track if name changes for update
+
+        function loadTournamentForEdit(name) {
+            const tournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+            const tournament = tournaments.find(t => t.name === name);
+
+            if (tournament) {
+                originalTournamentName = name;
+                document.querySelector('.header h1').innerText = '✏️ Edit Tournament';
+                document.getElementById('createBtn').innerText = 'Update Tournament';
+                document.getElementById('createBtn').removeAttribute('disabled'); // Allow update immediately
+
+                // Populate fields
+                document.getElementById('tournamentName').value = tournament.name;
+                document.getElementById('startDate').value = tournament.startDate;
+                document.getElementById('endDate').value = tournament.endDate;
+                document.getElementById('venue').value = tournament.venue;
+
+                // Dropdowns might need careful setting
+                setSelectValue('ageGroup', tournament.ageGroup);
+                setSelectValue('gender', tournament.gender);
+                setSelectValue('format', tournament.format);
+                setSelectValue('maxTime', tournament.maxTime);
+
+                // Handle State/City logic
+                // If it's a standard option, select it. If not, select 'Other' and fill input.
+                handleLocationField('stateSelect', 'otherStateInput', tournament.state);
+                handleLocationField('citySelect', 'otherCityInput', tournament.city);
+
+                validateForm();
+            }
+        }
+
+        function setSelectValue(id, value) {
+            const select = document.getElementById(id);
+            if (select) {
+                // Check if value exists in options
+                let exists = false;
+                for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].value === value || select.options[i].text === value) {
+                        select.selectedIndex = i;
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists && value) {
+                    // Could handle as custom if applicable, but for fixed dropdowns just default
+                }
+            }
+        }
+
+        function handleLocationField(selectId, inputId, value) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+
+            let matchFound = false;
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].value === value || select.options[i].text === value) {
+                    select.selectedIndex = i;
+                    matchFound = true;
+                    break;
+                }
+            }
+
+            if (!matchFound && value) {
+                select.value = 'Other';
+                input.style.display = 'block';
+                input.value = value;
+            } else {
+                input.style.display = 'none';
+            }
+        }
+
+        // Format date for display
+        function formatDateForDisplay(dateString) {
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            const options = { day: '2-digit', month: 'short', year: 'numeric' };
+            return date.toLocaleDateString('en-GB', options);
+        }
+
+        // Show confirmation popup
+        function createTournament() {
+            // Get form values
+            const tournamentName = document.getElementById('tournamentName').value.trim();
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            // Final check just in case
+            if (new Date(endDate) < new Date(startDate)) {
+                alert('End Date cannot be before Start Date.');
+                return;
+            }
+
+            const state = document.getElementById('stateSelect').value === 'Other' ?
+                document.getElementById('otherStateInput').value.trim() :
+                document.getElementById('stateSelect').value;
+
+            const cityVal = document.getElementById('citySelect').value;
+            const city = (cityVal === 'Other' || cityVal === 'Customize City') ?
+                document.getElementById('otherCityInput').value.trim() :
+                cityVal;
+
+            const venue = document.getElementById('venue').value.trim();
+            const ageGroup = document.getElementById('ageGroup').value;
+            const gender = document.getElementById('gender').value;
+            const format = document.getElementById('format').value;
+            const maxTime = document.getElementById('maxTime').value;
+
+            // Determine status based on dates
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const start = new Date(startDate);
+            start.setHours(0, 0, 0, 0);
+            const end = new Date(endDate);
+            end.setHours(23, 59, 59, 999);
+
+            let status = 'Scheduled';
+
+            const now = new Date();
+            if (now >= start && now <= end) {
+                status = 'Live';
+            } else if (now > end) {
+                status = 'Completed';
+            }
+
+            // Create tournament object
+            pendingTournament = {
+                name: tournamentName,
+                startDate: startDate,
+                endDate: endDate,
+                state: state,
+                city: city,
+                venue: venue,
+                ageGroup: ageGroup,
+                gender: gender,
+                format: format,
+                maxTime: maxTime,
+                status: status,
+                matches: 'TBD', // Should preserve if editing
+                teams: 'TBD',   // Should preserve if editing
+                createdAt: new Date().toISOString()
+            };
+
+            // Show confirmation popup with tournament details
+            const btnText = originalTournamentName ? 'Confirm Update' : 'Confirm Creation';
+            document.querySelector('#confirmationPopup h2').innerText = btnText;
+            document.querySelector('.btn-confirm').innerText = originalTournamentName ? 'Yes, Update Tournament' : 'Yes, Create Tournament';
+
+            document.getElementById('confirmName').textContent = tournamentName;
+            document.getElementById('confirmStartDate').textContent = formatDateForDisplay(startDate);
+            document.getElementById('confirmEndDate').textContent = formatDateForDisplay(endDate);
+            document.getElementById('confirmationPopup').style.display = 'flex';
+        }
+
+        // Close confirmation popup
+        function closeConfirmationPopup() {
+            document.getElementById('confirmationPopup').style.display = 'none';
+            pendingTournament = null;
+        }
+
+        // Confirm and save tournament
+        function confirmCreateTournament() {
+            if (!pendingTournament) {
+                return;
+            }
+
+            // Get existing tournaments from localStorage
+            let tournaments = JSON.parse(localStorage.getItem('tournaments') || '[]');
+
+            if (originalTournamentName) {
+                // Update existing
+                const index = tournaments.findIndex(t => t.name === originalTournamentName);
+                if (index !== -1) {
+                    // Preserve existing data like matches/teams if not TBD
+                    pendingTournament.matches = tournaments[index].matches;
+                    pendingTournament.teams = tournaments[index].teams;
+                    pendingTournament.createdAt = tournaments[index].createdAt; // Keep original creation date
+
+                    tournaments[index] = pendingTournament;
+                }
+            } else {
+                // Check if tournament name already exists
+                if (tournaments.some(t => t.name.toLowerCase() === pendingTournament.name.toLowerCase())) {
+                    alert('A tournament with this name already exists.');
+                    closeConfirmationPopup();
+                    return;
+                }
+                // Add new tournament
+                tournaments.push(pendingTournament);
+            }
+
+            // Save to localStorage
+            localStorage.setItem('tournaments', JSON.stringify(tournaments));
+
+            // Close popup
+            closeConfirmationPopup();
+
+            // Navigate to dashboard
+            ipcRenderer.send('dashboard.html');
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const today = new Date().toISOString().split('T')[0];
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+
+            if (startDate) startDate.setAttribute('min', today);
+            if (endDate) endDate.setAttribute('min', today);
+
+            if (startDate && endDate) {
+                startDate.addEventListener('change', function () {
+                    endDate.setAttribute('min', this.value);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

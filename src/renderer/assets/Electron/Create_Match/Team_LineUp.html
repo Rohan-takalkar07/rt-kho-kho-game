@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Match - Final Step</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fff5f0 0%, #ffe8dc 30%, #fff0e6 60%, #fef3f0 100%);
+            min-height: 100vh;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.8s ease-out;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #ef731b 0%, #ea580c 50%, #dc2626 100%);
+            padding: 40px 50px 35px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 38px;
+            font-weight: 800;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 15px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #ea580c;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .form-content {
+            padding: 45px 50px 50px;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #fef3f0;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 700;
+            color: #78716c;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #fff7ed;
+            color: #ea580c;
+        }
+
+        .lineup-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .roster-section,
+        .lineup-section {
+            background: #fff;
+            border: 1px solid #fed7aa;
+            border-radius: 16px;
+            padding: 20px;
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .roster-section {
+            background: #fffaf0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #fed7aa;
+        }
+
+        .section-header h3 {
+            font-size: 16px;
+            color: #ea580c;
+            margin-bottom: 0 !important;
+        }
+
+        .player-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 5px;
+        }
+
+        .player-item {
+            background: white;
+            border: 1px solid #fed7aa;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s;
+        }
+
+        .player-item:hover {
+            border-color: #f97316;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+            transform: translateX(2px);
+        }
+
+        .player-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .player-item .kit-badge {
+            background: #ea580c;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .count-badge {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: #fed7aa;
+            color: #9a3412;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .add-player-btn {
+            font-size: 12px;
+            color: #ea580c;
+            background: none;
+            border: 1px dashed #ea580c;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-player-btn:hover {
+            background: #ea580c;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-card h2 {
+            margin-bottom: 20px;
+            color: #ea580c;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #fed7aa;
+            border-radius: 8px;
+        }
+
+        .modal-btns {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-sm {
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+        }
+
+        .btn-cancel {
+            background: #f5f5f5;
+            color: #78716c;
+        }
+
+        .btn-save {
+            background: #ea580c;
+            color: white;
+        }
+
+        .placeholder-text {
+            color: #a8a29e;
+            text-align: center;
+            padding-top: 40%;
+            font-style: italic;
+            font-size: 14px;
+        }
+    </style>
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header-banner">
+            <div class="header">
+                <button class="back-btn" onclick="window.location.href='Toss_Result.html' + window.location.search">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <div class="header-content">
+                    <h1>🏁 Finalize Lineups</h1>
+                    <p class="subtitle">Set the starting players and substitutes for both teams</p>
+                </div>
+                <button class="back-btn" onclick="autoFillLineups()"
+                    style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.4);">
+                    <i class="fas fa-magic"></i> Auto Fill
+                </button>
+            </div>
+        </div>
+
+        <div class="form-content">
+            <div class="tab-bar">
+                <div class="tab active" id="tabA" onclick="switchTab('A')">TEAM A: <span
+                        id="tabNameA">Maharashtra</span></div>
+                <div class="tab" id="tabB" onclick="switchTab('B')">TEAM B: <span id="tabNameB">Gujarat</span></div>
+            </div>
+
+            <div id="contentA">
+                <div class="lineup-grid">
+                    <div class="roster-section">
+                        <div class="section-header">
+                            <h3>Available Roster</h3>
+                            <button class="add-player-btn" onclick="openAddModal('A')">+ Add Missing</button>
+                        </div>
+                        <div id="rosterListA" class="player-list" ondrop="drop(event, 'roster', 'A')"
+                            ondragover="allowDrop(event)"></div>
+                    </div>
+                    <div class="lineup-section">
+                        <div class="section-header">
+                            <h3>Starting 9</h3>
+                            <span class="count-badge" id="countPlayingA">0/9</span>
+                        </div>
+                        <div id="playingListA" class="player-list" ondrop="drop(event, 'playing', 'A')"
+                            ondragover="allowDrop(event)"></div>
+                    </div>
+                    <div class="lineup-section">
+                        <div class="section-header">
+                            <h3>Substitutes</h3>
+                            <span class="count-badge" id="countSubsA">0/3</span>
+                        </div>
+                        <div id="subsListA" class="player-list" ondrop="drop(event, 'subs', 'A')"
+                            ondragover="allowDrop(event)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contentB" style="display: none;">
+                <div class="lineup-grid">
+                    <div class="roster-section">
+                        <div class="section-header">
+                            <h3>Available Roster</h3>
+                            <button class="add-player-btn" onclick="openAddModal('B')">+ Add Missing</button>
+                        </div>
+                        <div id="rosterListB" class="player-list" ondrop="drop(event, 'roster', 'B')"
+                            ondragover="allowDrop(event)"></div>
+                    </div>
+                    <div class="lineup-section">
+                        <div class="section-header">
+                            <h3>Starting 9</h3>
+                            <span class="count-badge" id="countPlayingB">0/9</span>
+                        </div>
+                        <div id="playingListB" class="player-list" ondrop="drop(event, 'playing', 'B')"
+                            ondragover="allowDrop(event)"></div>
+                    </div>
+                    <div class="lineup-section">
+                        <div class="section-header">
+                            <h3>Substitutes</h3>
+                            <span class="count-badge" id="countSubsB">0/3</span>
+                        </div>
+                        <div id="subsListB" class="player-list" ondrop="drop(event, 'subs', 'B')"
+                            ondragover="allowDrop(event)"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button class="btn cancel-btn" onclick="saveAndBack()"
+                    style="background: #fff; border: 2px solid #fb923c; color: #ea580c; margin-right: 15px;">Back</button>
+                <button class="btn finish-btn" id="finishBtn" onclick="finalizeMatch()" disabled>
+                    <span id="btnText">Finish & Create Match</span>
+                    <i class="fas fa-check-circle" style="margin-left: 8px;"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Player Modal -->
+    <div id="addPlayerModal" class="modal-overlay">
+        <div class="modal-card">
+            <h2 id="modalTitle">Add Missing Player</h2>
+            <div class="form-group">
+                <label>Kit Number</label>
+                <input type="number" id="newKit" placeholder="e.g. 10">
+            </div>
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="newFirst" placeholder="e.g. Rahul">
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="newLast" placeholder="e.g. Sharma">
+            </div>
+            <div class="form-group">
+                <label>Position</label>
+                <input type="text" id="newPos" placeholder="e.g. Defender">
+            </div>
+            <div class="modal-btns">
+                <button class="btn-sm btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-sm btn-save" onclick="saveNewPlayer()">Add to Roster</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fs = require('fs');
+        const path = require('path');
+
+        let teamA = null;
+        let teamB = null;
+        let rosters = { A: [], B: [] };
+        let lineups = {
+            A: { playing: [], subs: [] },
+            B: { playing: [], subs: [] }
+        };
+        let currentModalTeam = 'A';
+
+        function init() {
+            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+
+            teamA = teams.find(t => t.id === setup.teamAId);
+            teamB = teams.find(t => t.id === setup.teamBId);
+
+            document.getElementById('tabNameA').textContent = teamA ? teamA.name : 'Team A';
+            document.getElementById('tabNameB').textContent = teamB ? teamB.name : 'Team B';
+
+            rosters.A = teamA ? [...teamA.players] : [];
+            rosters.B = teamB ? [...teamB.players] : [];
+
+            // Load existing selections if any
+            if (setup.lineupA) {
+                lineups.A.playing = setup.lineupA.playing || [];
+                lineups.A.subs = setup.lineupA.substitutes || [];
+                // Remove from roster if in playing/subs
+                lineups.A.playing.forEach(p => removeFromRoster('A', p.kit));
+                lineups.A.subs.forEach(p => removeFromRoster('A', p.kit));
+            }
+            if (setup.lineupB) {
+                lineups.B.playing = setup.lineupB.playing || [];
+                lineups.B.subs = setup.lineupB.substitutes || [];
+                lineups.B.playing.forEach(p => removeFromRoster('B', p.kit));
+                lineups.B.subs.forEach(p => removeFromRoster('B', p.kit));
+            }
+
+            renderAll();
+        }
+
+        function removeFromRoster(team, kit) {
+            rosters[team] = rosters[team].filter(p => p.kitNo.toString() !== kit.toString());
+        }
+
+        function allowDrop(ev) { ev.preventDefault(); }
+
+        function drag(ev, type, team, index) {
+            ev.dataTransfer.setData("text", JSON.stringify({ type, team, index }));
+        }
+
+        function drop(ev, toType, team) {
+            ev.preventDefault();
+            const data = JSON.parse(ev.dataTransfer.getData("text"));
+            if (data.team !== team) return; // Cant move between teams
+
+            let player;
+            if (data.type === 'roster') {
+                player = rosters[team].splice(data.index, 1)[0];
+            } else if (data.type === 'playing') {
+                player = lineups[team].playing.splice(data.index, 1)[0];
+            } else {
+                player = lineups[team].subs.splice(data.index, 1)[0];
+            }
+
+            if (toType === 'roster') {
+                rosters[team].push(player);
+            } else if (toType === 'playing') {
+                if (lineups[team].playing.length >= 9) {
+                    alert("Starting 9 is full!");
+                    rosters[team].push(player); // Put back
+                } else {
+                    lineups[team].playing.push(player);
+                }
+            } else {
+                if (lineups[team].subs.length >= 3) {
+                    alert("Substitutes are full!");
+                    rosters[team].push(player); // Put back
+                } else {
+                    lineups[team].subs.push(player);
+                }
+            }
+
+            renderAll();
+        }
+
+        function renderAll() {
+            renderList('rosterListA', rosters.A, 'roster', 'A');
+            renderList('playingListA', lineups.A.playing, 'playing', 'A');
+            renderList('subsListA', lineups.A.subs, 'subs', 'A');
+
+            renderList('rosterListB', rosters.B, 'roster', 'B');
+            renderList('playingListB', lineups.B.playing, 'playing', 'B');
+            renderList('subsListB', lineups.B.subs, 'subs', 'B');
+
+            document.getElementById('countPlayingA').textContent = `${lineups.A.playing.length}/9`;
+            document.getElementById('countSubsA').textContent = `${lineups.A.subs.length}/3`;
+            document.getElementById('countPlayingB').textContent = `${lineups.B.playing.length}/9`;
+            document.getElementById('countSubsB').textContent = `${lineups.B.subs.length}/3`;
+
+            const validA = lineups.A.playing.length === 9 && lineups.A.subs.length === 3;
+            const validB = lineups.B.playing.length === 9 && lineups.B.subs.length === 3;
+            document.getElementById('finishBtn').disabled = !(validA && validB);
+        }
+
+        function renderList(id, list, type, team) {
+            const el = document.getElementById(id);
+            el.innerHTML = '';
+            if (list.length === 0) {
+                el.innerHTML = '<div class="placeholder-text">Drop here</div>';
+                return;
+            }
+            list.forEach((p, i) => {
+                const div = document.createElement('div');
+                div.className = 'player-item';
+                div.draggable = true;
+                div.ondragstart = (ev) => drag(ev, type, team, i);
+                div.innerHTML = `
+                    <div class="kit-badge">${p.kitNo || p.kit}</div>
+                    <div style="font-weight:600;">${p.firstName || p.name} ${p.lastName || ''}</div>
+                `;
+                el.appendChild(div);
+            });
+        }
+
+        function switchTab(type) {
+            document.getElementById('tabA').classList.toggle('active', type === 'A');
+            document.getElementById('tabB').classList.toggle('active', type === 'B');
+            document.getElementById('contentA').style.display = type === 'A' ? 'block' : 'none';
+            document.getElementById('contentB').style.display = type === 'B' ? 'block' : 'none';
+        }
+
+        function openAddModal(team) {
+            currentModalTeam = team;
+            document.getElementById('modalTitle').textContent = `Add Player to ${team === 'A' ? teamA.name : teamB.name}`;
+            document.getElementById('addPlayerModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('addPlayerModal').style.display = 'none';
+        }
+
+        function saveNewPlayer() {
+            const kit = document.getElementById('newKit').value;
+            const first = document.getElementById('newFirst').value;
+            const last = document.getElementById('newLast').value;
+            const pos = document.getElementById('newPos').value;
+
+            if (!kit || !first) {
+                alert("Please fill Kit No and Name");
+                return;
+            }
+
+            const newPlayer = { kitNo: parseInt(kit), firstName: first, lastName: last, position: pos };
+
+            // 1. Update Local Roster
+            rosters[currentModalTeam].push(newPlayer);
+
+            // 2. Update teams database
+            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            const tId = currentModalTeam === 'A' ? teamA.id : teamB.id;
+            const idx = teams.findIndex(t => t.id === tId);
+            if (idx !== -1) {
+                teams[idx].players.push(newPlayer);
+                teams[idx].playerCount = teams[idx].players.length;
+                localStorage.setItem('teams', JSON.stringify(teams));
+
+                // Also update persistent file
+                try {
+                    const dbPath = path.join(process.cwd(), 'teams_db.json');
+                    fs.writeFileSync(dbPath, JSON.stringify(teams, null, 2), 'utf8');
+                } catch (e) { console.error("File update failed", e); }
+            }
+
+            renderAll();
+            closeModal();
+            // Clear inputs
+            document.getElementById('newKit').value = '';
+            document.getElementById('newFirst').value = '';
+            document.getElementById('newLast').value = '';
+            document.getElementById('newPos').value = '';
+        }
+
+        function autoFillLineups() {
+            // Auto fill for Team A
+            fillTeam('A');
+            // Auto fill for Team B
+            fillTeam('B');
+            renderAll();
+        }
+
+        function fillTeam(team) {
+            // Move everyone back to roster first to ensure clean state
+            rosters[team] = [...rosters[team], ...lineups[team].playing, ...lineups[team].subs];
+            lineups[team].playing = [];
+            lineups[team].subs = [];
+
+            // Shuffle roster for randomness (optional, but good for "magic" fill)
+            rosters[team].sort(() => Math.random() - 0.5);
+
+            // Fill Starting 9
+            while (lineups[team].playing.length < 9 && rosters[team].length > 0) {
+                lineups[team].playing.push(rosters[team].shift());
+            }
+
+            // Fill Substitutes
+            while (lineups[team].subs.length < 3 && rosters[team].length > 0) {
+                lineups[team].subs.push(rosters[team].shift());
+            }
+        }
+
+        function saveAndBack() {
+            const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+            setup.lineupA = {
+                playing: lineups.A.playing.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` })),
+                substitutes: lineups.A.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
+            };
+            setup.lineupB = {
+                playing: lineups.B.playing.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` })),
+                substitutes: lineups.B.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
+            };
+            localStorage.setItem('current_match_setup', JSON.stringify(setup));
+            window.location.href = 'Toss_Result.html' + (window.location.search || '');
+        }
+
+        function finalizeMatch() {
+            const btn = document.getElementById('finishBtn');
+            const btnText = document.getElementById('btnText');
+
+            // Celebration Animation
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => btn.style.transform = 'scale(1.05)', 100);
+
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ea580c', '#16a34a', '#ffffff']
+            });
+
+            // Delay for effect
+            btnText.textContent = "Creating Match...";
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
+
+                setup.lineupA = {
+                    playing: lineups.A.playing.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` })),
+                    substitutes: lineups.A.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
+                };
+                setup.lineupB = {
+                    playing: lineups.B.playing.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` })),
+                    substitutes: lineups.B.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
+                };
+
+                setup.status = 'Scheduled';
+                setup.id = setup.id || 'M' + Date.now();
+                setup.updatedAt = new Date().toISOString();
+
+                const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+                const index = matches.findIndex(m => (m.id || '').toString() === setup.id.toString());
+
+                if (index !== -1) {
+                    matches[index] = setup;
+                } else {
+                    matches.push(setup);
+                }
+
+                localStorage.setItem('matches', JSON.stringify(matches));
+                localStorage.removeItem('current_match_setup');
+
+                const params = new URLSearchParams(window.location.search);
+                const isEdit = params.get('edit') === 'true';
+                // alert(isEdit ? 'Match Updated Successfully!' : 'Match Created Successfully!'); // Removed alert for smoother flow
+                window.location.href = '../../../pages/tournament_dashboard.html';
+            }, 1000);
+        }
+
+        window.onload = init;
+    </script>
+</body>
+
+</html>
