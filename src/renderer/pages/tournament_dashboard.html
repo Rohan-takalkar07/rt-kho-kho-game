@@ -1669,7 +1669,7 @@
                     // Determine where to send the user
                     if (teams.length < 2) {
                         actionBtn.innerText = "Create Team";
-                        actionBtn.onclick = () => navigate('../assets/legacy_electron/team/team.html');
+                        actionBtn.onclick = () => navigate('../assets/Electron/Team_Login/Create_team.html');
                     } else if (officials.length === 0) {
                         actionBtn.innerText = "Create Official";
                         actionBtn.onclick = () => navigate('create_official.html');
@@ -1717,7 +1717,7 @@
 
             function handleCreateAction() {
                 if (currentTab === 'matches') navigate('../assets/Electron/Create_Match/Create_Assign_Match.html');
-                else if (currentTab === 'teams') navigate('../assets/legacy_electron/team/team.html');
+                else if (currentTab === 'teams') navigate('../assets/Electron/Team_Login/Create_team.html');
                 else if (currentTab === 'officials') navigate('officials.html');
                 else if (currentTab === 'staff') navigate('staff.html');
             }
@@ -1735,7 +1735,7 @@
                 let page = '';
                 switch (type) {
                     case 'team':
-                        page = `../assets/legacy_electron/team/team.html?edit=true&id=${id}`;
+                        page = `../assets/Electron/Team_Login/Create_team.html?edit=true&id=${id}`;
                         break;
                     case 'official':
                         page = `create_official.html?edit=true&id=${id}`;
