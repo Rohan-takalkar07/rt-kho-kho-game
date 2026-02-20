@@ -558,11 +558,14 @@
 
     <div class="form-content">
       <div class="step-bar">
-        <div class="step" onclick="window.location.href='Create_team.html' "><span class="circle">1</span><span>Details</span>
+        <div class="step" onclick="window.location.href='Create_team.html' "><span
+            class="circle">1</span><span>Details</span>
         </div>
-        <div class="step" onclick="window.location.href='Create_Staff.html' "><span class="circle">2</span><span>Staff</span>
+        <div class="step" onclick="window.location.href='Create_Staff.html' "><span
+            class="circle">2</span><span>Staff</span>
         </div>
-        <div class="step" onclick="window.location.href='Assign_Staff.html' "><span class="circle">3</span><span>Assign</span>
+        <div class="step" onclick="window.location.href='Assign_Staff.html' "><span
+            class="circle">3</span><span>Assign</span>
         </div>
         <div class="step active"><span class="circle">4</span><span>Players</span></div>
       </div>
@@ -725,21 +728,14 @@
 
       if (!teamDataToSave.createdAt) teamDataToSave.createdAt = new Date().toISOString();
 
-      if (teamDetails.isEdit && teamDetails.id) {
-        // UPDATE
-        const index = teamsLocal.findIndex(t => (t.id || '').toString() === teamDetails.id.toString());
-        if (index !== -1) {
-          teamsLocal[index] = { ...teamsLocal[index], ...teamDataToSave };
-        } else {
-          teamsLocal.push({ ...teamDataToSave, id: teamDetails.id });
-        }
+      const teamIdToFind = teamDetails.id;
+      const index = teamsLocal.findIndex(t => (t.id || '').toString() === (teamIdToFind || '').toString());
+
+      if (index !== -1) {
+        teamsLocal[index] = { ...teamsLocal[index], ...teamDataToSave };
       } else {
-        // CREATE NEW
-        const finalTeamData = {
-          id: 'team_' + Date.now(),
-          ...teamDataToSave
-        };
-        teamsLocal.push(finalTeamData);
+        // Fallback for safety, though it should exist now
+        teamsLocal.push({ ...teamDataToSave, id: teamIdToFind || 'team_' + Date.now() });
       }
 
       localStorage.setItem('teams', JSON.stringify(teamsLocal));

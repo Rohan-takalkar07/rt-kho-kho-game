@@ -469,11 +469,12 @@
       animation: gradientShift 4s ease infinite;
     }
 
-    .next-btn:hover {
-      transform: translateY(-4px);
-      box-shadow:
-        0 12px 32px rgba(249, 115, 22, 0.5),
-        0 6px 16px rgba(234, 88, 12, 0.4);
+    .next-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+      animation: none !important;
     }
 
     /* Modal Style Rewrite */
@@ -615,7 +616,7 @@
 
       <div class="button-row">
         <button class="btn cancel-btn" onclick="saveAndBack()">Back</button>
-        <button class="btn next-btn" onclick="goToNext()">Next Step</button>
+        <button id="nextBtn" class="btn next-btn" onclick="saveAndGoToNext()" disabled>Next Step</button>
       </div>
     </div>
   </div>
@@ -645,6 +646,7 @@
         assignments = JSON.parse(existing);
       }
       renderAssignments();
+      validateStaff();
     }
 
     function saveAndBack() {
@@ -692,6 +694,7 @@
       });
 
       renderAssignments();
+      validateStaff();
       document.getElementById('staffSelect').value = '';
       document.getElementById('roleSelect').value = '';
     }
@@ -721,15 +724,58 @@
     document.getElementById('confirmDelBtn').onclick = () => {
       assignments = assignments.filter(a => a.assignId !== assignToDelete);
       renderAssignments();
+      validateStaff();
       closeModal();
     };
 
     function openAddPopup() { ipcRenderer.send('open-add-staff-popup'); }
 
-    function goToNext() {
+    function validateStaff() {
+      const nextBtn = document.getElementById('nextBtn');
+      nextBtn.disabled = assignments.length === 0;
+    }
+
+    function saveAndGoToNext() {
+      if (assignments.length === 0) {
+        alert("Please assign at least one staff member before proceeding.");
+        return;
+      }
+
+      const teamDetails = JSON.parse(localStorage.getItem('temp_team_details') || '{}');
+      const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+
+      const teamData = {
+        ...teamDetails,
+        staff: assignments,
+        updatedAt: new Date().toISOString()
+      };
+
+      if (!teamData.id) teamData.id = 'team_' + Date.now();
+      if (!teamData.createdAt) teamData.createdAt = new Date().toISOString();
+
+      const index = teams.findIndex(t => (t.id || '').toString() === (teamData.id || '').toString());
+      if (index !== -1) {
+        teams[index] = { ...teams[index], ...teamData };
+      } else {
+        teams.push(teamData);
+      }
+
+      localStorage.setItem('teams', JSON.stringify(teams));
+
+      // Update persistent file
+      try {
+        const fs = require('fs');
+        const path = require('path');
+        const dbPath = path.join(process.cwd(), 'teams_db.json');
+        fs.writeFileSync(dbPath, JSON.stringify(teams, null, 2), 'utf8');
+      } catch (e) {
+        console.error("File update failed", e);
+      }
+
+      localStorage.setItem('temp_assignments', JSON.stringify(assignments));
+
       const params = new URLSearchParams(window.location.search);
       const isEdit = params.get('edit') === 'true';
-      localStorage.setItem('temp_assignments', JSON.stringify(assignments));
       window.location.href = `Assign_Staff.html${isEdit ? '?edit=true' : ''}`;
     }
 

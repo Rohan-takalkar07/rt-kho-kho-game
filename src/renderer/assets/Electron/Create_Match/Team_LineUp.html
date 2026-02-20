@@ -460,16 +460,21 @@
 
         function init() {
             const setup = JSON.parse(localStorage.getItem('current_match_setup') || '{}');
-            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            // Enhanced team loading logic
+            let teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            if (teams.length === 0) {
+                teams = JSON.parse(localStorage.getItem('team_db') || '[]');
+            }
 
-            teamA = teams.find(t => t.id === setup.teamAId);
-            teamB = teams.find(t => t.id === setup.teamBId);
+            // Robust ID comparison
+            teamA = teams.find(t => (t.id || '').toString() === (setup.teamAId || '').toString());
+            teamB = teams.find(t => (t.id || '').toString() === (setup.teamBId || '').toString());
 
-            document.getElementById('tabNameA').textContent = teamA ? teamA.name : 'Team A';
-            document.getElementById('tabNameB').textContent = teamB ? teamB.name : 'Team B';
+            document.getElementById('tabNameA').textContent = teamA ? teamA.name : (setup.teamA || 'Team A');
+            document.getElementById('tabNameB').textContent = teamB ? teamB.name : (setup.teamB || 'Team B');
 
-            rosters.A = teamA ? [...teamA.players] : [];
-            rosters.B = teamB ? [...teamB.players] : [];
+            rosters.A = teamA ? [...(teamA.players || [])] : [];
+            rosters.B = teamB ? [...(teamB.players || [])] : [];
 
             // Load existing selections if any
             if (setup.lineupA) {
@@ -607,13 +612,26 @@
             rosters[currentModalTeam].push(newPlayer);
 
             // 2. Update teams database
-            const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            let teams = JSON.parse(localStorage.getItem('teams') || '[]');
+            let usingTeamDB = false;
+
+            if (teams.length === 0) {
+                teams = JSON.parse(localStorage.getItem('team_db') || '[]');
+                usingTeamDB = true;
+            }
+
             const tId = currentModalTeam === 'A' ? teamA.id : teamB.id;
-            const idx = teams.findIndex(t => t.id === tId);
+            const idx = teams.findIndex(t => (t.id || '').toString() === (tId || '').toString());
             if (idx !== -1) {
+                if (!teams[idx].players) teams[idx].players = [];
                 teams[idx].players.push(newPlayer);
                 teams[idx].playerCount = teams[idx].players.length;
-                localStorage.setItem('teams', JSON.stringify(teams));
+
+                if (usingTeamDB) {
+                    localStorage.setItem('team_db', JSON.stringify(teams));
+                } else {
+                    localStorage.setItem('teams', JSON.stringify(teams));
+                }
 
                 // Also update persistent file
                 try {

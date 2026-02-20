@@ -359,9 +359,27 @@
         "firstName": "shubham",
         "lastName": "waman",
         "position": "defender"
+      },
+      {
+        "kitNo": 23,
+        "firstName": "sonu ",
+        "lastName": "sude",
+        "position": "defender"
+      },
+      {
+        "kitNo": 24,
+        "firstName": "sarthak",
+        "lastName": "waman",
+        "position": "attaker"
+      },
+      {
+        "kitNo": 25,
+        "firstName": "santosh",
+        "lastName": "champ",
+        "position": "attaker"
       }
     ],
-    "playerCount": 9,
+    "playerCount": 12,
     "updatedAt": "2026-02-16T16:56:52.087Z"
   }
 ]
