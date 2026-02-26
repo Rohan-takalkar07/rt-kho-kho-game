@@ -676,6 +676,104 @@
             font-size: 12px;
         }
 
+        /* Toss Popup Styles */
+        #tossModal .modal-content {
+            max-width: 800px;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .toss-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .toss-body {
+            padding: 40px;
+        }
+
+        .toss-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .toss-team-card {
+            background: #fff;
+            border: 2px solid #fed7aa;
+            border-radius: 16px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .toss-team-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .toss-team-card.selected {
+            background: #fff7ed;
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(234, 88, 12, 0.15);
+        }
+
+        .toss-team-name {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .toss-vs {
+            font-weight: 900;
+            color: #fb923c;
+            font-size: 24px;
+        }
+
+        .toss-decision {
+            display: none;
+            margin-top: 30px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .decision-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .decision-btn {
+            padding: 15px 40px;
+            border-radius: 12px;
+            border: 2px solid #fed7aa;
+            background: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-muted);
+        }
+
+        .decision-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .toss-footer {
+            padding: 20px 40px 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
         /* Team Box Styles */
         .team-grid-container {
             max-height: 600px;
@@ -1242,6 +1340,47 @@
             </button>
         </div>
 
+        <!-- Toss Modal -->
+        <div id="tossModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="toss-header">
+                    <h2 style="font-family: 'Poppins', sans-serif; text-transform: uppercase; letter-spacing: 2px;">
+                        Match Toss</h2>
+                    <p style="opacity: 0.9;">Select the toss winner and their decision</p>
+                </div>
+                <div class="toss-body">
+                    <div class="section-title" style="text-align: center; margin-bottom: 30px;">Who won the toss?</div>
+                    <div class="toss-grid">
+                        <div class="toss-team-card" id="tossCardA" onclick="handleTossWinner('A')">
+                            <div class="toss-team-name" id="tossTeamAName">Team A</div>
+                        </div>
+                        <div class="toss-vs">VS</div>
+                        <div class="toss-team-card" id="tossCardB" onclick="handleTossWinner('B')">
+                            <div class="toss-team-name" id="tossTeamBName">Team B</div>
+                        </div>
+                    </div>
+
+                    <div id="tossDecisionSection" class="toss-decision">
+                        <div class="section-title">Decision of <span id="tossWinnerDisplayName"
+                                style="color: var(--primary);">Winner</span></div>
+                        <div class="decision-options">
+                            <div class="decision-btn" id="tossBtnChasing" onclick="handleTossDecision('Chasing')">
+                                Chasing</div>
+                            <div class="decision-btn" id="tossBtnDefending" onclick="handleTossDecision('Defending')">
+                                Defending</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="toss-footer">
+                    <button class="modal-btn"
+                        style="background: white; color: var(--primary); border: 2px solid var(--primary);"
+                        onclick="closeTossModal()">Cancel</button>
+                    <button id="confirmTossBtn" class="modal-btn" onclick="confirmToss()" disabled>Confirm Toss &
+                        Start</button>
+                </div>
+            </div>
+        </div>
+
         <script>
             const { ipcRenderer } = require('electron');
 
@@ -1691,8 +1830,79 @@
                 }
 
                 // If everything is ready
-                localStorage.setItem('active_match_id', selectedMatchId);
-                window.location.href = 'scorer.html';
+                openTossModal(selectedMatchId);
+            }
+
+            let tossWinner = null;
+            let tossDecision = null;
+            let currentTossMatchId = null;
+
+            function openTossModal(matchId) {
+                currentTossMatchId = matchId;
+                const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+                const match = matches.find(m => m.id.toString() === matchId.toString());
+
+                if (!match) return;
+
+                document.getElementById('tossTeamAName').innerText = match.teamA;
+                document.getElementById('tossTeamBName').innerText = match.teamB;
+
+                // Reset states
+                tossWinner = null;
+                tossDecision = null;
+                document.getElementById('tossCardA').classList.remove('selected');
+                document.getElementById('tossCardB').classList.remove('selected');
+                document.getElementById('tossDecisionSection').style.display = 'none';
+                document.getElementById('tossBtnChasing').classList.remove('active');
+                document.getElementById('tossBtnDefending').classList.remove('active');
+                document.getElementById('confirmTossBtn').disabled = true;
+
+                document.getElementById('tossModal').style.display = 'flex';
+            }
+
+            function closeTossModal() {
+                document.getElementById('tossModal').style.display = 'none';
+            }
+
+            function handleTossWinner(side) {
+                tossWinner = side;
+                document.getElementById('tossCardA').classList.toggle('selected', side === 'A');
+                document.getElementById('tossCardB').classList.toggle('selected', side === 'B');
+
+                const teamName = side === 'A' ? document.getElementById('tossTeamAName').innerText : document.getElementById('tossTeamBName').innerText;
+                document.getElementById('tossWinnerDisplayName').innerText = teamName;
+
+                document.getElementById('tossDecisionSection').style.display = 'block';
+                validateToss();
+            }
+
+            function handleTossDecision(decision) {
+                tossDecision = decision;
+                document.getElementById('tossBtnChasing').classList.toggle('active', decision === 'Chasing');
+                document.getElementById('tossBtnDefending').classList.toggle('active', decision === 'Defending');
+                validateToss();
+            }
+
+            function validateToss() {
+                document.getElementById('confirmTossBtn').disabled = !(tossWinner && tossDecision);
+            }
+
+            function confirmToss() {
+                const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+                const idx = matches.findIndex(m => m.id.toString() === currentTossMatchId.toString());
+
+                if (idx !== -1) {
+                    const match = matches[idx];
+                    match.tossWinner = tossWinner === 'A' ? match.teamA : match.teamB;
+                    match.tossWinnerId = tossWinner === 'A' ? match.teamAId : match.teamBId;
+                    match.decision = tossDecision;
+                    match.status = 'Live'; // Update status to Live when started
+
+                    localStorage.setItem('matches', JSON.stringify(matches));
+                    localStorage.setItem('active_match_id', currentTossMatchId);
+
+                    window.location.href = 'scorer.html';
+                }
             }
 
             function navigateToMissing() {

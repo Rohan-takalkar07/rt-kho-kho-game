@@ -328,7 +328,7 @@
     <div class="container">
         <div class="header-banner">
             <div class="header">
-                <button class="back-btn" onclick="window.location.href='Toss_Result.html' + window.location.search">
+                <button class="back-btn" onclick="window.location.href='Assign_Official.html' + window.location.search">
                     <i class="fas fa-arrow-left"></i> Back
                 </button>
                 <div class="header-content">
@@ -688,7 +688,7 @@
                 substitutes: lineups.B.subs.map(p => ({ kit: p.kitNo || p.kit, name: `${p.firstName || p.name} ${p.lastName || ''}` }))
             };
             localStorage.setItem('current_match_setup', JSON.stringify(setup));
-            window.location.href = 'Toss_Result.html' + (window.location.search || '');
+            window.location.href = 'Assign_Official.html' + (window.location.search || '');
         }
 
         function finalizeMatch() {
