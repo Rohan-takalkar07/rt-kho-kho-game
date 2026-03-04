@@ -1,104 +1,127 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Kho Kho Team Setup - Step 2</title>
-  <link rel="stylesheet" href="team2.css" />
+  <link rel="stylesheet" href="team.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
   <div class="container">
-    <div class="createTeam">Create Team</div>
-    <h4>Set up a new Kho Kho</h4>
-    <hr/>
+    <div class="header-banner">
+      <div class="header">
+        <h1>Create Team</h1>
+        <!-- Back Button -->
+        <button class="back-btn" onclick="window.location.href='../tournament_dashboard.html'">
+          <i class="fas fa-arrow-left"></i> Dashboard
+        </button>
+      </div>
+      <div class="subtitle">Set up a new Kho Kho Team</div>
+    </div>
+
     <div class="step-bar">
       <div class="step" onclick="window.location.href='team.html'"><span class="circle">1</span>Team Details</div>
-      <div class="step active" onclick="window.location.href='team2.html'"><span class="circle">2</span> Create Staff</div>
+      <div class="step active" onclick="window.location.href='team2.html'"><span class="circle">2</span> Create Staff
+      </div>
       <div class="step" onclick="window.location.href='team3.html'"><span class="circle">3</span>Assign Staff</div>
       <div class="step" onclick="window.location.href='team4.html'"><span class="circle">4</span>Add Players</div>
     </div>
 
-    <div class="staff-form">
-      <select id="staffSelect">
-        <option value="">Select Staff</option>
-        <option>Sandeep Patil</option>
-        <option>Ajay Kulkarni</option>
-      </select>
+    <div class="form-content">
+      <h4 style="color: #374151; margin-bottom: 20px;">Assign Role</h4>
+      <div class="staff-form">
+        <select id="staffSelect">
+          <option value="">Select Staff</option>
+          <option>Sandeep Patil</option>
+          <option>Ajay Kulkarni</option>
+        </select>
 
-      <select id="roleSelect">
-        <option value="">Assign Role</option>
-        <option>Head Coach</option>
-        <option>Coach</option>
-        <option>Manager</option>
-      </select>
+        <select id="roleSelect">
+          <option value="">Assign Role</option>
+          <option>Head Coach</option>
+          <option>Coach</option>
+          <option>Manager</option>
+        </select>
 
-      <button class="assign" onclick="assignStaff()">+ Assign</button>
-    </div>
+        <button class="assign" onclick="assignStaff()">+ Assign</button>
+      </div>
 
-    <ul class="staff-list" id="staffList">
-    </ul>
+      <ul class="staff-list" id="staffList">
+      </ul>
 
-    <a href="javascript:void(0)" class="add-staff" onclick="addStaff()">+ Add Staff</a>
+      <a href="javascript:void(0)" class="add-staff" onclick="addStaff()">+ Add Staff</a>
 
-    <div class="button-row">
-      <button type="button" class="cancel" onclick="window.location.href='./team.html'">Back</button>
-      <button type="button" class="next" onclick="window.location.href='./team3.html'">Next</button>
-    </div>
-  </div>
+      <div class="button-row">
+        <button type="button" class="cancel" onclick="window.location.href='./team.html'">Back</button>
+        <button type="button" class="next" onclick="saveStep2()">Next</button>
+      </div>
 
-  <script>
-  function assignStaff() {
-    const staff = document.getElementById('staffSelect').value;
-    const role = document.getElementById('roleSelect').value;
+    </div> <!-- End container -->
 
-    if (!staff || !role) {
-      alert('Please select both staff and role.');
-      return;
-    }
+    <script>
+      let staffList = [];
 
-    const li = document.createElement('li');
-    li.innerHTML = `${staff} | ${role} <span class="actions"> 🗑️</span>`;
-
-    // Delete functionality
-    li.querySelector('.actions').addEventListener('click', function(e) {
-      if (e.target.textContent.includes('🗑️')) {
-        li.remove();
-      }
-      // Edit functionality placeholder
-      //if (e.target.textContent.includes('✏️')) {
-        //const newRole = prompt("Enter new role:", role);
-        //if (newRole) {
-         // li.innerHTML = `${staff} | ${newRole} <span class="actions">✏️ 🗑️</span>`;
-        //}
-      //}
-    });
-
-    document.getElementById('staffList').appendChild(li);
-
-    // Reset selects
-    document.getElementById('staffSelect').value = '';
-    document.getElementById('roleSelect').value = '';
-  }
-
-  function addStaff() {
-    // Create a blank entry with edit/delete icons
-    const li = document.createElement('li');
-    li.innerHTML = `New Staff | Role <span class="actions">🗑️</span>`;
-
-    li.querySelector('.actions').addEventListener('click', function(e) {
-      if (e.target.textContent.includes('🗑️')) {
-        li.remove();
-      }
-      if (e.target.textContent.includes('✏️')) {
-        const newName = prompt("Enter staff name:", "New Staff");
-        const newRole = prompt("Enter staff role:", "Role");
-        if (newName && newRole) {
-          li.innerHTML = `${newName} | ${newRole} <span class="actions"> 🗑️</span>`;
+      // Load existing data
+      window.onload = function () {
+        const saved = JSON.parse(sessionStorage.getItem('new_team_draft') || '{}');
+        if (saved.staff) {
+          staffList = saved.staff;
+          renderStaff();
         }
-      }
-    });
+      };
 
-    document.getElementById('staffList').appendChild(li);
-  }
-</script>
+      function renderStaff() {
+        const list = document.getElementById('staffList');
+        list.innerHTML = '';
+        staffList.forEach((s, index) => {
+          const li = document.createElement('li');
+          li.innerHTML = `${s.name} | ${s.role} <span class="actions" onclick="removeStaff(${index})">🗑️</span>`;
+          list.appendChild(li);
+        });
+      }
+
+      function removeStaff(index) {
+        staffList.splice(index, 1);
+        renderStaff();
+      }
+
+      function assignStaff() {
+        const staffName = document.getElementById('staffSelect').value;
+        const role = document.getElementById('roleSelect').value;
+
+        if (!staffName || !role) {
+          alert('Please select both staff and role.');
+          return;
+        }
+
+        // Add to local list
+        staffList.push({ name: staffName, role: role, isNew: false });
+        renderStaff();
+
+        // Reset selects
+        document.getElementById('staffSelect').value = '';
+        document.getElementById('roleSelect').value = '';
+      }
+
+      function addStaff() {
+        const newName = prompt("Enter staff name:");
+        if (!newName) return;
+        const newRole = prompt("Enter staff role:");
+        if (!newRole) return;
+
+        staffList.push({ name: newName, role: newRole, isNew: true });
+        renderStaff();
+      }
+
+      function saveStep2() {
+        const teamData = JSON.parse(sessionStorage.getItem('new_team_draft') || '{}');
+        teamData.staff = staffList;
+        sessionStorage.setItem('new_team_draft', JSON.stringify(teamData));
+        window.location.href = 'team3.html';
+      }
+    </script>
 
 </body>
+
 </html>

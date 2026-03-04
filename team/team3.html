@@ -1,55 +1,93 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Kho Kho Team Setup - Step 3</title>
-  <link rel="stylesheet" href="team3.css" />
+  <link rel="stylesheet" href="team.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
   <div class="container">
-    <div class="createTeam">Create Team</div>
-    <h4>Set up a new Kho Kho Team</h4>
-    <hr/>
+    <div class="header-banner">
+      <div class="header">
+        <h1>Create Team</h1>
+        <button class="back-btn" onclick="window.location.href='../tournament_dashboard.html'">
+          <i class="fas fa-arrow-left"></i> Dashboard
+        </button>
+      </div>
+      <div class="subtitle">Set up a new Kho Kho Team</div>
+    </div>
+
     <div class="step-bar">
       <div class="step" onclick="window.location.href='team.html'"><span class="circle">1</span>Team Details</div>
       <div class="step" onclick="window.location.href='team2.html'"><span class="circle">2</span>Create Staff</div>
-      <div class="step active" onclick="window.location.href='team3.html'"><span class="circle">3</span>Assign Staff</div>
+      <div class="step active" onclick="window.location.href='team3.html'"><span class="circle">3</span>Assign Staff
+      </div>
       <div class="step" onclick="window.location.href='team4.html'"><span class="circle">4</span>Add Players</div>
     </div>
 
-    <h2>Assign Staff</h2>
-    <h6>Assign roles to your team staff</h6>
-    <hr/>
+    <div class="form-content">
+      <h4 style="color: #374151; margin-bottom: 20px;">Assign Staff</h4>
+      <!-- Assignment Table -->
 
-    <!-- Assignment Table -->
-    <table class="staff-table">
-      <thead>
-        <tr>
-          <th>Staff Name</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Sandeep Patil</td>
-          <td>Head Coach</td>
-          <td><span class="actions">✏️ 🗑️</span></td>
-        </tr>
-        <tr>
-          <td>Ajay Kulkarni</td>
-          <td>Coach</td>
-          <td><span class="actions">✏️ 🗑️</span></td>
-        </tr>
-      </tbody>
-    </table>
+      <!-- Assignment Table -->
+      <table class="staff-table">
+        <thead>
+          <tr>
+            <th>Staff Name</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Sandeep Patil</td>
+            <td>Head Coach</td>
+            <td><span class="actions">✏️ 🗑️</span></td>
+          </tr>
+          <tr>
+            <td>Ajay Kulkarni</td>
+            <td>Coach</td>
+            <td><span class="actions">✏️ 🗑️</span></td>
+          </tr>
+        </tbody>
+      </table>
 
-    <a href="#" class="add-staff">+ Add Staff</a>
+      <a href="#" class="add-staff">+ Add Staff</a>
 
-    <!-- Navigation Buttons -->
-    <div class="button-row">
-      <button type="button" class="cancel" onclick="window.location.href='team2.html'">Back</button>
-      <button type="button" class="next" onclick="window.location.href='team4.html'">Next</button>
-    </div>
-  </div>
+      <!-- Navigation Buttons -->
+      <div class="button-row">
+        <button type="button" class="cancel" onclick="window.location.href='team2.html'">Back</button>
+        <button type="button" class="next" onclick="window.location.href='team4.html'">Next</button>
+      </div>
+    </div> <!-- End form-content -->
+  </div> <!-- End container -->
+
+  <script>
+    window.onload = function () {
+      const saved = JSON.parse(sessionStorage.getItem('new_team_draft') || '{}');
+      const staffList = saved.staff || [];
+
+      const tbody = document.querySelector('.staff-table tbody');
+      tbody.innerHTML = '';
+
+      if (staffList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No staff assigned</td></tr>';
+        return;
+      }
+
+      staffList.forEach(s => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+                <td>${s.name}</td>
+                <td>${s.role}</td>
+                <td><span class="actions">✏️ 🗑️</span></td>
+            `;
+        tbody.appendChild(tr);
+      });
+    };
+  </script>
 </body>
+
 </html>

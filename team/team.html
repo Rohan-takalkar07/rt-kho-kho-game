@@ -1,89 +1,141 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Kho Kho Team Setup - Step 1</title>
   <link rel="stylesheet" href="team.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
   <div class="container">
-    <div class="createTeam">Create Team</div>
-    <h4>Set up a new Kho Kho Team</h4>
-    <hr/>
+    <div class="header-banner">
+      <div class="header">
+        <h1>Create Team</h1>
+        <!-- Back Button -->
+        <button class="back-btn" onclick="window.location.href='../tournament_dashboard.html'">
+          <i class="fas fa-arrow-left"></i> Dashboard
+        </button>
+      </div>
+      <div class="subtitle">Set up a new Kho Kho Team</div>
+    </div>
+
     <div class="step-bar">
-      <div class="step active" onclick="window.location.href='team.html'"><span class="circle">1</span> Team Details</div>
+      <div class="step active" onclick="window.location.href='team.html'"><span class="circle">1</span> Team Details
+      </div>
       <div class="step" onclick="window.location.href='team2.html'"><span class="circle">2</span>Create Staff</div>
-      <div class="step" onclick="window.location.href='team3.html'"><span class="circle" >3</span>Assign Staff</div>
+      <div class="step" onclick="window.location.href='team3.html'"><span class="circle">3</span>Assign Staff</div>
       <div class="step" onclick="window.location.href='team4.html'"><span class="circle">4</span>Add Players</div>
     </div>
-   
-    
+
+    <div class="form-content">
+
+
       <div class="form-item">
         <label>Team Name*</label>
-        <input type="text" class="teamName" placeholder="Enter team name" required />
+        <input type="text" id="teamName" class="teamName" placeholder="Enter team name" required />
       </div>
       <form class="form-grid">
-      <div class="form-item">
-        <label>Team Short Name*</label>
-        <input type="text" placeholder="2–5 characters only" maxlength="5" required />
-      </div>
-      <div class="form-item">
-        <label>Colour</label>
-        <select>
-          <option value="">Select colour</option>
-          <option>Red</option>
-          <option>Blue</option>
-          <option>Green</option>
-          <option>Yellow</option>
-        </select>
-      </div>
-      <div class="form-item">
-        <label>State</label>
-        <select>
-          <option value="">Select State</option>
-          <option>Maharastra</option>
-          <option>Kerala</option>
-          <option>Gujrat</option>
-          <option>Rajasthan</option>
-          <option>Assam</option>
-          <option>Goa</option>
-          <option>Bihar</option>
-          <option>Madhya Pradesh</option>
-        </select>
-      </div>
-      <div class="form-item">
-        <label>City</label>
-        <select>
-          <option value="">Select city</option>
-          <option>Pune</option>
-          <option>Mumbai</option>
-          <option>Delhi</option>
-          <option>Bangalore</option>
-        </select>
-      </div>
-      <div class="form-item">
-        <label>Gender</label>
-        <select>
-          <option value="">Select gender</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-item">
-        <label>Section (Age Group)</label>
-        <select>
-          <option value="">Select section</option>
-          <option>U14</option>
-          <option>U18</option>
-          <option>Open</option>
-        </select>
-      </div>
-    </form>
+        <div class="form-item">
+          <label>Team Short Name*</label>
+          <input type="text" id="shortName" placeholder="2–5 characters only" maxlength="5" required />
+        </div>
+        <div class="form-item">
+          <label>Colour</label>
+          <select id="color">
+            <option value="">Select colour</option>
+            <option>Red</option>
+            <option>Blue</option>
+            <option>Green</option>
+            <option>Yellow</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label>State</label>
+          <select id="state">
+            <option value="">Select State</option>
+            <option>Maharastra</option>
+            <option>Kerala</option>
+            <option>Gujrat</option>
+            <option>Rajasthan</option>
+            <option>Assam</option>
+            <option>Goa</option>
+            <option>Bihar</option>
+            <option>Madhya Pradesh</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label>City</label>
+          <select id="city">
+            <option value="">Select city</option>
+            <option>Pune</option>
+            <option>Mumbai</option>
+            <option>Delhi</option>
+            <option>Bangalore</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label>Gender</label>
+          <select id="gender">
+            <option value="">Select gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-item">
+          <label>Section (Age Group)</label>
+          <select id="section">
+            <option value="">Select section</option>
+            <option>U14</option>
+            <option>U18</option>
+            <option>Open</option>
+          </select>
+        </div>
+      </form>
 
-    <div class="button-row">
-      <button type="button" class="cancel">Cancel</button>
-      <button type="button" class="next" onclick="window.location.href='team2.html'">Next</button>
-    </div>
-  </div>
+      <div class="button-row">
+        <button type="button" class="cancel"
+          onclick="window.location.href='../tournament_dashboard.html'">Cancel</button>
+        <button type="button" class="next" onclick="saveStep1()">Next</button>
+      </div>
+    </div> <!-- End form-content -->
+  </div> <!-- End container -->
+
+  <script>
+    // Pre-fill if editing or back button used
+    window.onload = function () {
+      const saved = JSON.parse(sessionStorage.getItem('new_team_draft') || '{}');
+      if (saved.name) document.getElementById('teamName').value = saved.name;
+      if (saved.shortName) document.getElementById('shortName').value = saved.shortName;
+      if (saved.color) document.getElementById('color').value = saved.color;
+      if (saved.state) document.getElementById('state').value = saved.state;
+      if (saved.city) document.getElementById('city').value = saved.city;
+      if (saved.gender) document.getElementById('gender').value = saved.gender;
+      if (saved.section) document.getElementById('section').value = saved.section;
+    };
+
+    function saveStep1() {
+      const name = document.getElementById('teamName').value;
+      const shortName = document.getElementById('shortName').value;
+      const color = document.getElementById('color').value;
+      const state = document.getElementById('state').value;
+      const city = document.getElementById('city').value;
+      const gender = document.getElementById('gender').value;
+      const section = document.getElementById('section').value;
+
+      if (!name || !shortName) {
+        alert("Team Name and Short Name are required!");
+        return;
+      }
+
+      const teamData = JSON.parse(sessionStorage.getItem('new_team_draft') || '{}');
+      const updatedData = { ...teamData, name, shortName, color, state, city, gender, section };
+
+      sessionStorage.setItem('new_team_draft', JSON.stringify(updatedData));
+      window.location.href = 'team2.html';
+    }
+  </script>
 </body>
+
 </html>

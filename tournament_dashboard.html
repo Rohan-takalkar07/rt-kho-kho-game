@@ -913,6 +913,154 @@
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(234, 88, 12, 0.4);
         }
+
+        /* Table Styles from Staff.html */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+
+        th {
+            padding: 16px 20px;
+            text-align: left;
+            color: #78716c;
+            font-size: 13px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #fee;
+            border-bottom: 1px solid #fee;
+        }
+
+        tr {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+        }
+
+        tr.selected td {
+            background: #d1fae5 !important;
+            border-color: #10b981 !important;
+        }
+
+        tr.selected {
+            box-shadow: 0 0 0 2px #10b981;
+        }
+
+        tr td:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+            border-left: 1px solid #fee;
+        }
+
+        tr td:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+            border-right: 1px solid #fee;
+        }
+
+        .action-icons i {
+            margin-left: 15px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .fa-edit {
+            color: #f97316;
+        }
+
+        .fa-trash {
+            color: #dc2626;
+        }
+
+        .fa-eye {
+            color: #3b82f6;
+        }
+
+        .fa-play {
+            color: #10b981;
+        }
+
+        .action-icons i:hover {
+            transform: scale(1.2);
+        }
+
+        /* Confirmation Modal Overlay */
+        .confirm-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            backdrop-filter: blur(4px);
+        }
+
+        .confirm-modal {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 400px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: zoomIn 0.3s ease;
+        }
+
+        .confirm-modal h3 {
+            font-family: 'Poppins', sans-serif;
+            margin-bottom: 15px;
+            color: #1c1917;
+        }
+
+        .confirm-modal p {
+            color: #78716c;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn-action {
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            border: none;
+        }
+
+        .btn-no {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .btn-yes {
+            background: #dc2626;
+            color: white;
+        }
+
+        .modal-btn-action:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 
@@ -1015,6 +1163,18 @@
                 <p id="missingMessage" class="modal-msg">Please complete team, officials, and staff registration first.
                 </p>
                 <button id="modalActionBtn" class="modal-btn" onclick="navigateToMissing()">Complete Setup</button>
+            </div>
+        </div>
+
+        <!-- Confirm Delete Modal -->
+        <div id="confirmDeleteModal" class="confirm-modal-overlay">
+            <div class="confirm-modal">
+                <h3>Confirm Deletion</h3>
+                <p>Are you sure you want to delete this match? This action cannot be undone.</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn-action btn-no" onclick="closeConfirmModal()">No</button>
+                    <button class="modal-btn-action btn-yes" id="confirmDeleteBtn">Yes</button>
+                </div>
             </div>
         </div>
 
@@ -1382,10 +1542,11 @@
                     // Determine where to send the user
                     if (teams.length < 2) {
                         actionBtn.innerText = "Create Team";
-                        actionBtn.onclick = () => navigate('electron/team/team.html');
+                        actionBtn.onclick = () => navigate('team/team.html');
                     } else if (officials.length === 0) {
                         actionBtn.innerText = "Create Official";
                         actionBtn.onclick = () => navigate('create_official.html');
+                    } else if (staff.length === 0) {
                     } else if (staff.length === 0) {
                         actionBtn.innerText = "Add Staff";
                         actionBtn.onclick = () => navigate('staff.html');
@@ -1430,8 +1591,8 @@
 
             function handleCreateAction() {
                 if (currentTab === 'matches') navigate('renderer/Electron/Create_Match/Create_Assign_Match.html');
-                else if (currentTab === 'teams') navigate('electron/team/team.html');
-                else if (currentTab === 'officials') navigate('officials.html');
+                else if (currentTab === 'teams') navigate('team/team.html');
+                else if (currentTab === 'officials') navigate('create_official.html');
                 else if (currentTab === 'staff') navigate('staff.html');
             }
 
@@ -1459,9 +1620,92 @@
                 return `${s} to ${e}`;
             }
 
+            let matchToDelete = null;
+
+            function askDeleteMatch(id) {
+                matchToDelete = id;
+                document.getElementById('confirmDeleteModal').style.display = 'flex';
+                event.stopPropagation();
+            }
+
+            function closeConfirmModal() {
+                document.getElementById('confirmDeleteModal').style.display = 'none';
+                matchToDelete = null;
+            }
+
+            document.getElementById('confirmDeleteBtn').onclick = () => {
+                if (matchToDelete) {
+                    let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+                    matches = matches.filter(m => m.id !== matchToDelete);
+                    localStorage.setItem('matches', JSON.stringify(matches));
+                    loadMatches();
+                }
+                closeConfirmModal();
+            };
+
+            function editMatch(id) {
+                event.stopPropagation();
+                alert("Edit Match feature coming soon for Match ID: " + id);
+            }
+
+            // --- Team Actions ---
+            function viewTeam(id) {
+                event.stopPropagation();
+                // Navigate to team details or show modal
+                alert("View Team details for ID: " + id);
+            }
+
+            function editTeam(id) {
+                event.stopPropagation();
+                alert("Edit Team feature coming soon for ID: " + id);
+            }
+
+            function askDeleteTeam(id) {
+                event.stopPropagation();
+                if (confirm("Are you sure you want to delete this team?")) {
+                    let teams = JSON.parse(localStorage.getItem('teams') || '[]');
+                    teams = teams.filter(t => (t.id || t.team_id) !== id);
+                    localStorage.setItem('teams', JSON.stringify(teams));
+                    loadTeams();
+                }
+            }
+
+            // --- Staff Actions ---
+            function editStaff(id) {
+                event.stopPropagation();
+                alert("Edit Staff feature coming soon for ID: " + id);
+            }
+
+            function askDeleteStaff(id) {
+                event.stopPropagation();
+                if (confirm("Are you sure you want to delete this staff member?")) {
+                    let staff = JSON.parse(localStorage.getItem('staff_db') || '[]');
+                    staff = staff.filter(s => s.id !== id);
+                    localStorage.setItem('staff_db', JSON.stringify(staff));
+                    loadStaff();
+                }
+            }
+
+            // --- Official Actions ---
+            function editOfficial(id) {
+                event.stopPropagation();
+                alert("Edit Official feature coming soon for ID: " + id);
+            }
+
+            function askDeleteOfficial(id) {
+                event.stopPropagation();
+                if (confirm("Are you sure you want to delete this official?")) {
+                    let officials = JSON.parse(localStorage.getItem('officials') || '[]');
+                    officials = officials.filter(o => o.id !== id);
+                    localStorage.setItem('officials', JSON.stringify(officials));
+                    loadOfficials();
+                }
+            }
+
             function loadMatches(filter = '') {
                 const matches = JSON.parse(localStorage.getItem('matches') || '[]');
                 const container = document.getElementById('matchesView');
+
 
                 // Update tab count
                 document.querySelector('.tab-item:nth-child(1) .tab-count').innerText = matches.length;
@@ -1472,7 +1716,7 @@
                     (m.matchNo && m.matchNo.toString().includes(filter))
                 );
 
-                if (matches.length === 0) {
+                if (filteredMatches.length === 0) {
                     container.innerHTML = `
                         <div style="background: white; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid var(--border);">
                             <i class="fas fa-calendar-times" style="font-size: 48px; color: var(--border); margin-bottom: 16px;"></i>
@@ -1483,71 +1727,225 @@
                     return;
                 }
 
-                container.innerHTML = matches.map(m => {
-                    let statusTag, statusColor, scoreDisplay, summaryText;
+                const tableHTML = `
+                    <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Match No</th>
+                                    <th>Date & Time</th>
+                                    <th>Teams (A vs B)</th>
+                                    <th>Venue / Pool</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${filteredMatches.map(m => {
+                    let teamDisplay;
+                    let statusTag, statusColor;
                     const status = m.status ? m.status.toLowerCase() : 'scheduled';
 
                     if (status === 'live') {
                         statusTag = 'Live';
                         statusColor = 'var(--success)';
-                        scoreDisplay = `<span>${m.scoreA || 0}</span><span class="score-vs">v/s</span><span>${m.scoreB || 0}</span>`;
-                        const diff = Math.abs((m.scoreA || 0) - (m.scoreB || 0));
-                        const leader = (m.scoreA || 0) > (m.scoreB || 0) ? m.teamA : m.teamB;
-                        summaryText = diff === 0 ? 'Match is tied' : `${leader} leading by ${diff} points`;
+                        teamDisplay = `${m.teamA} <span style="font-weight: 800; color: #16a34a; margin: 0 5px;">(${m.scoreA || 0})</span> VS ${m.teamB} <span style="font-weight: 800; color: #16a34a; margin: 0 5px;">(${m.scoreB || 0})</span>`;
                     } else if (status === 'completed' || status === 'finished') {
                         statusTag = 'Finished';
                         statusColor = 'var(--text-muted)';
-                        scoreDisplay = `<span>${m.scoreA || 0}</span><span class="score-vs">v/s</span><span>${m.scoreB || 0}</span>`;
-                        const diff = Math.abs((m.scoreA || 0) - (m.scoreB || 0));
                         const winner = (m.scoreA || 0) > (m.scoreB || 0) ? m.teamA : m.teamB;
-                        summaryText = diff === 0 ? 'Match ended in a tie' : `${winner} won by ${diff} points`;
+                        const isDraw = (m.scoreA || 0) === (m.scoreB || 0);
+                        teamDisplay = `
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <div>${m.teamA} <span style="font-weight: 800;">(${m.scoreA || 0})</span> VS ${m.teamB} <span style="font-weight: 800;">(${m.scoreB || 0})</span></div>
+                            ${!isDraw ? `<div style="font-size: 11px; color: #16a34a; font-weight: 700;">Winner: ${winner}</div>` : ''}
+                        </div>
+                    `;
                     } else {
                         statusTag = 'Upcoming';
                         statusColor = 'var(--primary)';
-                        scoreDisplay = `<span class="score-vs">v/s</span>`;
-                        summaryText = `Match scheduled for ${m.matchTime || 'TBD'}`;
+                        teamDisplay = `${m.teamA} <span style="font-size: 11px; color: #78716c; margin: 0 5px;">VS</span> ${m.teamB}`;
                     }
 
                     return `
-                        <div class="match-card ${status} ${selectedMatchId === m.id ? 'selected' : ''}" data-id="${m.id}" onclick="selectMatch('${m.id}')">
-                            <div class="match-left">
-                                <div class="match-meta-box">
-                                    <div class="match-status-tag">
-                                        <span style="background:${statusColor}; width: 6px; height: 6px; border-radius: 50%;"></span>
-                                        ${statusTag}
+                                        <tr class="${selectedMatchId === m.id ? 'selected' : ''}" onclick="selectMatch('${m.id}')" data-id="${m.id}">
+                                            <td><div style="font-weight: 700; color: #1c1917;">#${m.matchNo || 'N/A'}</div></td>
+                                            <td>
+                                                <div style="font-size: 14px; font-weight: 600;">${m.matchDate || 'N/A'}</div>
+                                                <div style="font-size: 12px; color: var(--text-muted);">${m.matchTime || 'N/A'}</div>
+                                            </td>
+                                            <td>
+                                    <div style="font-weight: 700; color: #ea580c; font-size: 15px;">
+                                        ${teamDisplay}
                                     </div>
-                                    <div class="match-number">Match # ${m.matchNo || 'N/A'}</div>
-                                    <div class="match-date">${m.matchDate || 'N/A'}</div>
-                                </div>
-                                <div class="team-info">
-                                    <div class="team-name">${m.teamA}</div>
-                                    <div class="team-name">${m.teamB}</div>
-                                </div>
-                            </div>
-                            <div class="match-middle">
-                                <div class="score-display">${scoreDisplay}</div>
-                                <div class="match-result-summary">${summaryText}</div>
-                            </div>
-                            <div class="match-right">
-                                <a href="#" class="view-details" onclick="event.stopPropagation(); alert('Viewing details for Match # ${m.matchNo || m.id}')">View Details</a>
-                            </div>
-                        </div>
-                    `;
-                }).reverse().join('');
+                                            </td>
+                                            <td>
+                                                <div style="font-size: 13px;">${m.venue || 'N/A'}</div>
+                                                <div style="font-size: 11px; color: var(--text-muted); padding-top: 2px;">${m.pool || 'N/A'}</div>
+                                            </td>
+                                            <td>
+                                                <span style="background: ${status === 'upcoming' ? '#ffedd5' : (status === 'live' ? '#dcfce7' : '#f3f4f6')}; 
+                                                             color: ${status === 'upcoming' ? '#c2410c' : (status === 'live' ? '#15803d' : '#4b5563')}; 
+                                                             padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                                                    <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
+                                                    ${statusTag}
+                                                </span>
+                                            </td>
+                                            <td class="action-icons">
+                                                <i class="fas fa-play" title="Start/View Match" onclick="event.stopPropagation(); selectMatch('${m.id}'); validateAndStart();"></i>
+                                                <i class="fas fa-edit" title="Edit Match" onclick="editMatch('${m.id}')"></i>
+                                                <i class="fas fa-trash" title="Delete Match" onclick="askDeleteMatch('${m.id}')"></i>
+                                            </td>
+                                        </tr>
+                                    `;
+                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
 
-                if (filteredMatches.length === 0 && matches.length > 0) {
+                container.innerHTML = tableHTML;
+            }
+
+            function loadTeams(filter = '') {
+                const teams = JSON.parse(localStorage.getItem('teams') || '[]');
+                const container = document.getElementById('genericView');
+
+                // Update tab count
+                document.querySelector('.tab-item:nth-child(2) .tab-count').innerText = teams.length;
+
+                const filteredTeams = teams.filter(t =>
+                    t.name.toLowerCase().includes(filter.toLowerCase()) ||
+                    (t.city && t.city.toLowerCase().includes(filter.toLowerCase()))
+                );
+
+                if (filteredTeams.length === 0) {
                     container.innerHTML = `
                         <div style="background: white; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid var(--border);">
-                            <i class="fas fa-search" style="font-size: 48px; color: var(--border); margin-bottom: 16px;"></i>
-                            <h3>No Matches Found</h3>
-                            <p style="color: var(--text-muted);">Try a different search term.</p>
+                            <i class="fas fa-users" style="font-size: 48px; color: var(--border); margin-bottom: 16px;"></i>
+                            <h3>No Teams Found</h3>
+                            <p style="color: var(--text-muted);">Create a team to get started.</p>
                         </div>
                     `;
                     return;
                 }
 
-                container.innerHTML = matchesList;
+                container.innerHTML = `
+                    <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Team Name</th>
+                                    <th>Location</th>
+                                    <th>Players</th>
+                                    <th>Staff</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${filteredTeams.map(t => `
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 700; color: #1c1917; font-size: 15px;">${t.name}</div>
+                                            <div style="font-size: 12px; color: var(--text-muted);">${t.shortName || ''}</div>
+                                        </td>
+                                        <td>
+                                            <div style="font-size: 14px; font-weight: 600;">${t.city || 'N/A'}</div>
+                                            <div style="font-size: 12px; color: var(--text-muted);">${t.state || 'N/A'}</div>
+                                        </td>
+                                        <td>
+                                            <span style="background: #f0f9ff; color: #0284c7; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 700;">
+                                                <i class="fas fa-user-friends" style="margin-right: 4px;"></i> ${t.players ? t.players.length : 0}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span style="background: #fdf4ff; color: #a21caf; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: 700;">
+                                                <i class="fas fa-briefcase" style="margin-right: 4px;"></i> ${t.staff ? t.staff.length : 0}
+                                            </span>
+                                        </td>
+                                        <td class="action-icons">
+                                            <i class="fas fa-eye" title="View Team" onclick="viewTeam('${t.id || t.team_id}')"></i>
+                                            <i class="fas fa-edit" title="Edit Team" onclick="editTeam('${t.id || t.team_id}')"></i>
+                                            <i class="fas fa-trash" title="Delete Team" onclick="askDeleteTeam('${t.id || t.team_id}')"></i>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
             }
+
+            function loadStaff(filter = '') {
+                // Try to get assigned staff first, falling back to full staff db for display if needed, 
+                // but usually the dashboard shows the "pool" of staff available or assigned to tournament.
+                // Based on standard, let's show the main staff DB.
+                const staff = JSON.parse(localStorage.getItem('staff_db') || '[]');
+                const container = document.getElementById('genericView');
+
+                // Update tab count
+                document.querySelector('.tab-item:nth-child(4) .tab-count').innerText = staff.length;
+
+                const filteredStaff = staff.filter(s =>
+                    s.firstName.toLowerCase().includes(filter.toLowerCase()) ||
+                    s.lastName.toLowerCase().includes(filter.toLowerCase()) ||
+                    s.role.toLowerCase().includes(filter.toLowerCase())
+                );
+
+                if (filteredStaff.length === 0) {
+                    container.innerHTML = `
+                        <div style="background: white; padding: 40px; border-radius: 12px; text-align: center; border: 1px solid var(--border);">
+                            <i class="fas fa-id-card-alt" style="font-size: 48px; color: var(--border); margin-bottom: 16px;"></i>
+                            <h3>No Staff Found</h3>
+                            <p style="color: var(--text-muted);">Add staff members to manage the tournament.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div style="background: white; border-radius: 16px; padding: 20px; box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Contact</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${filteredStaff.map(s => `
+                                    <tr>
+                                        <td><div style="font-weight: 700; color: #1c1917;">${s.firstName} ${s.lastName}</div></td>
+                                        <td>
+                                            <span style="background: #ffedd5; color: #c2410c; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700;">
+                                                ${s.role}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div style="font-size: 14px;">${s.email || 'N/A'}</div>
+                                            <div style="font-size: 12px; color: var(--text-muted);">${s.mobile || ''}</div>
+                                        </td>
+                                        <td>
+                                            <span style="background: #dcfce7; color: #15803d; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px;">
+                                                <span style="width: 6px; height: 6px; border-radius: 50%; background-color: currentColor;"></span>
+                                                Active
+                                            </span>
+                                        </td>
+                                        <td class="action-icons">
+                                            <i class="fas fa-edit" title="Edit Staff" onclick="editStaff('${s.id}')"></i>
+                                            <i class="fas fa-trash" title="Delete Staff" onclick="askDeleteStaff('${s.id}')"></i>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
 
             function loadOfficials(filter = '') {
                 const officials = JSON.parse(localStorage.getItem('officials') || '[]');
@@ -1582,6 +1980,7 @@
                                         <th style="padding: 12px 20px; text-align: left; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Contact</th>
                                         <th style="padding: 12px 20px; text-align: left; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Location</th>
                                         <th style="padding: 12px 20px; text-align: left; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Status</th>
+                                        <th style="padding: 12px 20px; text-align: left; font-size: 13px; color: var(--text-muted); text-transform: uppercase;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1597,6 +1996,10 @@
                                         </td>
                                         <td style="padding: 16px 20px;">
                                             <span style="color: #16a34a; font-weight: 600; font-size: 13px;">● Active</span>
+                                        </td>
+                                        <td class="action-icons" style="padding: 16px 20px;">
+                                            <i class="fas fa-edit" title="Edit Official" onclick="editOfficial('${o.id}')"></i>
+                                            <i class="fas fa-trash" title="Delete Official" onclick="askDeleteOfficial('${o.id}')"></i>
                                         </td>
                                     </tr>
                                 `).join('')}

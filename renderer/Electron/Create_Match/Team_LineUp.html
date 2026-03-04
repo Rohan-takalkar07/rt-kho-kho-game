@@ -227,6 +227,39 @@
             box-shadow: 0 12px 32px rgba(22, 163, 74, 0.6);
             background: linear-gradient(135deg, #22c55e, #16a34a);
         }
+
+        .tab.valid {
+            border: 2px solid #16a34a;
+            color: #16a34a;
+        }
+
+        .tab.invalid {
+            border: 2px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .tab.valid::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 8px;
+        }
+
+        .tab.invalid::after {
+            content: '\f071';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 8px;
+        }
+
+        #validationMsg {
+            text-align: center;
+            color: #ef4444;
+            font-weight: 600;
+            margin-top: 15px;
+            font-size: 14px;
+            min-height: 20px;
+        }
     </style>
 </head>
 
@@ -278,7 +311,8 @@
                 </div>
             </div>
 
-            <div class="button-row">
+            <div class="button-row" style="flex-direction: column; align-items: center; gap: 5px; margin-top: 30px;">
+                <div id="validationMsg"></div>
                 <button class="btn finish-btn" id="finishBtn" onclick="finalizeMatch()" disabled>Finish & Create
                     Match</button>
             </div>
@@ -353,7 +387,42 @@
             const dupB = checkDuplicates(dataB.kits);
 
             const finishBtn = document.getElementById('finishBtn');
-            finishBtn.disabled = !(allFilledA && allFilledB && !dupA && !dupB);
+            const msgEl = document.getElementById('validationMsg');
+            const tabA = document.getElementById('tabA');
+            const tabB = document.getElementById('tabB');
+
+            // Update Tab Status
+            const updateTabStatus = (tab, isValid, isInvalid) => {
+                if (isValid) {
+                    tab.classList.add('valid');
+                    tab.classList.remove('invalid');
+                } else {
+                    tab.classList.remove('valid');
+                    if (isInvalid) tab.classList.add('invalid');
+                }
+            };
+
+            // Only mark invalid if there's an issue and it's not just "empty initial state"
+            // Actually, for simplicity, valid = all good, invalid = not good.
+            updateTabStatus(tabA, allFilledA && !dupA, !allFilledA || dupA);
+            updateTabStatus(tabB, allFilledB && !dupB, !allFilledB || dupB);
+
+            const isValid = allFilledA && allFilledB && !dupA && !dupB;
+            finishBtn.disabled = !isValid;
+            finishBtn.style.opacity = isValid ? '1' : '0.5';
+            finishBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
+
+            if (!isValid) {
+                if (!allFilledA && !allFilledB) msgEl.innerText = "Please complete lineups for both teams";
+                else if (!allFilledA && dupA) msgEl.innerText = "Team A has duplicates and missing info";
+                else if (!allFilledB && dupB) msgEl.innerText = "Team B has duplicates and missing info";
+                else if (!allFilledA) msgEl.innerText = "Please complete Team A lineup";
+                else if (!allFilledB) msgEl.innerText = "Please complete Team B lineup";
+                else if (dupA) msgEl.innerText = "Team A has duplicate jersey numbers";
+                else if (dupB) msgEl.innerText = "Team B has duplicate jersey numbers";
+            } else {
+                msgEl.innerText = "";
+            }
 
             // Visual feedback for duplicates
             const updateStyles = (pref, kits) => {
